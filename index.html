@@ -198,19 +198,32 @@ h1 span {
   © 2026 AI YOUTUBER
 </footer>
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+const SUPABASE_URL = "https://xxzcbjsbiaveclxmoqpu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_2GXwDmXYiO6GBapwH3la1A_yukRPEmF";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 function showSignup() {
-  alert("Our sign-up page is coming soon!");
+  alert("Supabase connection is ready for sign-up!");
 }
 
 function showLogin() {
-  alert("Our login page is coming soon!");
+  alert("Supabase connection is ready for login!");
 }
 
 function learnMore() {
-  alert("AI YOUTUBER will research, create, publish and improve your videos.");
+  alert("AI YOUTUBER researches, creates, publishes and improves videos.");
 }
 </script>
+
+
 
 </body>
 </html>

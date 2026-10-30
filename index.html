@@ -6,146 +6,193 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI YOUTUBER</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   background: #080808;
   color: white;
   font-family: Arial, sans-serif;
-}
-
-button {
-  cursor: pointer;
-  font-family: inherit;
+  min-height: 100vh;
 }
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 7%;
+  padding: 22px 7%;
 }
 
-.logo {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: 1px;
+.logo { font-size: 22px; font-weight: bold; }
+.logo span, .red { color: #ff3030; }
+
+button {
+  cursor: pointer;
+  padding: 14px 22px;
+  border-radius: 7px;
+  font-weight: bold;
+  font-size: 14px;
 }
 
-.logo span {
-  color: #ff3030;
+.primary {
+  background: #ff3030;
+  color: white;
+  border: none;
+}
+
+.secondary {
+  background: transparent;
+  color: white;
+  border: 1px solid #555;
 }
 
 .login-btn {
   background: transparent;
   color: white;
   border: 1px solid #ff3030;
-  border-radius: 7px;
-  padding: 12px 23px;
+}
+
+main {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 25px;
 }
 
 .hero {
-  min-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   text-align: center;
-  padding: 40px 20px;
+  max-width: 750px;
+  margin: 80px auto;
 }
 
 .avatar {
-  width: 125px;
-  height: 125px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
+  width: 115px;
+  height: 115px;
   background: linear-gradient(135deg, #ff3030, #350000);
   border: 3px solid #ff3030;
-  box-shadow: 0 0 45px #ff303055;
-  font-size: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 38px;
   font-weight: bold;
-  margin-bottom: 35px;
-}
-
-.tagline {
-  color: #ff4545;
-  font-size: 12px;
-  letter-spacing: 4px;
-  margin-bottom: 22px;
+  margin: 0 auto 30px;
 }
 
 h1 {
-  font-size: clamp(38px, 7vw, 68px);
+  font-size: clamp(36px, 7vw, 60px);
   line-height: 1.15;
 }
 
-h1 span {
-  color: #ff3030;
+p {
+  color: #aaa;
+  line-height: 1.7;
 }
 
-.description {
-  max-width: 530px;
-  color: #aaa;
-  line-height: 1.8;
-  margin: 25px 0 30px;
+.hero p { margin: 22px 0 30px; }
+
+.tagline {
+  color: #ff4545;
+  letter-spacing: 3px;
+  font-size: 12px;
+  margin-bottom: 20px;
 }
 
 .buttons {
   display: flex;
-  gap: 15px;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 
-.primary-btn {
-  background: #ff3030;
-  color: white;
-  border: none;
-  border-radius: 7px;
-  padding: 16px 30px;
-  font-weight: bold;
+.card {
+  background: #151515;
+  border: 1px solid #303030;
+  border-radius: 12px;
+  padding: 28px;
 }
 
-.secondary-btn {
-  background: transparent;
-  color: white;
-  border: 1px solid #555;
-  border-radius: 7px;
-  padding: 16px 30px;
-}
-
-.note {
-  color: #777;
-  margin-top: 35px;
-  font-size: 12px;
-}
-
-.footer {
+.card h2 {
+  margin-bottom: 22px;
   text-align: center;
-  padding: 25px;
-  color: #666;
-  font-size: 12px;
 }
 
-@media (max-width: 500px) {
-  .navbar {
-    padding: 20px;
-  }
+input {
+  width: 100%;
+  padding: 15px;
+  margin: 9px 0 16px;
+  border-radius: 7px;
+  border: 1px solid #444;
+  background: #080808;
+  color: white;
+  font-size: 15px;
+}
 
-  .logo {
-    font-size: 17px;
-  }
+label {
+  color: #ccc;
+  font-size: 13px;
+}
 
-  .buttons {
-    flex-direction: column;
-    width: 100%;
-    max-width: 260px;
-  }
+.full { width: 100%; margin-top: 10px; }
+
+.switch {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.link {
+  color: #ff4545;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.message {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-title {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.dashboard-item {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 24px 12px;
+  text-align: center;
+}
+
+.dashboard-item span {
+  display: block;
+  color: #ff4545;
+  font-size: 25px;
+  margin-bottom: 12px;
+}
+
+.small {
+  color: #777;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.hidden { display: none !important; }
+
+@media(max-width: 500px) {
+  main { margin: 25px auto; }
+  .dashboard-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -154,76 +201,256 @@ h1 span {
 
 <header class="navbar">
   <div class="logo">AI <span>YOUTUBER</span></div>
-  <button class="login-btn" onclick="showLogin()">
+  <button id="navLogin" class="login-btn" onclick="showPage('login')">
     Log in
+  </button>
+  <button id="navLogout" class="login-btn hidden" onclick="logout()">
+    Log out
   </button>
 </header>
 
-<main class="hero">
-
+<section id="welcome" class="hero">
   <div class="avatar">AI</div>
+  <div class="tagline">YOUR CHANNEL. YOUR AI CREATOR.</div>
 
-  <p class="tagline">
-    YOUR CHANNEL. YOUR AI CREATOR.
-  </p>
-
-  <h1>
-    Your YouTube channel,<br>
-    <span>powered by AI.</span>
+  <h1>Your YouTube channel,<br>
+    <span class="red">powered by AI.</span>
   </h1>
 
-  <p class="description">
+  <p>
     Research, create, publish and improve.
-    Let your AI creator manage your entire
-    content journey while you stay in control.
+    Let your AI creator manage your content journey
+    while you stay in control.
   </p>
 
   <div class="buttons">
-    <button class="primary-btn" onclick="showSignup()">
+    <button class="primary" onclick="showPage('signup')">
       Get Started
     </button>
-
-    <button class="secondary-btn" onclick="learnMore()">
-      Discover More
+    <button class="secondary" onclick="showPage('login')">
+      Log in
     </button>
   </div>
+</section>
 
-  <p class="note">
-    Your channel. Your AI. Your control.
-  </p>
+<main id="signup" class="hidden">
+  <div class="card">
+    <h2>Create your account</h2>
 
+    <form id="signupForm">
+      <label>Email address</label>
+      <input id="signupEmail" type="email"
+        placeholder="Enter your email" required>
+
+      <label>Password</label>
+      <input id="signupPassword" type="password"
+        placeholder="At least 8 characters" minlength="8" required>
+
+      <button class="primary full" type="submit">
+        Create account
+      </button>
+    </form>
+
+    <div id="signupMessage" class="message"></div>
+
+    <div class="switch">
+      Already have an account?
+      <span class="link" onclick="showPage('login')">Log in</span>
+    </div>
+  </div>
 </main>
 
-<footer class="footer">
-  © 2026 AI YOUTUBER
-</footer>
+<main id="login" class="hidden">
+  <div class="card">
+    <h2>Welcome back</h2>
 
+    <form id="loginForm">
+      <label>Email address</label>
+      <input id="loginEmail" type="email"
+        placeholder="Enter your email" required>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <label>Password</label>
+      <input id="loginPassword" type="password"
+        placeholder="Enter your password" required>
+
+      <button class="primary full" type="submit">
+        Log in
+      </button>
+    </form>
+
+    <div id="loginMessage" class="message"></div>
+
+    <div class="switch">
+      New here?
+      <span class="link" onclick="showPage('signup')">Create account</span>
+    </div>
+  </div>
+</main>
+
+<main id="dashboard" class="hidden">
+  <div class="card">
+    <h1 class="dashboard-title">
+      Your AI <span class="red">Dashboard</span>
+    </h1>
+
+    <p id="userEmail"></p>
+
+    <div class="dashboard-grid">
+      <div class="dashboard-item">
+        <span>◈</span>
+        AI Creator
+      </div>
+      <div class="dashboard-item">
+        <span>▶</span>
+        Videos
+      </div>
+      <div class="dashboard-item">
+        <span>⌕</span>
+        Research
+      </div>
+      <div class="dashboard-item">
+        <span>▦</span>
+        Analytics
+      </div>
+    </div>
+
+    <p class="small">
+      Your AI creator workspace is being built.
+    </p>
+  </div>
+</main>
 
 <script>
-const SUPABASE_URL = "https://xxzcbjsbiaveclxmoqpu.supabase.co";
-const SUPABASE_KEY = "sb_publishable_2GXwDmXYiO6GBapwH3la1A_yukRPEmF";
+const SUPABASE_URL = "PASTE_YOUR_PROJECT_URL";
+const SUPABASE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY";
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
 
-function showSignup() {
-  alert("Supabase connection is ready for sign-up!");
+const pages = ["welcome", "signup", "login", "dashboard"];
+
+function showPage(page) {
+  pages.forEach(id => {
+    document.getElementById(id).classList.add("hidden");
+  });
+
+  document.getElementById(page).classList.remove("hidden");
+
+  document.getElementById("navLogin").classList.toggle(
+    "hidden", page === "dashboard"
+  );
 }
 
-function showLogin() {
-  alert("Supabase connection is ready for login!");
+function showMessage(id, message) {
+  document.getElementById(id).textContent = message;
 }
 
-function learnMore() {
-  alert("AI YOUTUBER researches, creates, publishes and improves videos.");
+document.getElementById("signupForm").addEventListener("submit",
+async function(event) {
+  event.preventDefault();
+
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
+
+  showMessage("signupMessage", "Creating your account...");
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: window.location.origin + window.location.pathname
+    }
+  });
+
+  if (error) {
+    showMessage("signupMessage", error.message);
+    return;
+  }
+
+  if (data.session) {
+    showMessage("signupMessage", "Account created!");
+    showDashboard(data.user);
+  } else {
+    showMessage(
+      "signupMessage",
+      "Account created. Please check your email and verify your account before logging in."
+    );
+  }
+});
+
+document.getElementById("loginForm").addEventListener("submit",
+async function(event) {
+  event.preventDefault();
+
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  showMessage("loginMessage", "Logging in...");
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    showMessage("loginMessage", error.message);
+    return;
+  }
+
+  showDashboard(data.user);
+});
+
+function showDashboard(user) {
+  document.getElementById("userEmail").textContent =
+    "Logged in as: " + user.email;
+
+  document.getElementById("navLogin").classList.add("hidden");
+  document.getElementById("navLogout").classList.remove("hidden");
+
+  showPage("dashboard");
 }
+
+async function logout() {
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  document.getElementById("navLogout").classList.add("hidden");
+  document.getElementById("navLogin").classList.remove("hidden");
+
+  showPage("welcome");
+}
+
+async function checkSession() {
+  const { data, error } = await supabaseClient.auth.getSession();
+
+  if (error) {
+    console.error(error);
+    showPage("welcome");
+    return;
+  }
+
+  if (data.session) {
+    showDashboard(data.session.user);
+  } else {
+    showPage("welcome");
+  }
+}
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_IN" && session) {
+    showDashboard(session.user);
+  }
+});
+
+checkSession();
 </script>
-
-
 
 </body>
 </html>
+

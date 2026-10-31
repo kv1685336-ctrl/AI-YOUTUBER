@@ -613,9 +613,7 @@ label {
 
       <div class="settings-section">
         <h2>Legal</h2>
-        <button class="secondary" onclick="showPage('legal')">
-          Legal &amp; Privacy
-        </button>
+        <button onclick="openLegal()">Legal & Privacy</button>
       </div>
 
       <button class="secondary" onclick="logout()">Log out</button>
@@ -629,7 +627,7 @@ label {
 <footer id="siteFooter" class="site-footer">
   <div>© 2026 AI YOUTUBER. Prototype.</div>
   <div style="margin-top: 10px;">
-    <a onclick="showPage('legal')">Legal &amp; Privacy</a>
+    <a href="#" onclick="openLegal(); return false;">Legal & Privacy</a>
     <a onclick="showPage('welcome')">Home</a>
   </div>
 </footer>
@@ -698,7 +696,7 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
-
+let pageBeforeLegal = "welcome";
 const pages = ["welcome", "signup", "login", "workspace", "legal"];
 
 function showPage(page) {
@@ -707,14 +705,25 @@ function showPage(page) {
   });
 
   document.getElementById(page).classList.remove("hidden");
+
   const isWorkspace = page === "workspace";
   const isLegal = page === "legal";
 
-  document.getElementById("navLogin").classList.toggle("hidden", isWorkspace);
+  // Keep the logged-in navigation visible on the Legal page.
+  document.getElementById("navLogin").classList.toggle(
+    "hidden",
+    isWorkspace || isLegal
+  );
 
-  document.getElementById("navLogout").classList.toggle("hidden", !isWorkspace);
+  document.getElementById("navLogout").classList.toggle(
+    "hidden",
+    !isWorkspace && !isLegal
+  );
 
-  document.getElementById("siteFooter").classList.toggle("hidden", isWorkspace || isLegal);
+  document.getElementById("siteFooter").classList.toggle(
+    "hidden",
+    isWorkspace || isLegal
+  );
 }
 
 function showMessage(id, message) {
@@ -898,6 +907,23 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 });
 
 checkSession();
+function openLegal() {
+  pageBeforeLegal = document.getElementById("legal").classList.contains("hidden")
+    ? getCurrentPage()
+    : pageBeforeLegal;
+
+  showPage("legal");
+}
+
+function getCurrentPage() {
+  return pages.find(id =>
+    !document.getElementById(id).classList.contains("hidden")
+  ) || "welcome";
+}
+
+function backFromLegal() {
+  showPage(pageBeforeLegal);
+}
 </script>
 
 </body>

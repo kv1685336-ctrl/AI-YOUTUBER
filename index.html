@@ -457,6 +457,71 @@ label {
     </section>
   </div>
 </main>
+  
+<footer id="siteFooter" class="site-footer">
+  <div>© 2026 AI YOUTUBER. Prototype.</div>
+  <div style="margin-top: 10px;">
+    <a onclick="showPage('legal')">Legal &amp; Privacy</a>
+    <a onclick="showPage('welcome')">Home</a>
+  </div>
+</footer>
+
+<main id="legal" class="legal-page hidden">
+  <h1>Legal &amp; Privacy</h1>
+
+  <p><strong>Last updated:</strong> October 2026</p>
+  <p>
+    AI YOUTUBER is currently a prototype. Features may be incomplete,
+    and generated content may be inaccurate. Please review all content
+    before using or publishing it.
+  </p>
+
+  <h2>What the prototype does</h2>
+  <p>
+    AI YOUTUBER is intended to help users plan and create YouTube content.
+    The current prototype includes account access and a chat interface.
+    Some displayed features are not yet connected or available.
+  </p>
+
+  <h2>Information and account data</h2>
+  <p>
+    The prototype uses Supabase for account authentication. If you create
+    an account, your email address and authentication data are processed
+    by Supabase to provide that service. Do not enter passwords, private
+    information, or confidential material into the chat.
+  </p>
+
+  <h2>AI-generated content</h2>
+  <p>
+    AI-generated ideas, text, audio, or other content may be incorrect,
+    incomplete, or unsuitable. You are responsible for checking content,
+    permissions, and accuracy before publishing.
+  </p>
+
+  <h2>YouTube and third-party services</h2>
+  <p>
+    YouTube features and integrations are not currently connected in this
+    prototype. If they are added, their use will be subject to applicable
+    third-party terms and policies.
+  </p>
+
+  <h2>Privacy and data controls</h2>
+  <p>
+    This prototype does not yet provide a complete in-app process for
+    exporting or deleting all account data. Avoid using it for sensitive
+    information. Before public launch, the service needs a reviewed privacy
+    policy and a clear way to request data access or deletion.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    For questions about this prototype, contact the project owner through
+    the contact method provided when the service is publicly launched.
+  </p>
+
+  <button class="secondary" onclick="showPage('welcome')">Back to home</button>
+</main>
+
 <script>
 const SUPABASE_URL = "https://xxzcbjsbiaveclxmoqpu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_2GXwDmXYiO6GBapwH3la1A_yukRPEmF";
@@ -466,7 +531,7 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_KEY
 );
 
-const pages = ["welcome", "signup", "login", "workspace"];
+const pages = ["welcome", "signup", "login", "workspace", "legal"];
 
 function showPage(page) {
   pages.forEach(id => {
@@ -474,9 +539,14 @@ function showPage(page) {
   });
 
   document.getElementById(page).classList.remove("hidden");
+  const isWorkspace = page === "workspace";
+  const isLegal = page === "legal";
 
-  document.getElementById("navLogin").classList.toggle(
-    "hidden", page === "workspace"
+  document.getElementById("navLogin").classList.toggle("hidden", isWorkspace);
+
+  document.getElementById("navLogout").classList.toggle("hidden", !isWorkspace);
+
+  document.getElementById("siteFooter").classList.toggle("hidden", isWorkspace || isLegal);
   );
 }
 

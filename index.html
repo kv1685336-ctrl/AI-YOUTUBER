@@ -323,6 +323,74 @@ label {
   main { margin: 25px auto; }
   .dashboard-grid { grid-template-columns: 1fr; }
 }
+.settings-panel {
+  flex: 1;
+  min-width: 0;
+  padding: 28px;
+  overflow-y: auto;
+}
+
+.settings-panel h1 {
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.settings-intro {
+  margin-bottom: 25px;
+}
+
+.settings-section {
+  max-width: 750px;
+  margin-bottom: 18px;
+  padding: 22px;
+  background: #151515;
+  border: 1px solid #303030;
+  border-radius: 12px;
+}
+
+.settings-section h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 0;
+  border-top: 1px solid #303030;
+}
+
+.settings-row p {
+  font-size: 14px;
+}
+
+.settings-row select {
+  background: #080808;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 7px;
+  padding: 10px;
+  max-width: 170px;
+}
+
+.settings-note {
+  color: #777;
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+@media (max-width: 650px) {
+  .settings-panel {
+    padding: 18px 12px;
+  }
+
+  .settings-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
 </style>
 </head>
 
@@ -454,6 +522,106 @@ label {
           <button class="primary" onclick="sendMessage()">➤</button>
         </div>
       </div>
+        </section>
+
+    <section id="settingsPanel" class="settings-panel hidden">
+      <h1>Settings</h1>
+      <p class="settings-intro">
+        Manage your account and AI YOUTUBER preferences.
+      </p>
+
+      <div class="settings-section">
+        <h2>Profile</h2>
+        <div class="settings-row">
+          <div>
+            <strong>Email address</strong>
+            <p id="settingsEmail">Loading account...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h2>Preferences</h2>
+
+        <div class="settings-row">
+          <div>
+            <strong>Default language</strong>
+            <p>Choose your preferred language.</p>
+          </div>
+          <select id="settingsLanguage">
+            <option>English</option>
+            <option>Tamil</option>
+            <option>Hindi</option>
+          </select>
+        </div>
+
+        <div class="settings-row">
+          <div>
+            <strong>Theme</strong>
+            <p>Choose how the app looks.</p>
+          </div>
+          <select id="settingsTheme">
+            <option value="dark">Dark</option>
+            <option value="light">Light (coming later)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h2>AI Preferences</h2>
+
+        <div class="settings-row">
+          <div>
+            <strong>Video language</strong>
+            <p>Preferred language for video content.</p>
+          </div>
+          <select id="settingsVideoLanguage">
+            <option>English</option>
+            <option>Tamil</option>
+            <option>Hindi</option>
+          </select>
+        </div>
+
+        <div class="settings-row">
+          <div>
+            <strong>Content style</strong>
+            <p>Preferred style for generated content.</p>
+          </div>
+          <select id="settingsStyle">
+            <option>Informative</option>
+            <option>Educational</option>
+            <option>Entertaining</option>
+            <option>Cinematic</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h2>Usage &amp; Plan</h2>
+        <p>Your plan and usage information will appear here when subscriptions are connected.</p>
+      </div>
+
+      <div class="settings-section">
+        <h2>Privacy &amp; Data</h2>
+        <p>Chat history, data export, and account deletion controls will be added when those features are connected.</p>
+      </div>
+
+      <div class="settings-section">
+        <h2>Help &amp; Support</h2>
+        <p>Support options will be available when the app is ready for users.</p>
+      </div>
+
+      <div class="settings-section">
+        <h2>Legal</h2>
+        <button class="secondary" onclick="showPage('legal')">
+          Legal &amp; Privacy
+        </button>
+      </div>
+
+      <button class="secondary" onclick="logout()">Log out</button>
+      <p class="settings-note">
+        This is a prototype. Preference controls are not saved yet.
+      </p>
     </section>
   </div>
 </main>
@@ -639,14 +807,26 @@ function selectTool(tool, button) {
   });
 
   button.classList.add("active");
-  document.getElementById("chatAnswer").textContent =
-    tool + " selected. This feature will be connected in a later step.";
-}
-document.getElementById("chatInput").addEventListener("keydown", function(event) {
-  if (event.key === "Enter") {
-    sendMessage();
+
+  const settingsPanel = document.getElementById("settingsPanel");
+  const chatMain = document.querySelector(".chat-main");
+
+  if (tool === "Settings") {
+    chatMain.classList.add("hidden");
+    settingsPanel.classList.remove("hidden");
+
+    supabaseClient.auth.getUser().then(({ data, error }) => {
+      document.getElementById("settingsEmail").textContent =
+        error ? "Could not load account" : (data.user?.email || "Not available");
+    });
+  } else {
+    settingsPanel.classList.add("hidden");
+    chatMain.classList.remove("hidden");
+
+    document.getElementById("chatAnswer").textContent =
+      tool + " selected. This feature will be connected in a later step.";
   }
-});
+}
 
 function sendMessage() {
   const input = document.getElementById("chatInput");

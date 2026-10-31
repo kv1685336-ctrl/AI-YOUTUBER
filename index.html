@@ -1024,16 +1024,26 @@ function showAudioGenerator() {
 
 function loadAudioVoices() {
   const voiceSelect = document.getElementById("audioVoice");
+
   if (!voiceSelect || !("speechSynthesis" in window)) return;
 
-  const voices = window.speechSynthesis.getVoices();
+  function populateVoices() {
+    const voices = window.speechSynthesis.getVoices();
 
-  voices.forEach((voice, index) => {
-    const option = document.createElement("option");
-    option.value = index;
-    option.textContent = `${voice.name} (${voice.lang})`;
-    voiceSelect.appendChild(option);
-  });
+    voiceSelect.innerHTML = '<option value="">Default voice</option>';
+
+    voices.forEach((voice, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.textContent = `${voice.name} (${voice.lang})`;
+      voiceSelect.appendChild(option);
+    });
+  }
+
+  populateVoices();
+
+  // Some browsers load available voices asynchronously.
+  window.speechSynthesis.onvoiceschanged = populateVoices;
 }
 
 function generateAudio() {

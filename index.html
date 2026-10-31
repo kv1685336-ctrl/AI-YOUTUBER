@@ -167,32 +167,6 @@ label {
   overflow-wrap: anywhere;
 }
 
-.dashboard-title {
-  font-size: 32px;
-  margin-bottom: 12px;
-}
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 30px;
-}
-
-.dashboard-item {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 24px 12px;
-  text-align: center;
-}
-
-.dashboard-item span {
-  display: block;
-  color: #ff4545;
-  font-size: 25px;
-  margin-bottom: 12px;
-}
 
 .small {
   color: #777;
@@ -200,7 +174,149 @@ label {
   text-align: center;
   margin-top: 30px;
 }
+/* Main chat workspace */
+#workspace {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
 
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  border-bottom: 1px solid #292929;
+}
+
+.chat-header h2 {
+  font-size: 19px;
+  flex: 1;
+}
+
+.icon-btn {
+  background: #171717;
+  color: white;
+  border: 1px solid #333;
+  padding: 10px 13px;
+}
+
+.chat-layout {
+  display: flex;
+  min-height: calc(100vh - 75px);
+}
+
+.side-menu {
+  width: 260px;
+  background: #111;
+  border-right: 1px solid #292929;
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-item {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: #ddd;
+  border: 1px solid transparent;
+  padding: 13px;
+}
+
+.menu-item:hover {
+  background: #202020;
+}
+
+.menu-item.active {
+  background: #251111;
+  border-color: #572020;
+  color: white;
+}
+
+.menu-spacer {
+  flex: 1;
+}
+
+.chat-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 75px);
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 30px 20px;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.chat-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin: 35px auto 20px;
+  font-size: 30px;
+  font-weight: bold;
+  background: radial-gradient(circle at 35% 30%, #ff7777, #ff3030 45%, #350000 80%);
+  box-shadow: 0 0 35px #ff303055;
+}
+
+.chat-answer {
+  max-width: 650px;
+  margin: 20px auto;
+  color: #ddd;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.chat-input-area {
+  padding: 16px;
+  border-top: 1px solid #292929;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 8px;
+  max-width: 850px;
+  margin: auto;
+}
+
+.chat-input-row input {
+  margin: 0;
+  min-width: 0;
+}
+
+.chat-input-row button {
+  padding: 12px 15px;
+}
+
+@media (max-width: 650px) {
+  .side-menu {
+    width: 220px;
+  }
+
+  .chat-header {
+    padding: 14px;
+  }
+
+  .chat-input-area {
+    padding: 10px;
+  }
+
+  .chat-input-row {
+    gap: 5px;
+  }
+
+  .chat-input-row button {
+    padding: 12px 10px;
+  }
+}
 .hidden { display: none !important; }
 
 @media(max-width: 500px) {
@@ -300,39 +416,47 @@ label {
   </div>
 </main>
 
-<main id="dashboard" class="hidden">
-  <div class="card">
-    <h1 class="dashboard-title">
-      Your AI <span class="red">Dashboard</span>
-    </h1>
+<main id="workspace" class="hidden">
+  <header class="chat-header">
+    <button class="icon-btn" onclick="toggleMenu()" aria-label="Open menu">☰</button>
+    <h2>AI <span class="red">YOUTUBER</span></h2>
+    <button class="secondary" onclick="newChat()">New Chat</button>
+  </header>
 
-    <p id="userEmail"></p>
+  <div class="chat-layout">
+    <aside id="sideMenu" class="side-menu">
+      <button class="menu-item active" onclick="selectTool('AI YOUTUBER (AI)', this)">AI YOUTUBER (AI)</button>
+      <button class="menu-item" onclick="selectTool('Editor', this)">Editor</button>
+      <button class="menu-item" onclick="selectTool('Video Generator', this)">Video Generator</button>
+      <button class="menu-item" onclick="selectTool('Audio Generator', this)">Audio Generator</button>
+      <button class="menu-item" onclick="selectTool('Chat History', this)">Chat History</button>
+      <button class="menu-item" onclick="selectTool('Settings', this)">Settings</button>
 
-    <div class="dashboard-grid">
-      <div class="dashboard-item">
-        <span>◈</span>
-        AI Creator
-      </div>
-      <div class="dashboard-item">
-        <span>▶</span>
-        Videos
-      </div>
-      <div class="dashboard-item">
-        <span>⌕</span>
-        Research
-      </div>
-      <div class="dashboard-item">
-        <span>▦</span>
-        Analytics
-      </div>
-    </div>
+      <div class="menu-spacer"></div>
+      <button class="menu-item" onclick="logout()">Log out</button>
+    </aside>
 
-    <p class="small">
-      Your AI creator workspace is being built.
-    </p>
+    <section class="chat-main">
+      <div id="chatMessages" class="chat-messages">
+        <div class="chat-avatar">AI</div>
+        <p id="chatAnswer" class="chat-answer">
+          Hi! I’m your AI YOUTUBER assistant. What would you like to create?
+        </p>
+        <button class="icon-btn" onclick="toggleMute()" id="muteButton">🔊 Mute</button>
+      </div>
+
+      <div class="chat-input-area">
+        <div class="chat-input-row">
+          <button class="icon-btn" onclick="document.getElementById('uploadImage').click()" aria-label="Upload image">＋</button>
+          <input id="chatInput" type="text" placeholder="Message AI YOUTUBER…">
+          <input id="uploadImage" type="file" accept="image/*" class="hidden">
+          <button class="icon-btn" onclick="startVoice()" aria-label="Voice input">🎙</button>
+          <button class="primary" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+    </section>
   </div>
 </main>
-
 <script>
 const SUPABASE_URL = "https://xxzcbjsbiaveclxmoqpu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_2GXwDmXYiO6GBapwH3la1A_yukRPEmF";
@@ -342,7 +466,7 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_KEY
 );
 
-const pages = ["welcome", "signup", "login", "dashboard"];
+const pages = ["welcome", "signup", "login", "workspace"];
 
 function showPage(page) {
   pages.forEach(id => {
@@ -352,7 +476,7 @@ function showPage(page) {
   document.getElementById(page).classList.remove("hidden");
 
   document.getElementById("navLogin").classList.toggle(
-    "hidden", page === "dashboard"
+    "hidden", page === "workspace"
   );
 }
 
@@ -416,14 +540,56 @@ async function(event) {
 });
 
 function showDashboard(user) {
-  document.getElementById("userEmail").textContent =
-    "Logged in as: " + user.email;
+  
 
   document.getElementById("navLogin").classList.add("hidden");
   document.getElementById("navLogout").classList.remove("hidden");
 
-  showPage("dashboard");
+  showPage("workspace");
 }
+function toggleMenu() {
+  document.getElementById("sideMenu").classList.toggle("hidden");
+}
+
+function newChat() {
+  document.getElementById("chatInput").value = "";
+  document.getElementById("chatAnswer").textContent =
+    "New chat started. What would you like to create?";
+}
+
+function selectTool(tool, button) {
+  document.querySelectorAll(".menu-item").forEach(item => {
+    item.classList.remove("active");
+  });
+
+  button.classList.add("active");
+  document.getElementById("chatAnswer").textContent =
+    tool + " selected. This feature will be connected in a later step.";
+}
+
+function sendMessage() {
+  const input = document.getElementById("chatInput");
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  document.getElementById("chatAnswer").textContent =
+    "Your message: " + message +
+    "\n\nAI responses will be connected in a later step.";
+
+  input.value = "";
+}
+
+function toggleMute() {
+  const button = document.getElementById("muteButton");
+  button.textContent = button.textContent.includes("Mute")
+    ? "🔇 Unmute"
+    : "🔊 Mute";
+}
+
+function startVoice() {
+  alert("Voice input will be added in a later step.");
+}  
 
 async function logout() {
   const { error } = await supabaseClient.auth.signOut();

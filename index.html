@@ -697,6 +697,8 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+let currentChatId = null;
+let currentMessages = [];
 let pageBeforeLegal = "welcome";
 const pages = ["welcome", "signup", "login", "workspace", "legal"];
 
@@ -798,20 +800,141 @@ function toggleMenu() {
   document.getElementById("sideMenu").classList.toggle("hidden");
 }
 
-function newChat() {
+
+
+  
+function renderMessages() {
   const chatMessages = document.getElementById("chatMessages");
+  chatMessages.innerHTML = "";
 
-  chatMessages.innerHTML = `
-    <div class="chat-avatar">AI</div>
-    <p id="chatAnswer" class="chat-answer">
-      Hi! I’m your AI YOUTUBER assistant. What would you like to create?
-    </p>
-    <button class="icon-btn" onclick="toggleMute()" id="muteButton">🔊 Mute</button>
-  `;
+  if (currentMessages.length === 0) {
+    chatMessages.innerHTML = `
+      <div class="chat-avatar">AI</div>
+      <p class="chat-answer">
+        Hi! I’m your AI YOUTUBER assistant. What would you like to create?
+      </p>
+      <button class="icon-btn" onclick="toggleMute()" id="muteButton">
+        🔊 Mute
+      </button>
+    `;
+    return;
+  }
 
-  document.getElementById("chatInput").value = "";
+  currentMessages.forEach(message => {
+    const paragraph = document.createElement("p");
+    paragraph.className = "chat-answer";
+    paragraph.textContent =
+      (message.role === "user" ? "You: " : "AI YOUTUBER: ") +
+      message.content;
+    chatMessages.appendChild(paragraph);
+  });
+
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-function selectTool(tool, button) {
+
+function newChat() {
+  currentChatId = null;
+  currentMessages = [];
+  document.getElementById("chatInput").value = "";
+  renderMessages();
+}
+
+async function saveCurrentChat() {
+  const { data: userData, error: userError } =
+    await supabaseClient.auth.getUser();
+
+  if (userError || !userData.user) {
+    throw new Error("Please log in again to save this chat.");
+  }
+
+  const title =
+    currentMessages.find(message => message.role === "user")
+      ?.content.slice(0, 60) || "New Chat";
+
+  if (!currentChatId) {
+    const { data, error } = await supabaseClient
+      .from("chat_history")
+      .insert({
+        user_id: userData.user.id,
+        title,
+        messages: currentMessages
+      })
+      .select("id")
+      .single();
+
+    if (error) throw error;
+    currentChatId = data.id;
+  } else {
+    const { error } = await supabaseClient
+      .from("chat_history")
+      .update({
+        title,
+        messages: currentMessages,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", currentChatId);
+
+    if (error) throw error;
+  }
+}
+
+async function openChat(chatId) {
+  const { data, error } = await supabaseClient
+    .from("chat_history")
+    .select("id, messages")
+    .eq("id", chatId)
+    .single();
+
+  if (error) {
+    alert("Could not open this chat: " + error.message);
+    return;
+  }
+
+  currentChatId = data.id;
+  currentMessages = Array.isArray(data.messages) ? data.messages : [];
+  document.getElementById("settingsPanel").classList.add("hidden");
+  document.querySelector(".chat-main").classList.remove("hidden");
+  renderMessages();
+}
+
+async function showChatHistory() {
+  const chatMessages = document.getElementById("chatMessages");
+  chatMessages.innerHTML = "<p class='chat-answer'>Loading your chats...</p>";
+
+  const { data, error } = await supabaseClient
+    .from("chat_history")
+    .select("id, title, updated_at")
+    .order("updated_at", { ascending: false });
+
+  if (error) {
+    chatMessages.innerHTML = "";
+    const message = document.createElement("p");
+    message.className = "chat-answer";
+    message.textContent = "Could not load chat history: " + error.message;
+    chatMessages.appendChild(message);
+    return;
+  }
+
+  chatMessages.innerHTML = "<h2>Your Chat History</h2>";
+
+  if (!data || data.length === 0) {
+    chatMessages.innerHTML +=
+      "<p class='chat-answer'>No saved chats yet. Start a chat and send a message to save it.</p>";
+    return;
+  }
+
+  data.forEach(chat => {
+    const button = document.createElement("button");
+    button.className = "menu-item";
+    button.textContent = chat.title || "New Chat";
+    button.style.maxWidth = "650px";
+    button.style.margin = "10px auto";
+    button.onclick = () => openChat(chat.id);
+    chatMessages.appendChild(button);
+  });
+}
+
+async function selectTool(tool, button) {
   document.querySelectorAll(".menu-item").forEach(item => {
     item.classList.remove("active");
   });
@@ -825,40 +948,44 @@ function selectTool(tool, button) {
     chatMain.classList.add("hidden");
     settingsPanel.classList.remove("hidden");
 
-    supabaseClient.auth.getUser().then(({ data, error }) => {
-      document.getElementById("settingsEmail").textContent =
-        error ? "Could not load account" : (data.user?.email || "Not available");
-    });
-  } else {
-    settingsPanel.classList.add("hidden");
-    chatMain.classList.remove("hidden");
-
-    document.getElementById("chatAnswer").textContent =
-      tool + " selected. This feature will be connected in a later step.";
+    const { data, error } = await supabaseClient.auth.getUser();
+    document.getElementById("settingsEmail").textContent =
+      error ? "Could not load account" : (data.user?.email || "Not available");
+    return;
   }
+
+  settingsPanel.classList.add("hidden");
+  chatMain.classList.remove("hidden");
+
+  if (tool === "Chat History") {
+    await showChatHistory();
+    return;
+  }
+
+  document.getElementById("chatAnswer").textContent =
+    tool + " selected. This feature will be connected in a later step.";
 }
 
-function sendMessage() {
+async function sendMessage() {
   const input = document.getElementById("chatInput");
   const message = input.value.trim();
 
   if (!message) return;
 
-  const chatMessages = document.getElementById("chatMessages");
-
-  const userMessage = document.createElement("p");
-  userMessage.className = "chat-answer";
-  userMessage.textContent = "You: " + message;
-  chatMessages.appendChild(userMessage);
-
-  const placeholderReply = document.createElement("p");
-  placeholderReply.className = "chat-answer";
-  placeholderReply.textContent =
-    "AI YOUTUBER: Real AI responses will be connected in a later step.";
-  chatMessages.appendChild(placeholderReply);
+  currentMessages.push({ role: "user", content: message });
+  currentMessages.push({
+    role: "assistant",
+    content: "Real AI responses will be connected in a later step."
+  });
 
   input.value = "";
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+  renderMessages();
+
+  try {
+    await saveCurrentChat();
+  } catch (error) {
+    alert("Your message is shown, but it could not be saved: " + error.message);
+  }
 }
 function toggleMute() {
   const button = document.getElementById("muteButton");

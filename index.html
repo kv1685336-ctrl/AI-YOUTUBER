@@ -933,7 +933,6 @@ async function showChatHistory() {
     chatMessages.appendChild(button);
   });
 }
-
 async function selectTool(tool, button) {
   document.querySelectorAll(".menu-item").forEach(item => {
     item.classList.remove("active");
@@ -943,6 +942,7 @@ async function selectTool(tool, button) {
 
   const settingsPanel = document.getElementById("settingsPanel");
   const chatMain = document.querySelector(".chat-main");
+  const chatMessages = document.getElementById("chatMessages");
 
   if (tool === "Settings") {
     chatMain.classList.add("hidden");
@@ -962,8 +962,126 @@ async function selectTool(tool, button) {
     return;
   }
 
-  document.getElementById("chatAnswer").textContent =
-    tool + " selected. This feature will be connected in a later step.";
+  if (tool === "Audio Generator") {
+    showAudioGenerator();
+    return;
+  }
+
+  chatMessages.innerHTML = `
+    <div class="chat-avatar">AI</div>
+    <p class="chat-answer">
+      ${tool} selected. This feature will be connected in a later step.
+    </p>
+  `;
+}
+function showAudioGenerator() {
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <h2>Audio Generator</h2>
+    <p class="chat-answer">
+      Enter a script and listen to it spoken aloud.
+    </p>
+
+    <textarea
+      id="audioText"
+      placeholder="Type or paste your narration here..."
+      style="
+        width: min(100%, 650px);
+        min-height: 180px;
+        padding: 15px;
+        background: #151515;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 8px;
+        font: inherit;
+      "
+    ></textarea>
+
+    <div style="margin: 15px auto; max-width: 650px; text-align: left;">
+      <label for="audioVoice">Voice</label>
+      <select id="audioVoice" style="
+        display: block;
+        width: 100%;
+        margin-top: 8px;
+        padding: 12px;
+        background: #151515;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 7px;
+      ">
+        <option value="">Default voice</option>
+      </select>
+    </div>
+
+    <button class="primary" onclick="generateAudio()">▶ Play audio</button>
+    <button class="secondary" onclick="stopAudio()">■ Stop</button>
+    <p id="audioStatus" class="chat-answer"></p>
+  `;
+
+  loadAudioVoices();
+}
+
+function loadAudioVoices() {
+  const voiceSelect = document.getElementById("audioVoice");
+  if (!voiceSelect || !("speechSynthesis" in window)) return;
+
+  const voices = window.speechSynthesis.getVoices();
+
+  voices.forEach((voice, index) => {
+    const option = document.createElement("option");
+    option.value = index;
+    option.textContent = `${voice.name} (${voice.lang})`;
+    voiceSelect.appendChild(option);
+  });
+}
+
+function generateAudio() {
+  const text = document.getElementById("audioText").value.trim();
+  const status = document.getElementById("audioStatus");
+
+  if (!text) {
+    status.textContent = "Please enter some text first.";
+    return;
+  }
+
+  if (!("speechSynthesis" in window)) {
+    status.textContent = "Text-to-speech is not supported in this browser.";
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  const voiceSelect = document.getElementById("audioVoice");
+  const voices = window.speechSynthesis.getVoices();
+
+  if (voiceSelect.value !== "") {
+    utterance.voice = voices[Number(voiceSelect.value)];
+  }
+
+  utterance.onstart = () => {
+    status.textContent = "Playing audio...";
+  };
+
+  utterance.onend = () => {
+    status.textContent = "Audio finished.";
+  };
+
+  utterance.onerror = () => {
+    status.textContent = "Could not play the audio.";
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
+function stopAudio() {
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+
+  const status = document.getElementById("audioStatus");
+  if (status) status.textContent = "Audio stopped.";
 }
 
 async function sendMessage() {

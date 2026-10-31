@@ -831,8 +831,9 @@ function renderMessages() {
 
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-
+showChatInput(true);
 function newChat() {
+  showChatInput(true);
   currentChatId = null;
   currentMessages = [];
   document.getElementById("chatInput").value = "";
@@ -933,6 +934,9 @@ async function showChatHistory() {
     chatMessages.appendChild(button);
   });
 }
+function showChatInput(show) {
+  document.querySelector(".chat-input-area").classList.toggle("hidden", !show);
+}
 async function selectTool(tool, button) {
   document.querySelectorAll(".menu-item").forEach(item => {
     item.classList.remove("active");
@@ -945,6 +949,7 @@ async function selectTool(tool, button) {
   const chatMessages = document.getElementById("chatMessages");
 
   if (tool === "Settings") {
+    showChatInput(false);
     chatMain.classList.add("hidden");
     settingsPanel.classList.remove("hidden");
 
@@ -956,6 +961,9 @@ async function selectTool(tool, button) {
 
   settingsPanel.classList.add("hidden");
   chatMain.classList.remove("hidden");
+
+  // Show the shared input only in the main AI YOUTUBER chat.
+  showChatInput(tool === "AI YOUTUBER (AI)");
 
   if (tool === "Chat History") {
     await showChatHistory();

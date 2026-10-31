@@ -391,6 +391,9 @@ label {
     flex-direction: column;
   }
 }
+  .chat-input-area.hidden {
+  display: none !important;
+}
 </style>
 </head>
 
@@ -833,6 +836,7 @@ function renderMessages() {
 }
 showChatInput(true);
 function newChat() {
+  document.querySelector(".chat-input-area").style.display = "block";
   showChatInput(true);
   currentChatId = null;
   currentMessages = [];
@@ -963,7 +967,8 @@ async function selectTool(tool, button) {
   chatMain.classList.remove("hidden");
 
   // Show the shared input only in the main AI YOUTUBER chat.
-  showChatInput(tool === "AI YOUTUBER (AI)");
+  document.querySelector(".chat-input-area").style.display =
+  tool === "AI YOUTUBER (AI)" ? "block" : "none";
 
   if (tool === "Chat History") {
     await showChatHistory();

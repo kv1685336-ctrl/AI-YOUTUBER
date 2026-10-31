@@ -552,11 +552,18 @@ function toggleMenu() {
 }
 
 function newChat() {
-  document.getElementById("chatInput").value = "";
-  document.getElementById("chatAnswer").textContent =
-    "New chat started. What would you like to create?";
-}
+  const chatMessages = document.getElementById("chatMessages");
 
+  chatMessages.innerHTML = `
+    <div class="chat-avatar">AI</div>
+    <p id="chatAnswer" class="chat-answer">
+      Hi! I’m your AI YOUTUBER assistant. What would you like to create?
+    </p>
+    <button class="icon-btn" onclick="toggleMute()" id="muteButton">🔊 Mute</button>
+  `;
+
+  document.getElementById("chatInput").value = "";
+}
 function selectTool(tool, button) {
   document.querySelectorAll(".menu-item").forEach(item => {
     item.classList.remove("active");
@@ -566,6 +573,11 @@ function selectTool(tool, button) {
   document.getElementById("chatAnswer").textContent =
     tool + " selected. This feature will be connected in a later step.";
 }
+document.getElementById("chatInput").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    sendMessage();
+  }
+});
 
 function sendMessage() {
   const input = document.getElementById("chatInput");
@@ -573,13 +585,22 @@ function sendMessage() {
 
   if (!message) return;
 
-  document.getElementById("chatAnswer").textContent =
-    "Your message: " + message +
-    "\n\nAI responses will be connected in a later step.";
+  const chatMessages = document.getElementById("chatMessages");
+
+  const userMessage = document.createElement("p");
+  userMessage.className = "chat-answer";
+  userMessage.textContent = "You: " + message;
+  chatMessages.appendChild(userMessage);
+
+  const placeholderReply = document.createElement("p");
+  placeholderReply.className = "chat-answer";
+  placeholderReply.textContent =
+    "AI YOUTUBER: Real AI responses will be connected in a later step.";
+  chatMessages.appendChild(placeholderReply);
 
   input.value = "";
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-
 function toggleMute() {
   const button = document.getElementById("muteButton");
   button.textContent = button.textContent.includes("Mute")

@@ -1292,7 +1292,7 @@ async function sendMessage() {
       data.reply || "I couldn't generate a reply.";
   } catch (error) {
     currentMessages[currentMessages.length - 1].content =
-      "I couldn't reach the AI. Please check your connection and try again.";
+      error.message || "Request failed.";
     console.error(error);
   }
 

@@ -534,7 +534,7 @@ body.light-theme .welcome-setting-select {
 
 <section id="welcome" class="hero">
   <div class="avatar">AI</div>
-  </div>
+  
   <div class="tagline">YOUR CHANNEL. YOUR AI CREATOR.</div>
 
   <h1>Your YouTube channel,<br>
@@ -857,12 +857,17 @@ function showPage(page) {
     document.getElementById(id).classList.add("hidden");
   });
 
-  document.getElementById(page).classList.remove("hidden");
+  const selectedPage = document.getElementById(page);
+  if (!selectedPage) {
+    console.error("Unknown page:", page);
+    return;
+  }
+
+  selectedPage.classList.remove("hidden");
 
   const isWorkspace = page === "workspace";
   const isLegal = page === "legal";
 
-  // Keep the logged-in navigation visible on the Legal page.
   document.getElementById("navLogin").classList.toggle(
     "hidden",
     isWorkspace || isLegal
@@ -878,7 +883,6 @@ function showPage(page) {
     isWorkspace || isLegal
   );
 }
-
 function showMessage(id, message) {
   document.getElementById(id).textContent = message;
 }

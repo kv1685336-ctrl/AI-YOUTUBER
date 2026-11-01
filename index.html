@@ -493,6 +493,23 @@ body.light-theme .chat-input-row .icon-btn,
 body.light-theme #muteButton {
   color: black;
 }
+.welcome-setting-select {
+  display: block;
+  width: 100%;
+  margin: 8px 0 18px;
+  padding: 12px;
+  border-radius: 7px;
+  border: 1px solid #444;
+  background: #080808;
+  color: white;
+  font-size: 15px;
+}
+
+body.light-theme .welcome-setting-select {
+  background: white;
+  color: #171717;
+  border-color: #bbb;
+}
 </style>
 </head>
 
@@ -509,6 +526,7 @@ body.light-theme #muteButton {
   <button id="navLogout" class="login-btn hidden" onclick="logout()">
     Log out
   </button>
+  </div>
 </header>
 
 <section id="welcome" class="hero">
@@ -535,7 +553,28 @@ body.light-theme #muteButton {
     </button>
   </div>
 </section>
+<main id="welcomeSettings" class="hidden">
+  <div class="card">
+    <h2>Settings</h2>
 
+    <label for="welcomeLanguage">App language</label>
+    <select id="welcomeLanguage" class="welcome-setting-select">
+      <option>English</option>
+      <option>Tamil</option>
+      <option>Hindi</option>
+    </select>
+
+    <label for="welcomeTheme">Theme</label>
+    <select id="welcomeTheme" class="welcome-setting-select">
+      <option value="dark">Dark</option>
+      <option value="light">Light</option>
+    </select>
+
+    <button class="primary full" onclick="saveWelcomeSettings()">Save preferences</button>
+    <button class="secondary full" onclick="showPage('welcome')">Back</button>
+    <p id="welcomeSettingsMessage" class="message"></p>
+  </div>
+</main>
 <main id="signup" class="hidden">
   <div class="card">
     <h2>Create your account</h2>
@@ -806,7 +845,7 @@ const supabaseClient = window.supabase.createClient(
 let currentChatId = null;
 let currentMessages = [];
 let pageBeforeLegal = "welcome";
-const pages = ["welcome", "signup", "login", "workspace", "legal"];
+const pages = ["welcome", "welcomeSettings", "signup", "login", "workspace", "legal"];
 
 function showPage(page) {
   pages.forEach(id => {
@@ -1316,6 +1355,39 @@ function saveSettings() {
 ].forEach(id => {
   document.getElementById(id).addEventListener("change", saveSettings);
 });
+function openWelcomeSettings() {
+  const saved = JSON.parse(localStorage.getItem("welcomePreferences") || "{}");
+
+  document.getElementById("welcomeLanguage").value =
+    saved.language || "English";
+
+  document.getElementById("welcomeTheme").value =
+    saved.theme || "dark";
+
+  showPage("welcomeSettings");
+}
+
+function saveWelcomeSettings() {
+  const preferences = {
+    language: document.getElementById("welcomeLanguage").value,
+    theme: document.getElementById("welcomeTheme").value
+  };
+
+  localStorage.setItem("welcomePreferences", JSON.stringify(preferences));
+
+  // Apply the selected theme immediately.
+  applyTheme(preferences.theme);
+
+  document.getElementById("welcomeSettingsMessage").textContent =
+    "Preferences saved on this device.";
+}
+
+function loadWelcomePreferences() {
+  const saved = JSON.parse(localStorage.getItem("welcomePreferences") || "{}");
+  applyTheme(saved.theme || "dark");
+}
+
+loadWelcomePreferences();
 async function checkSession() {
   const { data, error } = await supabaseClient.auth.getSession();
 

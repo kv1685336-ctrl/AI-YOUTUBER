@@ -394,6 +394,50 @@ label {
   .chat-input-area.hidden {
   display: none !important;
 }
+  body.light-theme {
+  background: #f4f4f4;
+  color: #171717;
+}
+
+body.light-theme .navbar,
+body.light-theme .chat-header,
+body.light-theme .chat-input-area {
+  background: #fff;
+  border-color: #ddd;
+}
+
+body.light-theme .side-menu,
+body.light-theme .card,
+body.light-theme .settings-section {
+  background: #fff;
+  border-color: #ddd;
+}
+
+body.light-theme .menu-item {
+  color: #222;
+}
+
+body.light-theme .menu-item:hover {
+  background: #eee;
+}
+
+body.light-theme .menu-item.active {
+  background: #ffe8e8;
+  border-color: #ffbaba;
+}
+
+body.light-theme input,
+body.light-theme .settings-row select {
+  background: #fff;
+  color: #171717;
+  border-color: #bbb;
+}
+
+body.light-theme .chat-answer,
+body.light-theme label,
+body.light-theme .settings-row p {
+  color: #444;
+}
 </style>
 </head>
 
@@ -793,7 +837,8 @@ async function(event) {
 });
 
 function showDashboard(user) {
-  
+  settingsUserId = user.id;
+  loadSettings();
 
   document.getElementById("navLogin").classList.add("hidden");
   document.getElementById("navLogout").classList.remove("hidden");
@@ -1153,7 +1198,66 @@ async function logout() {
 
   showPage("welcome");
 }
+let settingsUserId = null;
 
+function settingsStorageKey() {
+  return settingsUserId
+    ? `aiYoutuberSettings_${settingsUserId}`
+    : null;
+}
+
+function applyTheme(theme) {
+  document.body.classList.toggle("light-theme", theme === "light");
+}
+
+function loadSettings() {
+  const key = settingsStorageKey();
+  if (!key) return;
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(key) || "{}");
+
+    document.getElementById("settingsLanguage").value =
+      saved.language || "English";
+    document.getElementById("settingsTheme").value =
+      saved.theme || "dark";
+    document.getElementById("settingsVideoLanguage").value =
+      saved.videoLanguage || "English";
+    document.getElementById("settingsStyle").value =
+      saved.style || "Informative";
+
+    applyTheme(saved.theme || "dark");
+  } catch {
+    applyTheme("dark");
+  }
+}
+
+function saveSettings() {
+  const key = settingsStorageKey();
+  if (!key) return;
+
+  const settings = {
+    language: document.getElementById("settingsLanguage").value,
+    theme: document.getElementById("settingsTheme").value,
+    videoLanguage: document.getElementById("settingsVideoLanguage").value,
+    style: document.getElementById("settingsStyle").value
+  };
+
+  localStorage.setItem(key, JSON.stringify(settings));
+  applyTheme(settings.theme);
+
+  document.querySelector(".settings-note").textContent =
+    "Preferences saved on this device. AI behavior will use them when AI features are connected.";
+}
+
+[
+  "settingsLanguage",
+  "settingsTheme",
+  "settingsVideoLanguage",
+  "settingsStyle"
+].forEach(id => {
+  document.getElementById(id).addEventListener("change", saveSettings);
+});
 async function checkSession() {
   const { data, error } = await supabaseClient.auth.getSession();
 

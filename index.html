@@ -521,8 +521,8 @@ body.light-theme .welcome-setting-select {
 <header class="navbar">
   <div class="logo">AI <span>YOUTUBER</span></div>
   <div style="display:flex; gap:10px; align-items:center;">
-
-    <button class="secondary" onclick="openWelcomeSettings()">Settings</button>
+    <button id="welcomeSettingsButton" class="secondary" onclick="openWelcomeSettings()">Settings</button>
+ 
   <button id="navLogin" class="login-btn" onclick="showPage('login')">
     Log in
   </button>
@@ -877,7 +877,9 @@ function showPage(page) {
     "hidden",
     isWorkspace || isLegal
   );
+  document.getElementById("welcomeSettingsButton").classList.toggle("hidden", page !== "welcome");
 }
+  
 function showMessage(id, message) {
   document.getElementById(id).textContent = message;
 }

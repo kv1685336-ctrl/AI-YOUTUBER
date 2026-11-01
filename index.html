@@ -65,51 +65,31 @@ main {
   max-width: 750px;
   margin: 80px auto;
 }
-.ai-smoke {
-  width: 110px;
-  height: 110px;
-  position: relative;
-  display: grid;
-  place-items: center;
-  margin: 20px auto;
-  border-radius: 50%;
-  background: #080000;
-}
 
-.smoke-ring {
-  position: absolute;
-  inset: 4px;
-  border-radius: 50%;
-  background: conic-gradient(
-    from 0deg,
-    transparent,
-    #ff1010,
-    #ff7777,
-    transparent,
-    #b50000,
-    #ff3030,
-    transparent
-  );
-  filter: blur(7px);
-  opacity: 0.9;
-  animation: smoke-spin 3s linear infinite;
-}
-
-.smoke-core {
-  position: relative;
-  z-index: 1;
-  width: 48px;
-  height: 48px;
+.avatar {
+  width: 125px;
+  height: 125px;
+  background: radial-gradient(circle at 35% 30%, #ff7777, #ff3030 45%, #350000 80%);
+  border: 2px solid #ff5555;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: #1a0000;
-  color: white;
-  box-shadow: 0 0 12px #ff0000;
+  font-size: 38px;
+  font-weight: bold;
+  margin: 0 auto 30px;
+  box-shadow: 0 0 25px #ff303066, inset 0 0 20px #ffffff22;
+  animation: aiPulse 3s ease-in-out infinite;
 }
 
-@keyframes smoke-spin {
-  to { transform: rotate(360deg); }
+@keyframes aiPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 25px #ff303066, inset 0 0 20px #ffffff22;
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px #ff303099, inset 0 0 25px #ffffff33;
+  }
 }
 p {
   color: #aaa;
@@ -430,9 +410,7 @@ label {
 </header>
 
 <section id="welcome" class="hero">
-  <div class="ai-smoke">
-  <div class="smoke-ring"></div>
-  <div class="smoke-core">▶</div>
+  <div class="avatar">AI</div>
   </div>
   <div class="tagline">YOUR CHANNEL. YOUR AI CREATOR.</div>
 

@@ -1185,6 +1185,16 @@ async function selectTool(tool, button) {
     await showChatHistory();
     return;
   }
+  if (tool === "Editor") {
+    
+
+    showEditor();
+
+    return;
+
+  }
+
+
 
   if (tool === "Audio Generator") {
     showAudioGenerator();
@@ -1197,6 +1207,65 @@ async function selectTool(tool, button) {
       ${tool} selected. This feature will be connected in a later step.
     </p>
   `;
+}
+function showEditor() {
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <h2>Video Editor</h2>
+    <p class="chat-answer">Upload a video from your device to preview it here.</p>
+
+    <input
+      id="editorVideoInput"
+      type="file"
+      accept="video/*"
+      style="display:block; max-width:650px; margin:20px auto;"
+    >
+
+    <video
+      id="editorVideoPreview"
+      controls
+      playsinline
+      style="
+        display:none;
+        width:100%;
+        max-width:750px;
+        max-height:65vh;
+        margin:20px auto;
+        background:#000;
+        border-radius:10px;
+      "
+    ></video>
+
+    <p id="editorStatus" class="chat-answer"></p>
+  `;
+
+  const videoInput = document.getElementById("editorVideoInput");
+  const videoPreview = document.getElementById("editorVideoPreview");
+  const editorStatus = document.getElementById("editorStatus");
+
+  videoInput.addEventListener("change", () => {
+    const file = videoInput.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("video/")) {
+      editorStatus.textContent = "Please choose a video file.";
+      videoPreview.style.display = "none";
+      return;
+    }
+
+    // Release the previous local preview, if there was one.
+    if (videoPreview.dataset.videoUrl) {
+      URL.revokeObjectURL(videoPreview.dataset.videoUrl);
+    }
+
+    const videoUrl = URL.createObjectURL(file);
+    videoPreview.dataset.videoUrl = videoUrl;
+    videoPreview.src = videoUrl;
+    videoPreview.style.display = "block";
+    editorStatus.textContent = `Previewing: ${file.name}`;
+  });
 }
 function showAudioGenerator() {
   const chatMessages = document.getElementById("chatMessages");

@@ -1213,7 +1213,7 @@ function showEditor() {
 
   chatMessages.innerHTML = `
     <h2>Video Editor</h2>
-    <p class="chat-answer">Upload a video from your device to preview it here.</p>
+    <p class="chat-answer">Upload a video, then choose the section to preview.</p>
 
     <input
       id="editorVideoInput"
@@ -1237,34 +1237,117 @@ function showEditor() {
       "
     ></video>
 
-    <p id="editorStatus" class="chat-answer"></p>
+    <div style="max-width:650px; margin:20px auto; text-align:left;">
+      <label for="trimStart">Start time: <span id="trimStartLabel">0.0</span>s</label>
+      <input id="trimStart" type="range" min="0" max="0" step="0.1" value="0" disabled>
+
+      <label for="trimEnd">End time: <span id="trimEndLabel">0.0</span>s</label>
+      <input id="trimEnd" type="range" min="0" max="0" step="0.1" value="0" disabled>
+
+      <button id="previewTrimButton" class="primary" disabled>
+        ▶ Preview trimmed section
+      </button>
+
+      <p id="editorStatus" class="chat-answer"></p>
+    </div>
   `;
 
   const videoInput = document.getElementById("editorVideoInput");
-  const videoPreview = document.getElementById("editorVideoPreview");
-  const editorStatus = document.getElementById("editorStatus");
+  const video = document.getElementById("editorVideoPreview");
+  const startSlider = document.getElementById("trimStart");
+  const endSlider = document.getElementById("trimEnd");
+  const startLabel = document.getElementById("trimStartLabel");
+  const endLabel = document.getElementById("trimEndLabel");
+  const previewButton = document.getElementById("previewTrimButton");
+  const status = document.getElementById("editorStatus");
+
+  let videoUrl = null;
+  let trimStart = 0;
+  let trimEnd = 0;
+
+  function updateLabels() {
+    startLabel.textContent = trimStart.toFixed(1);
+    endLabel.textContent = trimEnd.toFixed(1);
+  }
 
   videoInput.addEventListener("change", () => {
     const file = videoInput.files[0];
-
     if (!file) return;
 
     if (!file.type.startsWith("video/")) {
-      editorStatus.textContent = "Please choose a video file.";
-      videoPreview.style.display = "none";
+      status.textContent = "Please choose a video file.";
       return;
     }
 
-    // Release the previous local preview, if there was one.
-    if (videoPreview.dataset.videoUrl) {
-      URL.revokeObjectURL(videoPreview.dataset.videoUrl);
+    if (videoUrl) URL.revokeObjectURL(videoUrl);
+
+    videoUrl = URL.createObjectURL(file);
+    video.src = videoUrl;
+    video.style.display = "block";
+    status.textContent = "Loading video…";
+  });
+
+  video.addEventListener("loadedmetadata", () => {
+    const duration = video.duration;
+
+    trimStart = 0;
+    trimEnd = duration;
+
+    startSlider.max = duration;
+    endSlider.max = duration;
+    startSlider.value = trimStart;
+    endSlider.value = trimEnd;
+
+    startSlider.disabled = false;
+    endSlider.disabled = false;
+    previewButton.disabled = false;
+
+    updateLabels();
+    status.textContent = `Video length: ${duration.toFixed(1)} seconds.`;
+  });
+
+  startSlider.addEventListener("input", () => {
+    trimStart = Number(startSlider.value);
+
+    if (trimStart >= trimEnd) {
+      trimStart = Math.max(0, trimEnd - 0.1);
+      startSlider.value = trimStart;
     }
 
-    const videoUrl = URL.createObjectURL(file);
-    videoPreview.dataset.videoUrl = videoUrl;
-    videoPreview.src = videoUrl;
-    videoPreview.style.display = "block";
-    editorStatus.textContent = `Previewing: ${file.name}`;
+    updateLabels();
+  });
+
+  endSlider.addEventListener("input", () => {
+    trimEnd = Number(endSlider.value);
+
+    if (trimEnd <= trimStart) {
+      trimEnd = Math.min(video.duration, trimStart + 0.1);
+      endSlider.value = trimEnd;
+    }
+
+    updateLabels();
+  });
+
+  previewButton.addEventListener("click", async () => {
+    if (!videoUrl || trimEnd <= trimStart) return;
+
+    video.pause();
+    video.currentTime = trimStart;
+
+    try {
+      await video.play();
+      status.textContent = "Previewing selected section…";
+    } catch {
+      status.textContent = "Press Play on the video to preview the selected section.";
+    }
+  });
+
+  video.addEventListener("timeupdate", () => {
+    if (!video.paused && video.currentTime >= trimEnd) {
+      video.pause();
+      video.currentTime = trimEnd;
+      status.textContent = "Preview finished.";
+    }
   });
 }
 function showAudioGenerator() {

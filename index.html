@@ -1046,8 +1046,14 @@ async function openChat(chatId) {
 
   currentChatId = data.id;
   currentMessages = Array.isArray(data.messages) ? data.messages : [];
+
   document.getElementById("settingsPanel").classList.add("hidden");
   document.querySelector(".chat-main").classList.remove("hidden");
+
+  // Show the message box so you can continue this chat.
+  document.querySelector(".chat-input-area").style.display = "block";
+  showChatInput(true);
+
   renderMessages();
 }
 
@@ -1061,11 +1067,7 @@ async function showChatHistory() {
     .order("updated_at", { ascending: false });
 
   if (error) {
-    chatMessages.innerHTML = "";
-    const message = document.createElement("p");
-    message.className = "chat-answer";
-    message.textContent = "Could not load chat history: " + error.message;
-    chatMessages.appendChild(message);
+    chatMessages.textContent = "Could not load chat history: " + error.message;
     return;
   }
 
@@ -1073,19 +1075,78 @@ async function showChatHistory() {
 
   if (!data || data.length === 0) {
     chatMessages.innerHTML +=
-      "<p class='chat-answer'>No saved chats yet. Start a chat and send a message to save it.</p>";
+      "<p class='chat-answer'>No saved chats yet. Start a chat to save it.</p>";
     return;
   }
 
   data.forEach(chat => {
-    const button = document.createElement("button");
-    button.className = "menu-item";
-    button.textContent = chat.title || "New Chat";
-    button.style.maxWidth = "650px";
-    button.style.margin = "10px auto";
-    button.onclick = () => openChat(chat.id);
-    chatMessages.appendChild(button);
+    const row = document.createElement("div");
+    row.style.cssText =
+      "display:flex; gap:8px; align-items:center; max-width:650px; margin:10px auto;";
+
+    const openButton = document.createElement("button");
+    openButton.className = "menu-item";
+    openButton.textContent = chat.title || "New Chat";
+    openButton.style.flex = "1";
+    openButton.onclick = () => openChat(chat.id);
+
+    const renameButton = document.createElement("button");
+    renameButton.className = "secondary";
+    renameButton.textContent = "Rename";
+    renameButton.onclick = () => renameChat(chat.id, chat.title || "");
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "secondary";
+    deleteButton.textContent = "Delete";
+    deleteButton.onclick = () => deleteChat(chat.id);
+
+    row.append(openButton, renameButton, deleteButton);
+    chatMessages.appendChild(row);
   });
+}
+async function renameChat(chatId, oldTitle) {
+  const newTitle = prompt("Enter a new chat name:", oldTitle);
+
+  if (newTitle === null) return;
+
+  const title = newTitle.trim();
+  if (!title) {
+    alert("Chat name cannot be empty.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("chat_history")
+    .update({ title, updated_at: new Date().toISOString() })
+    .eq("id", chatId);
+
+  if (error) {
+    alert("Could not rename chat: " + error.message);
+    return;
+  }
+
+  await showChatHistory();
+}
+
+async function deleteChat(chatId) {
+  if (!confirm("Delete this chat? This cannot be undone.")) return;
+
+  const { error } = await supabaseClient
+    .from("chat_history")
+    .delete()
+    .eq("id", chatId);
+
+  if (error) {
+    alert("Could not delete chat: " + error.message);
+    return;
+  }
+
+  if (currentChatId === chatId) {
+    currentChatId = null;
+    currentMessages = [];
+  }
+
+  await showChatHistory();
 }
 function showChatInput(show) {
   document.querySelector(".chat-input-area").classList.toggle("hidden", !show);

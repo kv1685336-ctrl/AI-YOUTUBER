@@ -633,7 +633,7 @@ body.light-theme .welcome-setting-select {
   <header class="chat-header">
     <button class="icon-btn" onclick="toggleMenu()" aria-label="Open menu">☰</button>
     <h2>AI <span class="red">YOUTUBER</span></h2>
-    <button class="secondary" onclick="newChat()">New Chat</button>
+    <button class="secondary" onclick="newChat()" data-i18n="newChat">New Chat</button>
   </header>
 
   <div class="chat-layout">
@@ -842,6 +842,64 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+const interfaceTranslations = {
+  English: {
+    appTitle: "AI YOUTUBER",
+    newChat: "New chat",
+    settings: "Settings",
+    history: "History",
+    editor: "Editor",
+    videoGenerator: "Video Generator",
+    audioGenerator: "Audio Generator",
+    logout: "Log out",
+    send: "Send",
+    language: "Interface language",
+    saveSettings: "Save settings"
+  },
+
+  Tamil: {
+    appTitle: "AI யூடியூபர்",
+    newChat: "புதிய உரையாடல்",
+    settings: "அமைப்புகள்",
+    history: "வரலாறு",
+    editor: "எடிட்டர்",
+    videoGenerator: "வீடியோ உருவாக்கி",
+    audioGenerator: "ஒலி உருவாக்கி",
+    logout: "வெளியேறு",
+    send: "அனுப்பு",
+    language: "இடைமுக மொழி",
+    saveSettings: "அமைப்புகளைச் சேமி"
+  },
+
+  Hindi: {
+    appTitle: "AI यूट्यूबर",
+    newChat: "नई चैट",
+    settings: "सेटिंग्स",
+    history: "इतिहास",
+    editor: "एडिटर",
+    videoGenerator: "वीडियो जनरेटर",
+    audioGenerator: "ऑडियो जनरेटर",
+    logout: "लॉग आउट",
+    send: "भेजें",
+    language: "इंटरफ़ेस भाषा",
+    saveSettings: "सेटिंग्स सहेजें"
+  }
+};
+
+function applyInterfaceLanguage(language) {
+  const words = interfaceTranslations[language] || interfaceTranslations.English;
+
+  document.querySelectorAll("[data-i18n]").forEach(element => {
+    const key = element.dataset.i18n;
+    if (words[key]) {
+      element.textContent = words[key];
+    }
+  });
+
+  document.documentElement.lang =
+    language === "Tamil" ? "ta" :
+    language === "Hindi" ? "hi" : "en";
+}
 let currentChatId = null;
 let currentMessages = [];
 let pageBeforeLegal = "welcome";
@@ -1586,6 +1644,7 @@ function saveSettings() {
     videoLanguage: document.getElementById("settingsVideoLanguage").value,
     style: document.getElementById("settingsStyle").value
   };
+  applyInterfaceLanguage(document.getElementById("settingsLanguage").value);
 
   localStorage.setItem(key, JSON.stringify(settings));
   applyTheme(settings.theme);

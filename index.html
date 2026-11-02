@@ -513,6 +513,378 @@ body.light-theme .welcome-setting-select {
 #welcomeSettings .settings-note {
   text-align: center;
 }
+/* ===== AI YOUTUBER — CREATOR STUDIO DESIGN ===== */
+
+:root {
+  --bg: #09090c;
+  --panel: #111116;
+  --panel-soft: #17171e;
+  --border: #292932;
+  --text: #f7f7fa;
+  --muted: #a2a2ae;
+  --red: #ff3b4e;
+  --red-dark: #b91f32;
+  --radius: 16px;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 50% -20%, #351018 0%, transparent 45%),
+    var(--bg);
+  color: var(--text);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+button {
+  border-radius: 11px;
+  transition: transform .16s ease, background .16s ease, border-color .16s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.primary {
+  background: linear-gradient(135deg, #ff4b5e, #d91e35);
+  box-shadow: 0 6px 20px #ff304022;
+}
+
+.primary:hover {
+  background: linear-gradient(135deg, #ff6575, #e52b42);
+}
+
+.secondary,
+.login-btn {
+  background: #15151b;
+  border: 1px solid #353540;
+  color: var(--text);
+}
+
+.secondary:hover,
+.login-btn:hover {
+  border-color: #7a3540;
+  background: #20151a;
+}
+
+.navbar {
+  padding: 20px clamp(18px, 5vw, 70px);
+  border-bottom: 1px solid #ffffff0b;
+}
+
+.logo {
+  letter-spacing: .04em;
+}
+
+.hero {
+  padding: 25px 22px 70px;
+  margin: 45px auto;
+}
+
+.avatar,
+.chat-avatar {
+  background: radial-gradient(circle at 35% 25%, #ff8a97, #ff304b 43%, #510d1b 82%);
+  border: 1px solid #ff8794;
+  box-shadow: 0 0 55px #ff30402b, inset 0 0 25px #ffffff20;
+}
+
+.tagline {
+  color: #ff6675;
+  font-weight: 700;
+}
+
+.hero p {
+  max-width: 590px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card,
+.settings-section {
+  background: linear-gradient(145deg, #17171e, #101014);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 18px 55px #00000024;
+}
+
+input,
+.settings-row select,
+.welcome-setting-select,
+textarea {
+  background: #0b0b10;
+  border: 1px solid #30303a;
+  border-radius: 11px;
+  color: var(--text);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #b83a4a;
+}
+
+#workspace {
+  min-height: 100vh;
+  background: #0b0b0f;
+}
+
+.chat-header {
+  min-height: 72px;
+  padding: 14px 24px;
+  background: #0e0e13;
+  border-bottom: 1px solid var(--border);
+}
+
+.chat-header h2 {
+  font-size: 16px;
+  letter-spacing: .06em;
+}
+
+.chat-layout {
+  min-height: calc(100vh - 72px);
+}
+
+.side-menu {
+  width: 250px;
+  padding: 20px 14px;
+  background: #0e0e13;
+  border-right: 1px solid var(--border);
+}
+
+.menu-item {
+  padding: 13px 14px;
+  border-radius: 10px;
+  color: #bdbdc8;
+  font-weight: 500;
+}
+
+.menu-item:hover {
+  background: #1b1b23;
+}
+
+.menu-item.active {
+  color: #fff;
+  background: linear-gradient(90deg, #35151d, #1b1217);
+  border-color: #6b2935;
+  box-shadow: inset 3px 0 var(--red);
+}
+
+.chat-main {
+  background:
+    radial-gradient(ellipse at 50% 0%, #24101655, transparent 55%),
+    #0b0b0f;
+}
+
+.chat-messages {
+  padding: 32px clamp(16px, 4vw, 48px);
+}
+
+.chat-avatar {
+  width: 82px;
+  height: 82px;
+  font-size: 25px;
+}
+
+.chat-answer {
+  color: #dedee6;
+}
+
+.chat-input-area {
+  background: #0e0e13;
+  border-top: 1px solid var(--border);
+  padding: 18px 20px 22px;
+}
+
+.chat-input-row {
+  padding: 8px;
+  border: 1px solid #30303a;
+  border-radius: 16px;
+  background: #15151b;
+  box-shadow: 0 12px 35px #00000025;
+}
+
+.chat-input-row input {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.chat-input-row input:focus {
+  outline: none;
+}
+
+.chat-input-row .icon-btn {
+  color: #c5c5ce;
+  border-radius: 10px;
+}
+
+.chat-input-row .primary {
+  min-width: 46px;
+  border-radius: 11px;
+}
+
+.settings-panel {
+  background: #0b0b0f;
+}
+
+.settings-panel h1 {
+  font-size: clamp(26px, 4vw, 34px);
+  letter-spacing: -0.04em;
+}
+
+.settings-section {
+  padding: 22px;
+}
+
+.settings-section h2 {
+  color: #f5f5f8;
+}
+
+.settings-row {
+  border-top-color: #292932;
+}
+
+.site-footer {
+  padding: 25px;
+  text-align: center;
+  color: #777782;
+  border-top: 1px solid #ffffff0b;
+}
+
+.site-footer a {
+  color: #ff6877;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .chat-layout {
+    position: relative;
+  }
+
+  .side-menu {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(270px, 82vw);
+    box-shadow: 18px 0 45px #00000070;
+  }
+
+  .chat-header {
+    padding: 12px 14px;
+  }
+
+  .chat-header h2 {
+    font-size: 14px;
+  }
+
+  .chat-header .secondary {
+    padding: 11px 13px;
+  }
+
+  .chat-messages {
+    padding: 20px 14px;
+  }
+
+  .chat-input-area {
+    padding: 12px;
+  }
+
+  .chat-input-row {
+    gap: 4px;
+  }
+
+  .chat-input-row button {
+    padding: 11px 12px;
+  }
+
+  .settings-panel {
+    padding: 20px 14px;
+  }
+
+  .settings-section {
+    padding: 17px;
+  }
+}
+
+body.light-theme {
+  --bg: #f4f4f7;
+  --panel: #ffffff;
+  --panel-soft: #f1f1f5;
+  --border: #dedee5;
+  --text: #181820;
+  --muted: #666673;
+  background: #f4f4f7;
+}
+
+body.light-theme #workspace,
+body.light-theme .chat-main,
+body.light-theme .settings-panel {
+  background: #f4f4f7;
+}
+
+body.light-theme .chat-header,
+body.light-theme .side-menu,
+body.light-theme .chat-input-area {
+  background: #fff;
+  border-color: var(--border);
+}
+
+body.light-theme .chat-input-row {
+  background: #fff;
+  border-color: var(--border);
+}
+
+body.light-theme .chat-answer {
+  color: #34343d;
+}
+
+body.light-theme .settings-section,
+body.light-theme .card {
+  background: #fff;
+  border-color: var(--border);
+}
+
+body.light-theme .settings-section h2,
+body.light-theme .chat-header h2 {
+  color: #181820;
+}
+
+body.light-theme .menu-item {
+  color: #44444e;
+}
+
+body.light-theme .menu-item.active {
+  color: #19191f;
+  background: #ffe9ec;
+  border-color: #ffc1c8;
+}
+
+body.light-theme input,
+body.light-theme textarea,
+body.light-theme .settings-row select {
+  background: #fff;
+  color: #181820;
+  border-color: #d5d5de;
+}
 </style>
 </head>
 
@@ -646,7 +1018,7 @@ body.light-theme .welcome-setting-select {
       <button class="menu-item" onclick="selectTool('Settings', this)" data-i18n="settings">Settings</button>
 
       <div class="menu-spacer"></div>
-      <button class="menu-item" onclick="logout() data-i18n="logout">Log out</button>
+      <button class="menu-item" onclick="logout()" data-i18n="logout">Log out</button>
     </aside>
 
     <section class="chat-main">

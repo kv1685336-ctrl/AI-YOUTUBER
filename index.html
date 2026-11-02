@@ -916,6 +916,44 @@ body.light-theme .menu-item *,
 body.light-theme .settings-btn * {
   color: inherit !important;
 }
+/* Fix button contrast in light mode */
+body.light-theme button.secondary,
+body.light-theme button.icon-btn,
+body.light-theme button.menu-item,
+body.light-theme button.login-btn {
+  background: #ffffff !important;
+  color: #181820 !important;
+  border: 1px solid #d5d5de !important;
+}
+
+/* Hover and selected menu buttons */
+body.light-theme button.secondary:hover,
+body.light-theme button.icon-btn:hover,
+body.light-theme button.menu-item:hover {
+  background: #f0f0f5 !important;
+}
+
+body.light-theme button.menu-item.active {
+  background: #ffe9ec !important;
+  color: #181820 !important;
+  border-color: #ffc1c8 !important;
+}
+
+/* Keep main actions red with readable white text */
+body.light-theme button.primary {
+  background: #c91f35 !important;
+  color: #ffffff !important;
+  border-color: #c91f35 !important;
+}
+
+/* Ensure text inside buttons follows the button color */
+body.light-theme button.secondary *,
+body.light-theme button.icon-btn *,
+body.light-theme button.menu-item *,
+body.light-theme button.login-btn *,
+body.light-theme button.primary * {
+  color: inherit !important;
+}
 </style>
 </head>
 

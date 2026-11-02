@@ -885,6 +885,37 @@ body.light-theme .settings-row select {
   color: #181820;
   border-color: #d5d5de;
 }
+/* Light mode: keep buttons readable */
+body.light-theme .logout-btn,
+body.light-theme .new-chat-btn,
+body.light-theme .stop-audio-btn,
+body.light-theme .chat-action-btn,
+body.light-theme .menu-item,
+body.light-theme .settings-btn,
+body.light-theme .back-btn,
+body.light-theme .login-btn,
+body.light-theme .get-started-btn {
+  background: #ffffff !important;
+  color: #171717 !important;
+  border-color: #d5d5d5 !important;
+}
+
+/* Keep primary actions distinct */
+body.light-theme .login-btn,
+body.light-theme .get-started-btn,
+body.light-theme .new-chat-btn {
+  background: #b91c1c !important;
+  color: #ffffff !important;
+  border-color: #b91c1c !important;
+}
+
+/* Icons and nested text should follow the button text color */
+body.light-theme button,
+body.light-theme button *,
+body.light-theme .menu-item *,
+body.light-theme .settings-btn * {
+  color: inherit !important;
+}
 </style>
 </head>
 

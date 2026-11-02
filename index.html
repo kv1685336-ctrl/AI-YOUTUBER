@@ -639,14 +639,14 @@ body.light-theme .welcome-setting-select {
   <div class="chat-layout">
     <aside id="sideMenu" class="side-menu">
       <button class="menu-item active" onclick="selectTool('AI YOUTUBER (AI)', this)">AI YOUTUBER (AI)</button>
-      <button class="menu-item" onclick="selectTool('Editor', this)">Editor</button>
-      <button class="menu-item" onclick="selectTool('Video Generator', this)">Video Generator</button>
-      <button class="menu-item" onclick="selectTool('Audio Generator', this)">Audio Generator</button>
-      <button class="menu-item" onclick="selectTool('Chat History', this)">Chat History</button>
-      <button class="menu-item" onclick="selectTool('Settings', this)">Settings</button>
+      <button class="menu-item" onclick="selectTool('Editor', this)" datai18n="editor">Editor</button>
+      <button class="menu-item" onclick="selectTool('Video Generator', this)" datai18n="videoGenerator">Video Generator</button>
+      <button class="menu-item" onclick="selectTool('Audio Generator', this)" datai18n="audioGenerator">Audio Generator</button>
+      <button class="menu-item" onclick="selectTool('Chat History', this)" datai18n="chatHistory">Chat History</button>
+      <button class="menu-item" onclick="selectTool('Settings', this)" datai18n="settings">Settings</button>
 
       <div class="menu-spacer"></div>
-      <button class="menu-item" onclick="logout()">Log out</button>
+      <button class="menu-item" onclick="logout() datai18n="logout">Log out</button>
     </aside>
 
     <section class="chat-main">

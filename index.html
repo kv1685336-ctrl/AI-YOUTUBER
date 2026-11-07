@@ -3500,25 +3500,16 @@ async function checkSession() {
   if (data.session) {
     showDashboard(data.session.user);
   } else {
+    const preferences = JSON.parse(
+      localStorage.getItem("welcomePreferences") || "{}"
+    );
+
+    applyInterfaceLanguage(preferences.language || "English");
+    applyTheme(preferences.theme || "dark");
     showPage("welcome");
   }
+}
 
-  const accountSettings = settingsUserId
-  ? JSON.parse(
-      localStorage.getItem(settingsStorageKey()) || "{}"
-    )
-  : {};
-
-const welcomePreferences = JSON.parse(
-  localStorage.getItem("welcomePreferences") || "{}"
-);
-
-applyInterfaceLanguage(
-  accountSettings.language ||
-  localStorage.getItem("activeInterfaceLanguage") ||
-  welcomePreferences.language ||
-  "English"
-);
 supabaseClient.auth.onAuthStateChange((event, session) => {
   if (event === "SIGNED_IN" && session) {
     showDashboard(session.user);
@@ -3526,6 +3517,7 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 });
 
 checkSession();
+
 function openLegal() {
   pageBeforeLegal = document.getElementById("legal").classList.contains("hidden")
     ? getCurrentPage()

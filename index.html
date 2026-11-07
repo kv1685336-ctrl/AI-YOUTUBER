@@ -1788,124 +1788,341 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_KEY
 );
 
+
 const interfaceTranslations = {
   English: {
+    // Navigation
     settings: "Settings",
     login: "Log in",
     logout: "Log out",
     getStarted: "Get Started",
-    tagline: "YOUR CHANNEL. YOUR AI CREATOR.",
-    heroTitle: "Your YouTube channel,",
-    heroDescription: "Research, create, publish and improve. Let your AI creator manage your content journey while you stay in control.",
-    createAccount: "Create your account",
-    welcomeBack: "Welcome back",
-    email: "Email address",
-    password: "Password",
-    createAccountButton: "Create account",
-    alreadyAccount: "Already have an account?",
-    newHere: "New here?",
     newChat: "New Chat",
-    aiAssistant: "Hi! I'm your AI YOUTUBER assistant. What would you like to create?",
+    home: "Home",
+    back: "Back",
     editor: "Editor",
     videoGenerator: "Video Generator",
     audioGenerator: "Audio Generator",
     chatHistory: "Chat History",
-    aiMenu: "AI YOUTUBER (AI)",
-    preferences: "Preferences",
+    legalPrivacy: "Legal & Privacy",
+
+    // Welcome page
+    tagline: "YOUR CHANNEL. YOUR AI CREATOR.",
+    welcomeTitle: "Your YouTube channel,",
+    welcomeSubtitle: "powered by AI.",
+    welcomeDescription: "Research, create, publish and improve. Let your AI creator manage your content journey while you stay in control.",
+
+    // Welcome settings
+    appLanguage: "App language",
+    theme: "Theme",
+    dark: "Dark",
+    light: "Light",
+    savePreferences: "Save preferences",
+    mainSettingsNotice: "Main settings will be available after signing in.",
+
+    // Account
+    createAccountTitle: "Create your account",
+    welcomeBack: "Welcome back",
+    emailAddress: "Email address",
+    password: "Password",
+    enterEmail: "Enter your email",
+    enterPassword: "Enter your password",
+    passwordLength: "At least 8 characters",
+    createAccount: "Create account",
+    alreadyAccount: "Already have an account?",
+    newHere: "New here?",
+
+    // Chat interface
+    chatGreeting: "Hi! I’m your AI YOUTUBE assistant. What would you like to ask?",
+    chatPlaceholder: "Message AI YOUTUBER…",
+    uploadImage: "Upload image",
+    voiceInput: "Voice input",
+    mute: "Mute",
+    unmute: "Unmute",
+    send: "Send",
+
+    // Settings page
+    managePreferences: "Manage your account and AI YOUTUBER preferences.",
     profile: "Profile",
+    loadingAccount: "Loading account...",
+    preferences: "Preferences",
     defaultLanguage: "Default language",
     chooseLanguage: "Choose your preferred language.",
-    theme: "Theme",
     chooseTheme: "Choose how the app looks.",
     aiPreferences: "AI Preferences",
     videoLanguage: "Video language",
+    preferredVideoLanguage: "Preferred language for video content.",
     contentStyle: "Content style",
+    preferredContentStyle: "Preferred style for generated content.",
     usagePlan: "Usage & Plan",
-    privacy: "Privacy & Data",
-    help: "Help & Support",
-    legal: "Legal & Privacy",
-    savePreferences: "Save preferences",
-    back: "Back",
-    messagePlaceholder: "Message AI YOUTUBER…",
-    languageSaved: "Preferences saved on this device."
+    planNotice: "Your plan and usage information will appear here when subscriptions are connected.",
+    privacyData: "Privacy & Data",
+    privacyNotice: "Chat history, data export, and account deletion controls will be added when those features are connected.",
+    helpSupport: "Help & Support",
+    supportNotice: "Support options will be available when the app is ready for users.",
+    legal: "Legal",
+    prototypeNotice: "This is a prototype. Preference controls are not saved yet.",
+    preferencesSaved: "Preferences saved on this device.",
+
+    // Content styles
+    informative: "Informative",
+    educational: "Educational",
+    entertaining: "Entertaining",
+    cinematic: "Cinematic",
+    aiChoice: "AI's Choice",
+
+    // Chat history
+    yourChatHistory: "Your Chat History",
+    loadingChats: "Loading your chats...",
+    noSavedChats: "No saved chats yet. Start a chat to save it.",
+    rename: "Rename",
+    delete: "Delete",
+    newChatName: "Enter a new chat name:",
+    emptyChatName: "Chat name cannot be empty.",
+    deleteChatConfirm: "Delete this chat? This cannot be undone.",
+
+    // Editor
+    videoEditor: "Video Editor",
+    editorDescription: "Upload a video, then choose the section to preview.",
+    startTime: "Start time:",
+    endTime: "End time:",
+    previewTrim: "Preview trimmed section",
+    chooseVideo: "Please choose a video file.",
+    loadingVideo: "Loading video…",
+    previewing: "Previewing selected section…",
+    previewFinished: "Preview finished.",
+    videoLength: "Video length:",
+
+    // Audio generator
+    enterScript: "Enter a script and listen to it spoken aloud.",
+    narrationPlaceholder: "Type or paste your narration here...",
+    voice: "Voice",
+    defaultVoice: "Default voice",
+    playAudio: "Play audio",
+    stop: "Stop",
+    enterTextFirst: "Please enter some text first.",
+    speechUnsupported: "Text-to-speech is not supported in this browser.",
+    playingAudio: "Playing audio...",
+
+    // General messages
+    creatingAccount: "Creating your account...",
+    accountCreated: "Account created!",
+    verifyEmail: "Account created. Please check your email and verify your account before logging in.",
+    loggingIn: "Logging in...",
+    accountUnavailable: "Not available",
+    couldNotLoadAccount: "Could not load account",
+    voiceComingSoon: "Voice input will be added in a later step.",
+    featureComingSoon: "This feature will be connected in a later step.",
+    aiRequestFailed: "The AI request failed.",
+    requestFailed: "Request failed.",
+    couldNotOpenChat: "Could not open this chat:",
+    couldNotRenameChat: "Could not rename chat:",
+    couldNotDeleteChat: "Could not delete chat:",
+    saveChatFailed: "The AI replied, but the chat could not be saved:",
+
+    // Legal page
+    lastUpdated: "Last updated:",
+    prototype: "Prototype.",
+    prototypeDescription: "AI YOUTUBER is currently a prototype. Features may be incomplete, and generated content may be inaccurate. Please review all content before using or publishing it.",
+    prototypeFeatures: "What the prototype does",
+    prototypeFeaturesDescription: "AI YOUTUBER is intended to help users plan and create YouTube content. The current prototype includes account access and a chat interface. Some displayed features are not yet connected or available.",
+    accountData: "Information and account data",
+    accountDataDescription: "The prototype uses Supabase for account authentication. If you create an account, your email address and authentication data are processed by Supabase to provide that service. Do not enter passwords, private information, or confidential material into the chat.",
+    generatedContent: "AI-generated content",
+    generatedContentDescription: "AI-generated ideas, text, audio, or other content may be incorrect, incomplete, or unsuitable. You are responsible for checking content, permissions, and accuracy before publishing.",
+    thirdPartyServices: "YouTube and third-party services",
+    thirdPartyDescription: "YouTube features and integrations are not currently connected in this prototype. If they are added, their use will be subject to applicable third-party terms and policies.",
+    privacyControls: "Privacy and data controls",
+    privacyDescription: "This prototype does not yet provide a complete in-app process for exporting or deleting all account data. Avoid using it for sensitive information. Before public launch, the service needs a reviewed privacy policy and a clear way to request data access or deletion.",
+    contact: "Contact",
+    contactDescription: "For questions about this prototype, contact the project owner through the contact method provided when the service is publicly launched."
   },
 
   Tamil: {
+    // Navigation
     settings: "அமைப்புகள்",
     login: "உள்நுழை",
     logout: "வெளியேறு",
     getStarted: "தொடங்குங்கள்",
-    tagline: "உங்கள் சேனல். உங்கள் AI படைப்பாளர்.",
-    heroTitle: "உங்கள் YouTube சேனல்,",
-    heroDescription: "ஆராயுங்கள், உருவாக்குங்கள், வெளியிடுங்கள், மேம்படுத்துங்கள். உங்கள் கட்டுப்பாட்டில் இருக்கும்போதே உங்கள் AI படைப்பாளர் உள்ளடக்கப் பணிகளை நிர்வகிக்கட்டும்.",
-    createAccount: "உங்கள் கணக்கை உருவாக்குங்கள்",
-    welcomeBack: "மீண்டும் வரவேற்கிறோம்",
-    email: "மின்னஞ்சல் முகவரி",
-    password: "கடவுச்சொல்",
-    createAccountButton: "கணக்கை உருவாக்கு",
-    alreadyAccount: "ஏற்கனவே கணக்கு உள்ளதா?",
-    newHere: "புதியவரா?",
     newChat: "புதிய உரையாடல்",
-    aiAssistant: "வணக்கம்! நான் உங்கள் AI YOUTUBER உதவியாளர். நீங்கள் எதை உருவாக்க விரும்புகிறீர்கள்?",
-    editor: "வீடியோ எடிட்டர்",
+    home: "முகப்பு",
+    back: "பின்னால்",
+    editor: "திருத்தி",
     videoGenerator: "வீடியோ உருவாக்கி",
     audioGenerator: "ஒலி உருவாக்கி",
     chatHistory: "உரையாடல் வரலாறு",
-    aiMenu: "AI YOUTUBER (AI)",
-    preferences: "விருப்ப அமைப்புகள்",
+    legalPrivacy: "சட்டம் மற்றும் தனியுரிமை",
+
+    // Welcome page
+    tagline: "உங்கள் சேனல். உங்கள் AI படைப்பாளர்.",
+    welcomeTitle: "உங்கள் YouTube சேனல்,",
+    welcomeSubtitle: "AI மூலம் இயக்கப்படுகிறது.",
+    welcomeDescription: "ஆராயுங்கள், உருவாக்குங்கள், வெளியிடுங்கள், மேம்படுத்துங்கள். உங்கள் கட்டுப்பாட்டில் இருக்கும்போதே உங்கள் AI படைப்பாளர் உங்கள் உள்ளடக்கப் பயணத்தை நிர்வகிக்கட்டும்.",
+
+    // Welcome settings
+    appLanguage: "செயலி மொழி",
+    theme: "தோற்றம்",
+    dark: "இருண்ட பயன்முறை",
+    light: "ஒளி பயன்முறை",
+    savePreferences: "விருப்பங்களைச் சேமி",
+    mainSettingsNotice: "உள்நுழைந்த பிறகு முக்கிய அமைப்புகள் கிடைக்கும்.",
+
+    // Account
+    createAccountTitle: "உங்கள் கணக்கை உருவாக்குங்கள்",
+    welcomeBack: "மீண்டும் வரவேற்கிறோம்",
+    emailAddress: "மின்னஞ்சல் முகவரி",
+    password: "கடவுச்சொல்",
+    enterEmail: "உங்கள் மின்னஞ்சலை உள்ளிடுங்கள்",
+    enterPassword: "உங்கள் கடவுச்சொல்லை உள்ளிடுங்கள்",
+    passwordLength: "குறைந்தது 8 எழுத்துகள்",
+    createAccount: "கணக்கை உருவாக்கு",
+    alreadyAccount: "ஏற்கனவே கணக்கு உள்ளதா?",
+    newHere: "இங்கு புதியவரா?",
+
+    // Chat interface
+    chatGreeting: "வணக்கம்! நான் உங்கள் AI YOUTUBER உதவியாளர். நீங்கள் என்ன கேட்க விரும்புகிறீர்கள்?",
+    chatPlaceholder: "AI YOUTUBER-க்கு செய்தி அனுப்புங்கள்…",
+    uploadImage: "படத்தைப் பதிவேற்றுங்கள்",
+    voiceInput: "குரல் உள்ளீடு",
+    mute: "ஒலியை நிறுத்து",
+    unmute: "ஒலியை இயக்கு",
+    send: "அனுப்பு",
+
+    // Settings page
+    managePreferences: "உங்கள் கணக்கு மற்றும் AI YOUTUBER விருப்பங்களை நிர்வகிக்கவும்.",
     profile: "சுயவிவரம்",
+    loadingAccount: "கணக்கு ஏற்றப்படுகிறது...",
+    preferences: "விருப்பங்கள்",
     defaultLanguage: "இயல்புநிலை மொழி",
     chooseLanguage: "உங்களுக்கு விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்.",
-    theme: "தோற்றம்",
     chooseTheme: "செயலியின் தோற்றத்தைத் தேர்ந்தெடுக்கவும்.",
     aiPreferences: "AI விருப்பங்கள்",
     videoLanguage: "வீடியோ மொழி",
-    contentStyle: "உள்ளடக்க நடை",
+    preferredVideoLanguage: "வீடியோ உள்ளடக்கத்திற்கான விருப்பமான மொழி.",
+    contentStyle: "உள்ளடக்க பாணி",
+    preferredContentStyle: "உருவாக்கப்படும் உள்ளடக்கத்திற்கான விருப்பமான பாணி.",
     usagePlan: "பயன்பாடு மற்றும் திட்டம்",
-    privacy: "தனியுரிமை மற்றும் தரவு",
-    help: "உதவி மற்றும் ஆதரவு",
-    legal: "சட்டம் மற்றும் தனியுரிமை",
-    savePreferences: "விருப்பங்களைச் சேமி",
-    back: "பின்னால்",
-    messagePlaceholder: "AI YOUTUBER-க்கு செய்தி அனுப்புங்கள்…",
-    languageSaved: "விருப்பங்கள் இந்தச் சாதனத்தில் சேமிக்கப்பட்டன."
+    planNotice: "சந்தா வசதி இணைக்கப்பட்டதும் உங்கள் திட்டம் மற்றும் பயன்பாட்டு விவரங்கள் இங்கே தோன்றும்.",
+    privacyData: "தனியுரிமை மற்றும் தரவு",
+    privacyNotice: "அரட்டை வரலாறு, தரவு ஏற்றுமதி மற்றும் கணக்கு நீக்குதல் வசதிகள் பின்னர் சேர்க்கப்படும்.",
+    helpSupport: "உதவி மற்றும் ஆதரவு",
+    supportNotice: "செயலி பயனர்களுக்குத் தயாரானதும் ஆதரவு வசதிகள் கிடைக்கும்.",
+    legal: "சட்டம்",
+    prototypeNotice: "இது ஒரு மாதிரி செயலி. விருப்பங்கள் இன்னும் சேமிக்கப்படவில்லை.",
+    preferencesSaved: "விருப்பங்கள் இந்தச் சாதனத்தில் சேமிக்கப்பட்டன.",
+
+    // Content styles
+    informative: "தகவல் சார்ந்தது",
+    educational: "கல்வி சார்ந்தது",
+    entertaining: "பொழுதுபோக்கு",
+    cinematic: "திரைப்பட பாணி",
+    aiChoice: "AI-யின் தேர்வு",
+
+    // Chat history
+    yourChatHistory: "உங்கள் உரையாடல் வரலாறு",
+    loadingChats: "உங்கள் உரையாடல்கள் ஏற்றப்படுகின்றன...",
+    noSavedChats: "சேமிக்கப்பட்ட உரையாடல்கள் எதுவும் இல்லை. புதிய உரையாடலைத் தொடங்குங்கள்.",
+    rename: "பெயரை மாற்று",
+    delete: "நீக்கு",
+    newChatName: "புதிய உரையாடல் பெயரை உள்ளிடுங்கள்:",
+    emptyChatName: "உரையாடல் பெயர் காலியாக இருக்கக்கூடாது.",
+    deleteChatConfirm: "இந்த உரையாடலை நீக்கவா? இதை மீட்டெடுக்க முடியாது.",
+
+    // Editor
+    videoEditor: "வீடியோ திருத்தி",
+    editorDescription: "ஒரு வீடியோவைப் பதிவேற்றி, முன்னோட்டம் பார்க்க வேண்டிய பகுதியைத் தேர்ந்தெடுக்கவும்.",
+    startTime: "தொடக்க நேரம்:",
+    endTime: "முடிவு நேரம்:",
+    previewTrim: "தேர்ந்தெடுத்த பகுதியைப் பார்",
+    chooseVideo: "தயவுசெய்து ஒரு வீடியோ கோப்பைத் தேர்ந்தெடுக்கவும்.",
+    loadingVideo: "வீடியோ ஏற்றப்படுகிறது…",
+    previewing: "தேர்ந்தெடுத்த பகுதி முன்னோட்டம் காட்டப்படுகிறது…",
+    previewFinished: "முன்னோட்டம் முடிந்தது.",
+    videoLength: "வீடியோ நீளம்:",
+
+    // Audio generator
+    enterScript: "ஒரு உரையை உள்ளிட்டு, அது குரலில் வாசிக்கப்படுவதைக் கேளுங்கள்.",
+    narrationPlaceholder: "உங்கள் குரல்வழி உரையை இங்கே தட்டச்சு செய்யவும் அல்லது ஒட்டவும்...",
+    voice: "குரல்",
+    defaultVoice: "இயல்புநிலை குரல்",
+    playAudio: "ஒலியை இயக்கு",
+    stop: "நிறுத்து",
+    enterTextFirst: "முதலில் சில உரைகளை உள்ளிடுங்கள்.",
+    speechUnsupported: "இந்த உலாவியில் உரையை குரலாக மாற்றும் வசதி இல்லை.",
+    playingAudio: "ஒலி இயக்கப்படுகிறது...",
+
+    // General messages
+    creatingAccount: "உங்கள் கணக்கு உருவாக்கப்படுகிறது...",
+    accountCreated: "கணக்கு உருவாக்கப்பட்டது!",
+    verifyEmail: "கணக்கு உருவாக்கப்பட்டது. உள்நுழைவதற்கு முன் உங்கள் மின்னஞ்சலைச் சரிபார்க்கவும்.",
+    loggingIn: "உள்நுழைகிறது...",
+    accountUnavailable: "கிடைக்கவில்லை",
+    couldNotLoadAccount: "கணக்கை ஏற்ற முடியவில்லை",
+    voiceComingSoon: "குரல் உள்ளீடு பின்னர் சேர்க்கப்படும்.",
+    featureComingSoon: "இந்த வசதி பின்னர் இணைக்கப்படும்.",
+    aiRequestFailed: "AI கோரிக்கை தோல்வியடைந்தது.",
+    requestFailed: "கோரிக்கை தோல்வியடைந்தது.",
+    couldNotOpenChat: "இந்த உரையாடலைத் திறக்க முடியவில்லை:",
+    couldNotRenameChat: "உரையாடலின் பெயரை மாற்ற முடியவில்லை:",
+    couldNotDeleteChat: "உரையாடலை நீக்க முடியவில்லை:",
+    saveChatFailed: "AI பதிலளித்தது. ஆனால் உரையாடலைச் சேமிக்க முடியவில்லை:",
+
+    // Legal page
+    lastUpdated: "கடைசியாகப் புதுப்பிக்கப்பட்டது:",
+    prototype: "மாதிரி.",
+    prototypeDescription: "AI YOUTUBER தற்போது ஒரு மாதிரி செயலியாக உள்ளது. சில வசதிகள் முழுமையடையாமல் இருக்கலாம்; உருவாக்கப்படும் உள்ளடக்கங்களில் தவறுகள் இருக்கலாம். பயன்படுத்துவதற்கு அல்லது வெளியிடுவதற்கு முன் அனைத்து உள்ளடக்கங்களையும் சரிபார்க்கவும்.",
+    prototypeFeatures: "இந்த மாதிரி செயலியின் செயல்பாடுகள்",
+    prototypeFeaturesDescription: "YouTube உள்ளடக்கத்தைத் திட்டமிடவும் உருவாக்கவும் பயனர்களுக்கு உதவுவதே AI YOUTUBER-ன் நோக்கம். தற்போதைய மாதிரியில் கணக்கு அணுகலும் உரையாடல் வசதியும் உள்ளன. காட்டப்படும் சில வசதிகள் இன்னும் இணைக்கப்படவில்லை.",
+    accountData: "கணக்கு மற்றும் தகவல்கள்",
+    accountDataDescription: "கணக்கு அங்கீகாரத்திற்காக இந்த மாதிரி செயலி Supabase-ஐப் பயன்படுத்துகிறது. கணக்கை உருவாக்கும்போது, உங்கள் மின்னஞ்சல் முகவரி மற்றும் அங்கீகாரத் தரவுகள் Supabase மூலம் செயலாக்கப்படும். கடவுச்சொற்கள், தனிப்பட்ட தகவல்கள் அல்லது ரகசியத் தகவல்களை உரையாடலில் உள்ளிட வேண்டாம்.",
+    generatedContent: "AI உருவாக்கும் உள்ளடக்கம்",
+    generatedContentDescription: "AI உருவாக்கும் யோசனைகள், உரைகள், ஒலி அல்லது பிற உள்ளடக்கங்களில் தவறுகள் இருக்கலாம். வெளியிடுவதற்கு முன் உள்ளடக்கம், அனுமதிகள் மற்றும் துல்லியத்தைச் சரிபார்ப்பது உங்கள் பொறுப்பு.",
+    thirdPartyServices: "YouTube மற்றும் மூன்றாம் தரப்பு சேவைகள்",
+    thirdPartyDescription: "இந்த மாதிரி செயலியில் YouTube வசதிகளும் இணைப்புகளும் தற்போது இணைக்கப்படவில்லை. அவை சேர்க்கப்பட்டால், தொடர்புடைய மூன்றாம் தரப்பு விதிமுறைகள் மற்றும் கொள்கைகள் பொருந்தும்.",
+    privacyControls: "தனியுரிமை மற்றும் தரவுக் கட்டுப்பாடுகள்",
+    privacyDescription: "அனைத்து கணக்குத் தரவுகளையும் ஏற்றுமதி செய்ய அல்லது நீக்குவதற்கான முழுமையான வசதி இந்த மாதிரி செயலியில் இன்னும் இல்லை. முக்கியமான தகவல்களைப் பயன்படுத்த வேண்டாம். பொதுமக்கள் பயன்பாட்டிற்கு வெளியிடுவதற்கு முன், தனியுரிமைக் கொள்கையும் தரவை அணுக அல்லது நீக்கக் கோரும் முறையும் உருவாக்கப்பட வேண்டும்.",
+    contact: "தொடர்பு",
+    contactDescription: "இந்த மாதிரி செயலி குறித்த கேள்விகளுக்கு, சேவை பொதுமக்களுக்கு வெளியிடப்படும்போது வழங்கப்படும் தொடர்பு வழியைப் பயன்படுத்தவும்."
   }
 };
 
-function translate(key) {
-  const language =
-    localStorage.getItem("activeInterfaceLanguage") || "English";
+let currentInterfaceLanguage = "English";
 
-  return interfaceTranslations[language]?.[key]
+function translate(key) {
+  return interfaceTranslations[currentInterfaceLanguage]?.[key]
     || interfaceTranslations.English[key]
     || key;
 }
 
 function applyInterfaceLanguage(language) {
-  const words =
-    interfaceTranslations[language] || interfaceTranslations.English;
+  currentInterfaceLanguage =
+    interfaceTranslations[language] ? language : "English";
 
-  localStorage.setItem("activeInterfaceLanguage", language);
+  const words = interfaceTranslations[currentInterfaceLanguage];
 
   document.querySelectorAll("[data-i18n]").forEach(element => {
     const key = element.dataset.i18n;
-
-    if (words[key]) {
-      element.textContent = words[key];
-    }
+    if (words[key]) element.textContent = words[key];
   });
 
   document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
     const key = element.dataset.i18nPlaceholder;
+    if (words[key]) element.placeholder = words[key];
+  });
 
-    if (words[key]) {
-      element.placeholder = words[key];
-    }
+  document.querySelectorAll("[data-i18n-aria]").forEach(element => {
+    const key = element.dataset.i18nAria;
+    if (words[key]) element.setAttribute("aria-label", words[key]);
   });
 
   document.documentElement.lang =
-    language === "Tamil" ? "ta" : "en";
+    currentInterfaceLanguage === "Tamil" ? "ta" : "en";
+
+  localStorage.setItem(
+    "activeInterfaceLanguage",
+    currentInterfaceLanguage
+  );
 }
+
 
 let currentChatId = null;
 let currentMessages = [];

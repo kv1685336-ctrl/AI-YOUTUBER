@@ -1606,7 +1606,7 @@ body.light-theme .primary {
       <div class="chat-input-area">
         <div class="chat-input-row">
           <button class="icon-btn" onclick="document.getElementById('uploadImage').click()" aria-label="Upload image">＋</button>
-          <input id="chatInput" type="text" data-i18n-placeholder="Message AI YOUTUBER…">
+          <input id="chatInput" type="text" data-i18n-placeholder="chatPlaceholder" placeholder="Message AI YOUTUBER…">
           <input id="uploadImage" type="file" accept="image/*" class="hidden">
           <button class="icon-btn" onclick="startVoice()" aria-label="Voice input">🎙</button>
           <button class="primary" onclick="sendMessage()">➤</button>
@@ -2652,6 +2652,13 @@ function loadSettings() {
 
   try {
     const saved = JSON.parse(localStorage.getItem(key) || "{}");
+    applyInterfaceLanguage(
+      
+      
+      saved.language ||
+      localStorage.getItem("activeInterfaceLanguage") ||
+      "English"
+    );
 
     document.getElementById("settingsLanguage").value =
       saved.language || "English";

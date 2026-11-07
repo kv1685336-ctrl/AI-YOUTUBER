@@ -2663,10 +2663,11 @@ function loadSettings() {
       saved.style || "Informative";
 
     applyTheme(saved.theme || "dark");
+    applyInterfaceLanguage(saved.language || "English");
   } catch {
     applyTheme("dark");
   }
-  applyInterfaceLanguage(saved.language || "English");
+  
 }
 
 function saveSettings() {
@@ -2744,9 +2745,13 @@ async function checkSession() {
   } else {
     showPage("welcome");
   }
-  applyInterfaceLanguage(saved.language || "English");
-}
 
+  const preferences = JSON.parse(
+    localStorage.getItem("welcomePreferences") || "{}"
+  );
+
+  applyInterfaceLanguage(preferences.language || "English");
+}
 supabaseClient.auth.onAuthStateChange((event, session) => {
   if (event === "SIGNED_IN" && session) {
     showDashboard(session.user);

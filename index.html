@@ -1465,9 +1465,9 @@ body.light-theme .primary {
 <header class="navbar">
   <div class="logo">AI <span>YOUTUBER</span></div>
   <div style="display:flex; gap:10px; align-items:center;">
-    <button id="welcomeSettingsButton" class="secondary" onclick="openWelcomeSettings()">Settings</button>
+    <button id="welcomeSettingsButton" class="secondary" onclick="openWelcomeSettings()" data-i18n="settings">Settings</button>
  
-  <button id="navLogin" class="login-btn" onclick="showPage('login')">
+  <button id="navLogin" class="login-btn" onclick="showPage('login')" data-i18n="login">
     Log in
   </button>
   <button id="navLogout" class="login-btn hidden" onclick="logout()">
@@ -1491,8 +1491,8 @@ body.light-theme .primary {
   </p>
 
   <div class="buttons">
-    <button class="primary" onclick="showPage('signup')">Get Started</button>
-    <button class="secondary" onclick="showPage('login')">Log in</button>
+    <button class="primary" onclick="showPage('signup')" data-i18n="getStarted">Get Started</button>
+    <button class="secondary" onclick="showPage('login')" data-i18n="login">Log in</button>
   </div>
 </section>
 
@@ -1504,8 +1504,8 @@ body.light-theme .primary {
     <label for="welcomeLanguage">App language</label>
     <select id="welcomeLanguage" class="welcome-setting-select">
       <option>English</option>
-      <option>Tamil</option>
-      <option>Hindi</option>
+      <option>தமிழ்</option>
+      
     </select>
 
     <label for="welcomeTheme">Theme</label>
@@ -1606,7 +1606,7 @@ body.light-theme .primary {
       <div class="chat-input-area">
         <div class="chat-input-row">
           <button class="icon-btn" onclick="document.getElementById('uploadImage').click()" aria-label="Upload image">＋</button>
-          <input id="chatInput" type="text" placeholder="Message AI YOUTUBER…">
+          <input id="chatInput" type="text" data-i18n-placeholder="Message AI YOUTUBER…">
           <input id="uploadImage" type="file" accept="image/*" class="hidden">
           <button class="icon-btn" onclick="startVoice()" aria-label="Voice input">🎙</button>
           <button class="primary" onclick="sendMessage()">➤</button>
@@ -1787,64 +1787,126 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+
 const interfaceTranslations = {
   English: {
-    appTitle: "AI YOUTUBER",
-    newChat: "New chat",
     settings: "Settings",
-    history: "History",
+    login: "Log in",
+    logout: "Log out",
+    getStarted: "Get Started",
+    tagline: "YOUR CHANNEL. YOUR AI CREATOR.",
+    heroTitle: "Your YouTube channel,",
+    heroDescription: "Research, create, publish and improve. Let your AI creator manage your content journey while you stay in control.",
+    createAccount: "Create your account",
+    welcomeBack: "Welcome back",
+    email: "Email address",
+    password: "Password",
+    createAccountButton: "Create account",
+    alreadyAccount: "Already have an account?",
+    newHere: "New here?",
+    newChat: "New Chat",
+    aiAssistant: "Hi! I'm your AI YOUTUBER assistant. What would you like to create?",
     editor: "Editor",
     videoGenerator: "Video Generator",
     audioGenerator: "Audio Generator",
-    logout: "Log out",
-    send: "Send",
-    language: "Interface language",
-    saveSettings: "Save settings"
+    chatHistory: "Chat History",
+    aiMenu: "AI YOUTUBER (AI)",
+    preferences: "Preferences",
+    profile: "Profile",
+    defaultLanguage: "Default language",
+    chooseLanguage: "Choose your preferred language.",
+    theme: "Theme",
+    chooseTheme: "Choose how the app looks.",
+    aiPreferences: "AI Preferences",
+    videoLanguage: "Video language",
+    contentStyle: "Content style",
+    usagePlan: "Usage & Plan",
+    privacy: "Privacy & Data",
+    help: "Help & Support",
+    legal: "Legal & Privacy",
+    savePreferences: "Save preferences",
+    back: "Back",
+    messagePlaceholder: "Message AI YOUTUBER…",
+    languageSaved: "Preferences saved on this device."
   },
 
   Tamil: {
-    appTitle: "AI யூடியூபர்",
-    newChat: "புதிய உரையாடல்",
     settings: "அமைப்புகள்",
-    history: "வரலாறு",
-    editor: "எடிட்டர்",
+    login: "உள்நுழை",
+    logout: "வெளியேறு",
+    getStarted: "தொடங்குங்கள்",
+    tagline: "உங்கள் சேனல். உங்கள் AI படைப்பாளர்.",
+    heroTitle: "உங்கள் YouTube சேனல்,",
+    heroDescription: "ஆராயுங்கள், உருவாக்குங்கள், வெளியிடுங்கள், மேம்படுத்துங்கள். உங்கள் கட்டுப்பாட்டில் இருக்கும்போதே உங்கள் AI படைப்பாளர் உள்ளடக்கப் பணிகளை நிர்வகிக்கட்டும்.",
+    createAccount: "உங்கள் கணக்கை உருவாக்குங்கள்",
+    welcomeBack: "மீண்டும் வரவேற்கிறோம்",
+    email: "மின்னஞ்சல் முகவரி",
+    password: "கடவுச்சொல்",
+    createAccountButton: "கணக்கை உருவாக்கு",
+    alreadyAccount: "ஏற்கனவே கணக்கு உள்ளதா?",
+    newHere: "புதியவரா?",
+    newChat: "புதிய உரையாடல்",
+    aiAssistant: "வணக்கம்! நான் உங்கள் AI YOUTUBER உதவியாளர். நீங்கள் எதை உருவாக்க விரும்புகிறீர்கள்?",
+    editor: "வீடியோ எடிட்டர்",
     videoGenerator: "வீடியோ உருவாக்கி",
     audioGenerator: "ஒலி உருவாக்கி",
-    logout: "வெளியேறு",
-    send: "அனுப்பு",
-    language: "இடைமுக மொழி",
-    saveSettings: "அமைப்புகளைச் சேமி"
-  },
-
-  Hindi: {
-    appTitle: "AI यूट्यूबर",
-    newChat: "नई चैट",
-    settings: "सेटिंग्स",
-    history: "इतिहास",
-    editor: "एडिटर",
-    videoGenerator: "वीडियो जनरेटर",
-    audioGenerator: "ऑडियो जनरेटर",
-    logout: "लॉग आउट",
-    send: "भेजें",
-    language: "इंटरफ़ेस भाषा",
-    saveSettings: "सेटिंग्स सहेजें"
+    chatHistory: "உரையாடல் வரலாறு",
+    aiMenu: "AI YOUTUBER (AI)",
+    preferences: "விருப்ப அமைப்புகள்",
+    profile: "சுயவிவரம்",
+    defaultLanguage: "இயல்புநிலை மொழி",
+    chooseLanguage: "உங்களுக்கு விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்.",
+    theme: "தோற்றம்",
+    chooseTheme: "செயலியின் தோற்றத்தைத் தேர்ந்தெடுக்கவும்.",
+    aiPreferences: "AI விருப்பங்கள்",
+    videoLanguage: "வீடியோ மொழி",
+    contentStyle: "உள்ளடக்க நடை",
+    usagePlan: "பயன்பாடு மற்றும் திட்டம்",
+    privacy: "தனியுரிமை மற்றும் தரவு",
+    help: "உதவி மற்றும் ஆதரவு",
+    legal: "சட்டம் மற்றும் தனியுரிமை",
+    savePreferences: "விருப்பங்களைச் சேமி",
+    back: "பின்னால்",
+    messagePlaceholder: "AI YOUTUBER-க்கு செய்தி அனுப்புங்கள்…",
+    languageSaved: "விருப்பங்கள் இந்தச் சாதனத்தில் சேமிக்கப்பட்டன."
   }
 };
 
+function translate(key) {
+  const language =
+    localStorage.getItem("activeInterfaceLanguage") || "English";
+
+  return interfaceTranslations[language]?.[key]
+    || interfaceTranslations.English[key]
+    || key;
+}
+
 function applyInterfaceLanguage(language) {
-  const words = interfaceTranslations[language] || interfaceTranslations.English;
+  const words =
+    interfaceTranslations[language] || interfaceTranslations.English;
+
+  localStorage.setItem("activeInterfaceLanguage", language);
 
   document.querySelectorAll("[data-i18n]").forEach(element => {
     const key = element.dataset.i18n;
+
     if (words[key]) {
       element.textContent = words[key];
     }
   });
 
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+    const key = element.dataset.i18nPlaceholder;
+
+    if (words[key]) {
+      element.placeholder = words[key];
+    }
+  });
+
   document.documentElement.lang =
-    language === "Tamil" ? "ta" :
-    language === "Hindi" ? "hi" : "en";
+    language === "Tamil" ? "ta" : "en";
 }
+
 let currentChatId = null;
 let currentMessages = [];
 let pageBeforeLegal = "welcome";
@@ -2604,6 +2666,7 @@ function loadSettings() {
   } catch {
     applyTheme("dark");
   }
+  applyInterfaceLanguage(saved.language || "English");
 }
 
 function saveSettings() {
@@ -2652,6 +2715,7 @@ function saveWelcomeSettings() {
   };
 
   localStorage.setItem("welcomePreferences", JSON.stringify(preferences));
+  applyInterfaceLanguage(preferences.language);
 
   // Apply the selected theme immediately.
   applyTheme(preferences.theme);
@@ -2680,6 +2744,7 @@ async function checkSession() {
   } else {
     showPage("welcome");
   }
+  applyInterfaceLanguage(saved.language || "English");
 }
 
 supabaseClient.auth.onAuthStateChange((event, session) => {

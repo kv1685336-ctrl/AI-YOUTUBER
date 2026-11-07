@@ -3332,10 +3332,11 @@ function showEditor() {
       progressBar.value = 100;
 
     } catch (error) {
-      console.error(error);
+      console.error("FFmpeg Export Error:", error);
+      
 
       status.textContent =
-        "Export failed. Try a smaller video or another browser.";
+        "Export failed: " + (error.message || string(error));
 
     } finally {
       exportButton.disabled = false;

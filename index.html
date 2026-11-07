@@ -3019,71 +3019,94 @@ async function selectTool(tool, button) {
     </p>
   `;
 }
+
 function showEditor() {
   const chatMessages = document.getElementById("chatMessages");
 
   chatMessages.innerHTML = `
     <h2>Video Editor</h2>
-    <p class="chat-answer">Upload a video, then choose the section to preview.</p>
+    <p class="chat-answer">
+      Upload a video, select a section and export it as a new MP4.
+    </p>
 
     <input
       id="editorVideoInput"
       type="file"
       accept="video/*"
-      style="display:block; max-width:650px; margin:20px auto;"
+      style="display:block; margin:20px auto; max-width:100%;"
     >
 
     <video
       id="editorVideoPreview"
       controls
       playsinline
-      style="
-        display:none;
-        width:100%;
-        max-width:750px;
-        max-height:65vh;
-        margin:20px auto;
-        background:#000;
-        border-radius:10px;
-      "
+      style="display:none; width:100%; max-width:750px;
+      max-height:60vh; margin:20px auto; background:#000;
+      border-radius:10px;"
     ></video>
 
     <div style="max-width:650px; margin:20px auto; text-align:left;">
-      <label for="trimStart">Start time: <span id="trimStartLabel">0.0</span>s</label>
-      <input id="trimStart" type="range" min="0" max="0" step="0.1" value="0" disabled>
 
-      <label for="trimEnd">End time: <span id="trimEndLabel">0.0</span>s</label>
-      <input id="trimEnd" type="range" min="0" max="0" step="0.1" value="0" disabled>
+      <label>
+        Start:
+        <span id="trimStartLabel">0.0</span>s
+      </label>
 
-      <button id="previewTrimButton" class="primary" disabled>
-        ▶ Preview trimmed section
+      <input
+        id="trimStart"
+        type="range"
+        min="0"
+        max="0"
+        step="0.1"
+        value="0"
+        disabled
+        style="width:100%;"
+      >
+
+      <label>
+        End:
+        <span id="trimEndLabel">0.0</span>s
+      </label>
+
+      <input
+        id="trimEnd"
+        type="range"
+        min="0"
+        max="0"
+        step="0.1"
+        value="0"
+        disabled
+        style="width:100%;"
+      >
+
+      <p id="editorStatus" class="chat-answer">
+        Choose a video to begin.
+      </p>
+
+      <progress
+        id="editorProgress"
+        value="0"
+        max="100"
+        style="width:100%; display:none;"
+      ></progress>
+
+      <button
+        id="exportTrimButton"
+        class="primary"
+        disabled
+        style="margin-top:15px;"
+      >
+        Export trimmed MP4
       </button>
-      
-<div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
 
-  <button id="toggleMuteButton" type="button">
-    Mute Audio
-  </button>
-
-  <button id="rotateVideoButton" type="button">
-    Rotate 90°
-  </button>
-
-  <select id="editorSpeed">
-    <option value="0.5">0.5x Speed</option>
-    <option value="1" selected>1x Speed</option>
-    <option value="1.5">1.5x Speed</option>
-    <option value="2">2x Speed</option>
-  </select>
-
-  <button id="flipVideoButton" type="button">
-    Flip Video
-  </button>
-
-</div>
-
-
-      <p id="editorStatus" class="chat-answer"></p>
+      <a
+        id="downloadEditedVideo"
+        style="display:none; margin-top:20px;
+        color:#ff3030; font-weight:bold;"
+        download="edited-video.mp4"
+      >
+        Download edited video
+      </a>
     </div>
   `;
 
@@ -3093,58 +3116,15 @@ function showEditor() {
   const endSlider = document.getElementById("trimEnd");
   const startLabel = document.getElementById("trimStartLabel");
   const endLabel = document.getElementById("trimEndLabel");
-  const previewButton = document.getElementById("previewTrimButton");
+  const exportButton = document.getElementById("exportTrimButton");
   const status = document.getElementById("editorStatus");
-  const muteButton = document.getElementById("toggleMuteButton");
-  const rotateButton = document.getElementById("rotateVideoButton");
-  const speedSelect = document.getElementById("editorSpeed");
-  const flipButton = document.getElementById("flipVideoButton");
+  const progressBar = document.getElementById("editorProgress");
+  const downloadLink = document.getElementById("downloadEditedVideo");
 
-  let rotation = 0;
-  let flipped = false;
-
-// Mute and unmute
-  muteButton.addEventListener("click", () => {
-    video.muted = !video.muted;
-
-    muteButton.textContent =
-      video.muted ? "Unmute Audio" : "Mute Audio";
-  });
-
-// Rotate video
-rotateButton.addEventListener("click", () => {
-  rotation = (rotation + 90) % 360;
-
-  video.style.transform =
-    `rotate(${rotation}deg)`;
-
-  video.style.transition = "transform 0.3s";
-
-  status.textContent = `Rotation: ${rotation}°`;
-});
-
-// Change playback speed
-speedSelect.addEventListener("change", () => {
-  video.playbackRate = Number(speedSelect.value);
-
-  status.textContent =
-    `Playback speed: ${speedSelect.value}x`;
-});
-
-// Flip video horizontally
-flipButton.addEventListener("click", () => {
-  flipped = !flipped;
-
-  video.style.scale = flipped ? "-1 1" : "1 1";
-
-  status.textContent =
-    flipped ? "Video flipped." : "Original orientation restored.";
-});
-
-
-
-  
   let videoUrl = null;
+  let editedUrl = null;
+  let ffmpeg = null;
+  let ffmpegLoaded = false;
   let trimStart = 0;
   let trimEnd = 0;
 
@@ -3155,38 +3135,64 @@ flipButton.addEventListener("click", () => {
 
   videoInput.addEventListener("change", () => {
     const file = videoInput.files[0];
+
     if (!file) return;
 
     if (!file.type.startsWith("video/")) {
-      status.textContent = "Please choose a video file.";
+      status.textContent = "Please select a valid video.";
+      return;
+    }
+
+    // Keep mobile memory usage manageable.
+    if (file.size > 100 * 1024 * 1024) {
+      status.textContent =
+        "This video is over 100 MB. Please try a smaller video.";
+      videoInput.value = "";
       return;
     }
 
     if (videoUrl) URL.revokeObjectURL(videoUrl);
+    if (editedUrl) URL.revokeObjectURL(editedUrl);
+
+    downloadLink.style.display = "none";
+    progressBar.style.display = "none";
 
     videoUrl = URL.createObjectURL(file);
     video.src = videoUrl;
     video.style.display = "block";
-    status.textContent = "Loading video…";
+
+    status.textContent = "Loading video...";
+
+    startSlider.disabled = true;
+    endSlider.disabled = true;
+    exportButton.disabled = true;
   });
 
   video.addEventListener("loadedmetadata", () => {
     const duration = video.duration;
+
+    if (!Number.isFinite(duration)) {
+      status.textContent = "Could not read this video's duration.";
+      return;
+    }
 
     trimStart = 0;
     trimEnd = duration;
 
     startSlider.max = duration;
     endSlider.max = duration;
-    startSlider.value = trimStart;
-    endSlider.value = trimEnd;
+
+    startSlider.value = 0;
+    endSlider.value = duration;
 
     startSlider.disabled = false;
     endSlider.disabled = false;
-    previewButton.disabled = false;
+    exportButton.disabled = false;
 
     updateLabels();
-    status.textContent = `Video length: ${duration.toFixed(1)} seconds.`;
+
+    status.textContent =
+      "Video ready. Select the section you want to export.";
   });
 
   startSlider.addEventListener("input", () => {
@@ -3211,28 +3217,132 @@ flipButton.addEventListener("click", () => {
     updateLabels();
   });
 
-  previewButton.addEventListener("click", async () => {
-    if (!videoUrl || trimEnd <= trimStart) return;
+  async function loadFFmpeg() {
+    if (ffmpegLoaded) return;
 
-    video.pause();
-    video.currentTime = trimStart;
+    status.textContent = "Loading video processing engine...";
+
+    const { FFmpeg } = await import(
+      "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js"
+    );
+
+    const { toBlobURL } = await import(
+      "https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/esm/index.js"
+    );
+
+    ffmpeg = new FFmpeg();
+
+    const baseURL =
+      "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd";
+
+    const coreURL = await toBlobURL(
+      baseURL + "/ffmpeg-core.js",
+      "text/javascript"
+    );
+
+    const wasmURL = await toBlobURL(
+      baseURL + "/ffmpeg-core.wasm",
+      "application/wasm"
+    );
+
+    await ffmpeg.load({
+      coreURL,
+      wasmURL
+    });
+
+    ffmpegLoaded = true;
+  }
+
+  exportButton.addEventListener("click", async () => {
+    if (!videoInput.files[0]) return;
+
+    if (trimEnd <= trimStart) {
+      status.textContent = "Please select a valid time range.";
+      return;
+    }
+
+    const file = videoInput.files[0];
+
+    exportButton.disabled = true;
+    progressBar.style.display = "block";
+    progressBar.value = 0;
+    downloadLink.style.display = "none";
 
     try {
-      await video.play();
-      status.textContent = "Previewing selected section…";
-    } catch {
-      status.textContent = "Press Play on the video to preview the selected section.";
-    }
-  });
+      await loadFFmpeg();
 
-  video.addEventListener("timeupdate", () => {
-    if (!video.paused && video.currentTime >= trimEnd) {
-      video.pause();
-      video.currentTime = trimEnd;
-      status.textContent = "Preview finished.";
+      status.textContent = "Preparing your video...";
+
+      ffmpeg.on("progress", ({ progress }) => {
+        const percent = Math.max(
+          0,
+          Math.min(100, Math.round(progress * 100))
+        );
+
+        progressBar.value = percent;
+        status.textContent = "Processing video: " + percent + "%";
+      });
+
+      await ffmpeg.writeFile(
+        "input_video",
+        new Uint8Array(await file.arrayBuffer())
+      );
+
+      const selectedDuration = trimEnd - trimStart;
+
+      status.textContent = "Trimming and encoding video...";
+
+      const result = await ffmpeg.exec([
+        "-ss", trimStart.toFixed(2),
+        "-i", "input_video",
+        "-t", selectedDuration.toFixed(2),
+        "-c:v", "libx264",
+        "-preset", "ultrafast",
+        "-crf", "28",
+        "-c:a", "aac",
+        "-b:a", "128k",
+        "-movflags", "+faststart",
+        "edited.mp4"
+      ]);
+
+      if (result !== 0) {
+        throw new Error("Video processing failed.");
+      }
+
+      const output = await ffmpeg.readFile("edited.mp4");
+
+      if (!output || output.length === 0) {
+        throw new Error("No output video was created.");
+      }
+
+      const blob = new Blob([output], {
+        type: "video/mp4"
+      });
+
+      if (editedUrl) URL.revokeObjectURL(editedUrl);
+
+      editedUrl = URL.createObjectURL(blob);
+
+      downloadLink.href = editedUrl;
+      downloadLink.style.display = "inline-block";
+
+      status.textContent =
+        "Your trimmed video is ready!";
+
+      progressBar.value = 100;
+
+    } catch (error) {
+      console.error(error);
+
+      status.textContent =
+        "Export failed. Try a smaller video or another browser.";
+
+    } finally {
+      exportButton.disabled = false;
     }
   });
 }
+
 function showAudioGenerator() {
   const chatMessages = document.getElementById("chatMessages");
 

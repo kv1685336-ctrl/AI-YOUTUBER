@@ -1464,320 +1464,699 @@ body.light-theme .primary {
 
 <header class="navbar">
   <div class="logo">AI <span>YOUTUBER</span></div>
+
   <div style="display:flex; gap:10px; align-items:center;">
-    <button id="welcomeSettingsButton" class="secondary" onclick="openWelcomeSettings()" data-i18n="settings">Settings</button>
- 
-  <button id="navLogin" class="login-btn" onclick="showPage('login')" data-i18n="login">
-    Log in
-  </button>
-  <button id="navLogout" class="login-btn hidden" onclick="logout()">
-    Log out
-  </button>
+    <button id="welcomeSettingsButton" class="secondary"
+      onclick="openWelcomeSettings()" data-i18n="settings">
+      Settings
+    </button>
+
+    <button id="navLogin" class="login-btn"
+      onclick="showPage('login')" data-i18n="login">
+      Log in
+    </button>
+
+    <button id="navLogout" class="login-btn hidden"
+      onclick="logout()" data-i18n="logout">
+      Log out
+    </button>
   </div>
 </header>
 
-<section id="welcome" class="hero">
-  <div class="avatar">AI</div>
-  <div class="tagline">YOUR CHANNEL. YOUR AI CREATOR.</div>
+<!-- WELCOME PAGE -->
 
-  <h1>Your YouTube channel,<br>
-    <span class="red">powered by AI.</span>
+<section id="welcome" class="hero">
+
+  <div class="avatar">AI</div>
+
+  <div class="tagline" data-i18n="tagline">
+    YOUR CHANNEL. YOUR AI CREATOR.
+  </div>
+
+  <h1>
+    <span data-i18n="welcomeTitle">Your YouTube channel,</span><br>
+    <span class="red" data-i18n="welcomeSubtitle">powered by AI.</span>
   </h1>
 
-  <p>
+  <p data-i18n="welcomeDescription">
     Research, create, publish and improve.
     Let your AI creator manage your content journey
     while you stay in control.
   </p>
 
   <div class="buttons">
-    <button class="primary" onclick="showPage('signup')" data-i18n="getStarted">Get Started</button>
-    <button class="secondary" onclick="showPage('login')" data-i18n="login">Log in</button>
+    <button class="primary" onclick="showPage('signup')"
+      data-i18n="getStarted">
+      Get Started
+    </button>
+
+    <button class="secondary" onclick="showPage('login')"
+      data-i18n="login">
+      Log in
+    </button>
   </div>
+
 </section>
 
-<main id="welcomeSettings" class="hidden">
-  <div class="card">
-    <h2>Settings</h2>
-    <p class="settings-note">Main settings will be available after signing in.</p>
+<!-- WELCOME SETTINGS -->
 
-    <label for="welcomeLanguage">App language</label>
+<main id="welcomeSettings" class="hidden">
+
+  <div class="card">
+
+    <h2 data-i18n="settings">Settings</h2>
+
+    <p class="settings-note" data-i18n="mainSettingsNotice">
+      Main settings will be available after signing in.
+    </p>
+
+    <label for="welcomeLanguage" data-i18n="appLanguage">
+      App language
+    </label>
+
     <select id="welcomeLanguage" class="welcome-setting-select">
       <option value="English">English</option>
       <option value="Tamil">தமிழ்</option>
-      
     </select>
 
-    <label for="welcomeTheme">Theme</label>
+    <label for="welcomeTheme" data-i18n="theme">
+      Theme
+    </label>
+
     <select id="welcomeTheme" class="welcome-setting-select">
-      <option value="dark">Dark</option>
-      <option value="light">Light</option>
+      <option value="dark" data-i18n="dark">Dark</option>
+      <option value="light" data-i18n="light">Light</option>
     </select>
 
-    <button class="primary full" onclick="saveWelcomeSettings()">Save preferences</button>
-    <button class="secondary full" onclick="showPage('welcome')">Back</button>
+    <button class="primary full" onclick="saveWelcomeSettings()"
+      data-i18n="savePreferences">
+      Save preferences
+    </button>
+
+    <button class="secondary full" onclick="showPage('welcome')"
+      data-i18n="back">
+      Back
+    </button>
+
     <p id="welcomeSettingsMessage" class="message"></p>
+
   </div>
+
 </main>
+
+<!-- SIGNUP PAGE -->
+
 <main id="signup" class="hidden">
+
   <div class="card">
-    <h2>Create your account</h2>
+
+    <h2 data-i18n="createAccountTitle">
+      Create your account
+    </h2>
 
     <form id="signupForm">
-      <label>Email address</label>
+
+      <label data-i18n="emailAddress">Email address</label>
+
       <input id="signupEmail" type="email"
-        placeholder="Enter your email" required>
+        placeholder="Enter your email"
+        data-i18n-placeholder="enterEmail"
+        required>
 
-      <label>Password</label>
+      <label data-i18n="password">Password</label>
+
       <input id="signupPassword" type="password"
-        placeholder="At least 8 characters" minlength="8" required>
+        placeholder="At least 8 characters"
+        data-i18n-placeholder="passwordLength"
+        minlength="8" required>
 
-      <button class="primary full" type="submit">
+      <button class="primary full" type="submit"
+        data-i18n="createAccount">
         Create account
       </button>
+
     </form>
 
     <div id="signupMessage" class="message"></div>
 
     <div class="switch">
-      Already have an account?
-      <span class="link" onclick="showPage('login')">Log in</span>
+
+      <span data-i18n="alreadyAccount">
+        Already have an account?
+      </span>
+
+      <span class="link" onclick="showPage('login')"
+        data-i18n="login">
+        Log in
+      </span>
+
     </div>
+
   </div>
+
 </main>
 
+<!-- LOGIN PAGE -->
+
 <main id="login" class="hidden">
+
   <div class="card">
-    <h2>Welcome back</h2>
+
+    <h2 data-i18n="welcomeBack">
+      Welcome back
+    </h2>
 
     <form id="loginForm">
-      <label>Email address</label>
+
+      <label data-i18n="emailAddress">Email address</label>
+
       <input id="loginEmail" type="email"
-        placeholder="Enter your email" required>
+        placeholder="Enter your email"
+        data-i18n-placeholder="enterEmail"
+        required>
 
-      <label>Password</label>
+      <label data-i18n="password">Password</label>
+
       <input id="loginPassword" type="password"
-        placeholder="Enter your password" required>
+        placeholder="Enter your password"
+        data-i18n-placeholder="enterPassword"
+        required>
 
-      <button class="primary full" type="submit">
+      <button class="primary full" type="submit"
+        data-i18n="login">
         Log in
       </button>
+
     </form>
 
     <div id="loginMessage" class="message"></div>
 
     <div class="switch">
-      New here?
-      <span class="link" onclick="showPage('signup')">Create account</span>
+
+      <span data-i18n="newHere">New here?</span>
+
+      <span class="link" onclick="showPage('signup')"
+        data-i18n="createAccount">
+        Create account
+      </span>
+
     </div>
+
   </div>
+
 </main>
 
+<!-- MAIN WORKSPACE -->
+
 <main id="workspace" class="hidden">
+
   <header class="chat-header">
-    <button class="icon-btn" onclick="toggleMenu()" aria-label="Open menu">☰</button>
+
+    <button class="icon-btn"
+      onclick="toggleMenu()"
+      aria-label="Open menu"
+      data-i18n-aria="openMenu">
+      ☰
+    </button>
+
     <h2>AI <span class="red">YOUTUBER</span></h2>
-    <button class="secondary" onclick="toggleThemeQuick()">◐ Theme</button>
-    <button class="secondary" onclick="newChat()" data-i18n="newChat">New Chat</button>
+
+    <button class="secondary" onclick="toggleThemeQuick()">
+      ◐ <span data-i18n="theme">Theme</span>
+    </button>
+
+    <button class="secondary" onclick="newChat()"
+      data-i18n="newChat">
+      New Chat
+    </button>
+
   </header>
 
   <div class="chat-layout">
+
+    <!-- SIDEBAR -->
+
     <aside id="sideMenu" class="side-menu">
-      <button class="menu-item active" onclick="selectTool('AI YOUTUBER (AI)', this)">AI YOUTUBER (AI)</button>
-      <button class="menu-item" onclick="selectTool('Editor', this)" data-i18n="editor">Editor</button>
-      <button class="menu-item" onclick="selectTool('Video Generator', this)" data-i18n="videoGenerator">Video Generator</button>
-      <button class="menu-item" onclick="selectTool('Audio Generator', this)" data-i18n="audioGenerator">Audio Generator</button>
-      <button class="menu-item" onclick="selectTool('Chat History', this)" data-i18n="chatHistory">Chat History</button>
-      <button class="menu-item" onclick="selectTool('Settings', this)" data-i18n="settings">Settings</button>
+
+      <button class="menu-item active"
+        onclick="selectTool('AI YOUTUBER (AI)', this)">
+        AI YOUTUBER (AI)
+      </button>
+
+      <button class="menu-item"
+        onclick="selectTool('Editor', this)"
+        data-i18n="editor">
+        Editor
+      </button>
+
+      <button class="menu-item"
+        onclick="selectTool('Video Generator', this)"
+        data-i18n="videoGenerator">
+        Video Generator
+      </button>
+
+      <button class="menu-item"
+        onclick="selectTool('Audio Generator', this)"
+        data-i18n="audioGenerator">
+        Audio Generator
+      </button>
+
+      <button class="menu-item"
+        onclick="selectTool('Chat History', this)"
+        data-i18n="chatHistory">
+        Chat History
+      </button>
+
+      <button class="menu-item"
+        onclick="selectTool('Settings', this)"
+        data-i18n="settings">
+        Settings
+      </button>
 
       <div class="menu-spacer"></div>
-      <button class="menu-item" onclick="logout()" data-i18n="logout">Log out</button>
+
+      <button class="menu-item"
+        onclick="logout()"
+        data-i18n="logout">
+        Log out
+      </button>
+
     </aside>
 
+    <!-- CHAT AREA -->
+
     <section class="chat-main">
+
       <div id="chatMessages" class="chat-messages">
+
         <div class="chat-avatar">AI</div>
-        <p id="chatAnswer" class="chat-answer">
-          Hi! I’m your AI YOUTUBE assistant. What would you like to ask?
+
+        <p id="chatAnswer" class="chat-answer"
+          data-i18n="chatGreeting">
+          Hi! I’m your AI YOUTUBE assistant.
+          What would you like to ask?
         </p>
-        <button class="icon-btn" onclick="toggleMute()" id="muteButton">🔊 Mute</button>
+
+        <button class="icon-btn"
+          onclick="toggleMute()"
+          id="muteButton"
+          data-i18n="mute">
+          🔊 Mute
+        </button>
+
       </div>
+
+      <!-- CHAT INPUT -->
 
       <div class="chat-input-area">
+
         <div class="chat-input-row">
-          <button class="icon-btn" onclick="document.getElementById('uploadImage').click()" aria-label="Upload image">＋</button>
-          <input id="chatInput" type="text" data-i18n-placeholder="chatPlaceholder" placeholder="Message AI YOUTUBER…">
-          <input id="uploadImage" type="file" accept="image/*" class="hidden">
-          <button class="icon-btn" onclick="startVoice()" aria-label="Voice input">🎙</button>
-          <button class="primary" onclick="sendMessage()">➤</button>
+
+          <button class="icon-btn"
+            onclick="document.getElementById('uploadImage').click()"
+            aria-label="Upload image"
+            data-i18n-aria="uploadImage">
+            ＋
+          </button>
+
+          <input id="chatInput"
+            type="text"
+            data-i18n-placeholder="chatPlaceholder"
+            placeholder="Message AI YOUTUBER…">
+
+          <input id="uploadImage"
+            type="file"
+            accept="image/*"
+            class="hidden">
+
+          <button class="icon-btn"
+            onclick="startVoice()"
+            aria-label="Voice input"
+            data-i18n-aria="voiceInput">
+            🎙
+          </button>
+
+          <button class="primary"
+            onclick="sendMessage()"
+            aria-label="Send"
+            data-i18n-aria="send">
+            ➤
+          </button>
+
         </div>
+
       </div>
-        </section>
+
+    </section>
+
+    <!-- SETTINGS PANEL -->
 
     <section id="settingsPanel" class="settings-panel hidden">
-      <h1>Settings</h1>
-      <p class="settings-intro">
+
+      <h1 data-i18n="settings">Settings</h1>
+
+      <p class="settings-intro" data-i18n="managePreferences">
         Manage your account and AI YOUTUBER preferences.
       </p>
 
+      <!-- PROFILE -->
+
       <div class="settings-section">
-        <h2>Profile</h2>
+
+        <h2 data-i18n="profile">Profile</h2>
+
         <div class="settings-row">
+
           <div>
-            <strong>Email address</strong>
-            <p id="settingsEmail">Loading account...</p>
+
+            <strong data-i18n="emailAddress">
+              Email address
+            </strong>
+
+            <p id="settingsEmail" data-i18n="loadingAccount">
+              Loading account...
+            </p>
+
           </div>
+
         </div>
+
       </div>
 
+      <!-- PREFERENCES -->
+
       <div class="settings-section">
-        <h2>Preferences</h2>
+
+        <h2 data-i18n="preferences">Preferences</h2>
 
         <div class="settings-row">
+
           <div>
-            <strong>Default language</strong>
-            <p>Choose your preferred language.</p>
+
+            <strong data-i18n="defaultLanguage">
+              Default language
+            </strong>
+
+            <p data-i18n="chooseLanguage">
+              Choose your preferred language.
+            </p>
+
           </div>
+
           <select id="settingsLanguage">
             <option>English</option>
             <option>Tamil</option>
             <option>Hindi</option>
           </select>
+
         </div>
 
         <div class="settings-row">
+
           <div>
-            <strong>Theme</strong>
-            <p>Choose how the app looks.</p>
+
+            <strong data-i18n="theme">Theme</strong>
+
+            <p data-i18n="chooseTheme">
+              Choose how the app looks.
+            </p>
+
           </div>
+
           <select id="settingsTheme">
-            <option value="dark">Dark</option>
-            <option value="light">Light</option>
+
+            <option value="dark" data-i18n="dark">
+              Dark
+            </option>
+
+            <option value="light" data-i18n="light">
+              Light
+            </option>
+
           </select>
+
         </div>
+
       </div>
 
+      <!-- AI PREFERENCES -->
+
       <div class="settings-section">
-        <h2>AI Preferences</h2>
+
+        <h2 data-i18n="aiPreferences">
+          AI Preferences
+        </h2>
 
         <div class="settings-row">
+
           <div>
-            <strong>Video language</strong>
-            <p>Preferred language for video content.</p>
+
+            <strong data-i18n="videoLanguage">
+              Video language
+            </strong>
+
+            <p data-i18n="preferredVideoLanguage">
+              Preferred language for video content.
+            </p>
+
           </div>
+
           <select id="settingsVideoLanguage">
             <option>English</option>
             <option>Tamil</option>
             <option>Hindi</option>
           </select>
+
         </div>
 
         <div class="settings-row">
+
           <div>
-            <strong>Content style</strong>
-            <p>Preferred style for generated content.</p>
+
+            <strong data-i18n="contentStyle">
+              Content style
+            </strong>
+
+            <p data-i18n="preferredContentStyle">
+              Preferred style for generated content.
+            </p>
+
           </div>
+
           <select id="settingsStyle">
-            <option>Informative</option>
-            <option>Educational</option>
-            <option>Entertaining</option>
-            <option>Cinematic</option>
-            <option>Ai's Choice</option>
+
+            <option data-i18n="informative">
+              Informative
+            </option>
+
+            <option data-i18n="educational">
+              Educational
+            </option>
+
+            <option data-i18n="entertaining">
+              Entertaining
+            </option>
+
+            <option data-i18n="cinematic">
+              Cinematic
+            </option>
+
+            <option data-i18n="aiChoice">
+              Ai's Choice
+            </option>
+
           </select>
+
         </div>
+
       </div>
+
+      <!-- USAGE AND PLAN -->
 
       <div class="settings-section">
-        <h2>Usage &amp; Plan</h2>
-        <p>Your plan and usage information will appear here when subscriptions are connected.</p>
+
+        <h2 data-i18n="usagePlan">
+          Usage &amp; Plan
+        </h2>
+
+        <p data-i18n="planNotice">
+          Your plan and usage information will appear here when subscriptions are connected.
+        </p>
+
       </div>
+
+      <!-- PRIVACY -->
 
       <div class="settings-section">
-        <h2>Privacy &amp; Data</h2>
-        <p>Chat history, data export, and account deletion controls will be added when those features are connected.</p>
+
+        <h2 data-i18n="privacyData">
+          Privacy &amp; Data
+        </h2>
+
+        <p data-i18n="privacyNotice">
+          Chat history, data export, and account deletion controls will be added when those features are connected.
+        </p>
+
       </div>
+
+      <!-- HELP -->
 
       <div class="settings-section">
-        <h2>Help &amp; Support</h2>
-        <p>Support options will be available when the app is ready for users.</p>
+
+        <h2 data-i18n="helpSupport">
+          Help &amp; Support
+        </h2>
+
+        <p data-i18n="supportNotice">
+          Support options will be available when the app is ready for users.
+        </p>
+
       </div>
+
+      <!-- LEGAL -->
 
       <div class="settings-section">
-        <h2>Legal</h2>
-        <button onclick="openLegal()">Legal & Privacy</button>
+
+        <h2 data-i18n="legal">Legal</h2>
+
+        <button onclick="openLegal()"
+          data-i18n="legalPrivacy">
+          Legal &amp; Privacy
+        </button>
+
       </div>
 
-      <button class="secondary" onclick="logout()">Log out</button>
-      <p class="settings-note">
+      <button class="secondary"
+        onclick="logout()"
+        data-i18n="logout">
+        Log out
+      </button>
+
+      <p class="settings-note" data-i18n="prototypeNotice">
         This is a prototype. Preference controls are not saved yet.
       </p>
+
     </section>
+
   </div>
+
 </main>
-  
+
+<!-- FOOTER -->
+
 <footer id="siteFooter" class="site-footer">
-  <div>© 2026 AI YOUTUBER. Prototype.</div>
-  <div style="margin-top: 10px;">
-    <a href="#" onclick="openLegal(); return false;">Legal & Privacy</a>
-    <a onclick="showPage('welcome')">Home</a>
+
+  <div>
+    © 2026 AI YOUTUBER.
+    <span data-i18n="prototype">Prototype.</span>
   </div>
+
+  <div style="margin-top: 10px;">
+
+    <a href="#"
+      onclick="openLegal(); return false;"
+      data-i18n="legalPrivacy">
+      Legal &amp; Privacy
+    </a>
+
+    <a onclick="showPage('welcome')"
+      data-i18n="home">
+      Home
+    </a>
+
+  </div>
+
 </footer>
 
-<main id="legal" class="legal-page hidden">
-  <h1>Legal &amp; Privacy</h1>
+<!-- LEGAL PAGE -->
 
-  <p><strong>Last updated:</strong> October 2026</p>
+<main id="legal" class="legal-page hidden">
+
+  <h1 data-i18n="legalPrivacy">
+    Legal &amp; Privacy
+  </h1>
+
   <p>
+    <strong data-i18n="lastUpdated">Last updated:</strong>
+    October 2026
+  </p>
+
+  <p data-i18n="prototypeDescription">
     AI YOUTUBER is currently a prototype. Features may be incomplete,
     and generated content may be inaccurate. Please review all content
     before using or publishing it.
   </p>
 
-  <h2>What the prototype does</h2>
-  <p>
+  <h2 data-i18n="prototypeFeatures">
+    What the prototype does
+  </h2>
+
+  <p data-i18n="prototypeFeaturesDescription">
     AI YOUTUBER is intended to help users plan and create YouTube content.
     The current prototype includes account access and a chat interface.
     Some displayed features are not yet connected or available.
   </p>
 
-  <h2>Information and account data</h2>
-  <p>
+  <h2 data-i18n="accountData">
+    Information and account data
+  </h2>
+
+  <p data-i18n="accountDataDescription">
     The prototype uses Supabase for account authentication. If you create
     an account, your email address and authentication data are processed
     by Supabase to provide that service. Do not enter passwords, private
     information, or confidential material into the chat.
   </p>
 
-  <h2>AI-generated content</h2>
-  <p>
+  <h2 data-i18n="generatedContent">
+    AI-generated content
+  </h2>
+
+  <p data-i18n="generatedContentDescription">
     AI-generated ideas, text, audio, or other content may be incorrect,
     incomplete, or unsuitable. You are responsible for checking content,
     permissions, and accuracy before publishing.
   </p>
 
-  <h2>YouTube and third-party services</h2>
-  <p>
+  <h2 data-i18n="thirdPartyServices">
+    YouTube and third-party services
+  </h2>
+
+  <p data-i18n="thirdPartyDescription">
     YouTube features and integrations are not currently connected in this
     prototype. If they are added, their use will be subject to applicable
     third-party terms and policies.
   </p>
 
-  <h2>Privacy and data controls</h2>
-  <p>
+  <h2 data-i18n="privacyControls">
+    Privacy and data controls
+  </h2>
+
+  <p data-i18n="privacyDescription">
     This prototype does not yet provide a complete in-app process for
     exporting or deleting all account data. Avoid using it for sensitive
     information. Before public launch, the service needs a reviewed privacy
     policy and a clear way to request data access or deletion.
   </p>
 
-  <h2>Contact</h2>
-  <p>
+  <h2 data-i18n="contact">
+    Contact
+  </h2>
+
+  <p data-i18n="contactDescription">
     For questions about this prototype, contact the project owner through
     the contact method provided when the service is publicly launched.
   </p>
 
-  <button class="secondary" onclick="backFromLegal()">Back</button>
+  <button class="secondary"
+    onclick="backFromLegal()"
+    data-i18n="back">
+    Back
+  </button>
+
 </main>
+
+
 
 <script>
 const SUPABASE_URL = "https://xxzcbjsbiaveclxmoqpu.supabase.co";

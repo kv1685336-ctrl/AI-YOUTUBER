@@ -2643,7 +2643,7 @@ function applyInterfaceLanguage(language) {
 
   document.documentElement.lang =
     currentInterfaceLanguage === "Tamil" ? "ta" : 
-  document.documentElement.lang = 
+  
     currentInterfaceLanguage === "Hindi" ? "hi" : "en";
 
   localStorage.setItem(
@@ -3392,35 +3392,39 @@ function toggleThemeQuick() {
 
 
 
+
 function loadSettings() {
   const key = settingsStorageKey();
   if (!key) return;
 
   try {
     const saved = JSON.parse(localStorage.getItem(key) || "{}");
-    applyInterfaceLanguage(
-      
-      
+
+    const selectedLanguage =
       saved.language ||
       localStorage.getItem("activeInterfaceLanguage") ||
-      "English"
-    );
+      JSON.parse(localStorage.getItem("welcomePreferences") || "{}").language ||
+      "English";
 
     document.getElementById("settingsLanguage").value =
-      saved.language || "English";
+      selectedLanguage;
+
     document.getElementById("settingsTheme").value =
       saved.theme || "dark";
+
     document.getElementById("settingsVideoLanguage").value =
       saved.videoLanguage || "English";
+
     document.getElementById("settingsStyle").value =
       saved.style || "Informative";
 
+    applyInterfaceLanguage(selectedLanguage);
     applyTheme(saved.theme || "dark");
-    applyInterfaceLanguage(saved.language || "English");
-  } catch {
+
+  } catch (error) {
+    console.error("Could not load settings:", error);
     applyTheme("dark");
   }
-  
 }
 
 function saveSettings() {
@@ -3499,12 +3503,22 @@ async function checkSession() {
     showPage("welcome");
   }
 
-  const preferences = JSON.parse(
-    localStorage.getItem("welcomePreferences") || "{}"
-  );
+  const accountSettings = settingsUserId
+  ? JSON.parse(
+      localStorage.getItem(settingsStorageKey()) || "{}"
+    )
+  : {};
 
-  applyInterfaceLanguage(preferences.language || "English");
-}
+const welcomePreferences = JSON.parse(
+  localStorage.getItem("welcomePreferences") || "{}"
+);
+
+applyInterfaceLanguage(
+  accountSettings.language ||
+  localStorage.getItem("activeInterfaceLanguage") ||
+  welcomePreferences.language ||
+  "English"
+);
 supabaseClient.auth.onAuthStateChange((event, session) => {
   if (event === "SIGNED_IN" && session) {
     showDashboard(session.user);

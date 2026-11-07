@@ -3058,6 +3058,30 @@ function showEditor() {
       <button id="previewTrimButton" class="primary" disabled>
         ▶ Preview trimmed section
       </button>
+      
+<div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+
+  <button id="toggleMuteButton" type="button">
+    Mute Audio
+  </button>
+
+  <button id="rotateVideoButton" type="button">
+    Rotate 90°
+  </button>
+
+  <select id="editorSpeed">
+    <option value="0.5">0.5x Speed</option>
+    <option value="1" selected>1x Speed</option>
+    <option value="1.5">1.5x Speed</option>
+    <option value="2">2x Speed</option>
+  </select>
+
+  <button id="flipVideoButton" type="button">
+    Flip Video
+  </button>
+
+</div>
+
 
       <p id="editorStatus" class="chat-answer"></p>
     </div>
@@ -3071,7 +3095,55 @@ function showEditor() {
   const endLabel = document.getElementById("trimEndLabel");
   const previewButton = document.getElementById("previewTrimButton");
   const status = document.getElementById("editorStatus");
+  const muteButton = document.getElementById("toggleMuteButton");
+  const rotateButton = document.getElementById("rotateVideoButton");
+  const speedSelect = document.getElementById("editorSpeed");
+  const flipButton = document.getElementById("flipVideoButton");
 
+  let rotation = 0;
+  let flipped = false;
+
+// Mute and unmute
+  muteButton.addEventListener("click", () => {
+    video.muted = !video.muted;
+
+    muteButton.textContent =
+      video.muted ? "Unmute Audio" : "Mute Audio";
+  });
+
+// Rotate video
+rotateButton.addEventListener("click", () => {
+  rotation = (rotation + 90) % 360;
+
+  video.style.transform =
+    `rotate(${rotation}deg)`;
+
+  video.style.transition = "transform 0.3s";
+
+  status.textContent = `Rotation: ${rotation}°`;
+});
+
+// Change playback speed
+speedSelect.addEventListener("change", () => {
+  video.playbackRate = Number(speedSelect.value);
+
+  status.textContent =
+    `Playback speed: ${speedSelect.value}x`;
+});
+
+// Flip video horizontally
+flipButton.addEventListener("click", () => {
+  flipped = !flipped;
+
+  video.style.scale = flipped ? "-1 1" : "1 1";
+
+  status.textContent =
+    flipped ? "Video flipped." : "Original orientation restored.";
+});
+
+
+
+  
   let videoUrl = null;
   let trimStart = 0;
   let trimEnd = 0;

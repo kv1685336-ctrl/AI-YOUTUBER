@@ -3349,17 +3349,15 @@ async function loadFFmpeg() {
       progressBar.value = 100;
     
   
-    } catch (error) {
-  console.error("FFmpeg error:", error);
+  } catch (error) {
+  console.error("FULL FFmpeg ERROR:", error);
+  console.error("Error type:", typeof error);
+  console.error("Error details:", String(error));
 
   status.textContent =
     "Failed at: " + currentStage +
-    " | " + error.name +
-    ": " + error.message;
-
-} finally {
-  exportButton.disabled = false;
-}
+    " | " + String(error);
+    }
 });
 }
   

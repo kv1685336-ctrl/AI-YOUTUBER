@@ -3332,8 +3332,8 @@ async function loadFFmpeg() {
         "Your trimmed video is ready!";
 
       progressBar.value = 100;
-    });
-  }
+    
+  
     } catch (error) {
   console.error("FFmpeg error:", error);
 
@@ -3345,8 +3345,8 @@ async function loadFFmpeg() {
 } finally {
   exportButton.disabled = false;
 }
-  });
-  }
+});
+}
   
 
 function showAudioGenerator() {

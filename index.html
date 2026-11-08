@@ -3238,33 +3238,29 @@ async function loadFFmpeg() {
   const baseURL =
     "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd";
 
-  const appBase = new URL("./", document.baseURI).href;
-
-  const workerURL = new URL(
-    "ffmpeg/worker.js",
-    appBase
-  ).href;
-
   currentStage = "Loading FFmpeg core";
 
+  const coreURL = await toBlobURL(
+    baseURL + "/ffmpeg-core.js",
+    "text/javascript"
+  );
+
+  const wasmURL = await toBlobURL(
+    baseURL + "/ffmpeg-core.wasm",
+    "application/wasm"
+  );
+
   await ffmpeg.load({
-    coreURL: await toBlobURL(
-      baseURL + "/ffmpeg-core.js",
-      "text/javascript"
-    ),
-
-    wasmURL: await toBlobURL(
-      baseURL + "/ffmpeg-core.wasm",
-      "application/wasm"
-    ),
-
-    classWorkerURL: workerURL
+    coreURL,
+    wasmURL
   });
 
   ffmpegLoaded = true;
-
   currentStage = "FFmpeg ready";
 }
+
+  
+
 
 
 

@@ -7,7 +7,7 @@
 <title>AI YOUTUBER</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<script src="https://unpkg.com/lucide@latest" defer></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1455,6 +1455,43 @@ body.light-theme .primary {
   .card {
     padding: 23px;
   }
+  /* MAKORA MENU ICONS */
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  text-align: left;
+}
+
+.menu-item i {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #ff3030 !important;
+  stroke: #ff3030;
+  stroke-width: 1.8;
+}
+
+/* Keep icons red in every state */
+
+.menu-item:hover i,
+.menu-item.active i,
+.menu-item:focus i {
+  color: #ff3030 !important;
+  stroke: #ff3030 !important;
+}
+.menu-title {
+  color: #ffffff;
+}
+
+body.light-theme .menu-title {
+  color: #000000;
+}
+  
+
+
 }
 
 </style>
@@ -1701,45 +1738,52 @@ body.light-theme .primary {
 
       <button class="menu-item active"
         onclick="selectTool('AI YOUTUBER (AI)', this)">
-        AI YOUTUBER (AI)
+        <i data-lucide="bot"></i>
+        <span>AI YOUTUBER (AI)</span>
       </button>
 
       <button class="menu-item"
         onclick="selectTool('Editor', this)"
         data-i18n="editor">
-        Editor
+        <i data-lucide="scissors"></i>
+        <span data-i18n="editor">Editor</span>
       </button>
 
       <button class="menu-item"
         onclick="selectTool('Video Generator', this)"
         data-i18n="videoGenerator">
-        Video Generator
+        <i data-lucide="video"></i>
+        <span data-i18n="videoGenerator">Video Generator</span>
       </button>
 
       <button class="menu-item"
         onclick="selectTool('Audio Generator', this)"
-        data-i18n="audioGenerator">
-        Audio Generator
+        data-i18n="audioGenerator"
+        <i data-lucide="audio-waveform"></i>
+        <span data-i18n="audioGenerator">Audio Generator</span>
       </button>
 
       <button class="menu-item"
         onclick="selectTool('Chat History', this)"
-        data-i18n="chatHistory">
-        Chat History
+        
+        <i data-lucide="messages-square"></i>
+        <span data-i18n="chatHistory">Chat History</span>
       </button>
 
       <button class="menu-item"
         onclick="selectTool('Settings', this)"
-        data-i18n="settings">
-        Settings
+        
+        <i data-lucide="settings"></i>
+        <span data-i18n="settings">Settings</span>
       </button>
 
       <div class="menu-spacer"></div>
 
       <button class="menu-item"
         onclick="logout()"
-        data-i18n="logout">
-        Log out
+        
+        <i data-lucide="log-out"></i>
+        <span data-i18n="logout">Log out</span>
       </button>
 
     </aside>
@@ -4679,7 +4723,13 @@ function getCurrentPage() {
 
 function backFromLegal() {
   showPage(pageBeforeLegal);
+  
 }
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+});
 </script>
 
 </body>

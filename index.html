@@ -4725,10 +4725,19 @@ function backFromLegal() {
   showPage(pageBeforeLegal);
   
 }
-document.addEventListener("DOMContentLoaded", () => {
+function renderSidebarIcons() {
   if (window.lucide) {
     window.lucide.createIcons();
+  } else {
+    console.error("Lucide library has not loaded.");
   }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", renderSidebarIcons);
+} else {
+  renderSidebarIcons();
+}
 });
 </script>
 

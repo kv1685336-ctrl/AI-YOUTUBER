@@ -3453,6 +3453,42 @@ function showEditor() {
 
           <video id="studioVideo" playsinline
             style="display:none;"></video>
+          <div id="studioTextOverlay" style="
+          
+
+    position:absolute;
+
+    z-index:5;
+
+    left:50%;
+
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    color:white;
+
+    font-size:28px;
+
+    font-weight:bold;
+
+    text-align:center;
+
+    text-shadow:2px 2px 5px black;
+
+    width:90%;
+
+    pointer-events:none;
+
+    display:none;
+
+    overflow-wrap:anywhere;
+
+  ">
+
+</div>
+
+  
         </div>
 
         <div class="studio-row" style="justify-content:center;margin-top:15px;">
@@ -3470,6 +3506,11 @@ function showEditor() {
         <button data-tool="trim">✂ Trim</button>
         <button data-tool="split">⫽ Split</button>
         <button data-tool="audio">♫ Audio</button>
+        <button data-tool="text">T Text</button>
+
+        <button data-tool="filters">◐ Filters</button>
+
+        <button data-tool="speed">⏩ Speed</button>
       </div>
 
       <div class="studio-panel" id="studioToolPanel">
@@ -3692,6 +3733,33 @@ function showEditor() {
     document.getElementById("studioTime").textContent =
       formatTime(position) + " / " + formatTime(total);
   }
+  function applyClipEffects(clip) {
+  if (!clip) return;
+
+  const overlay = document.getElementById("studioTextOverlay");
+
+  // Text overlay
+  overlay.textContent = clip.text || "";
+  overlay.style.display = clip.text ? "block" : "none";
+  overlay.style.fontSize = (clip.textSize || 28) + "px";
+
+  // Visual filters
+  const filters = {
+    none: "none",
+    grayscale: "grayscale(100%)",
+    sepia: "sepia(100%)",
+    vintage: "sepia(45%) contrast(110%) brightness(90%)",
+    blur: "blur(3px)",
+    bright: "brightness(130%)",
+    contrast: "contrast(150%)",
+    warm: "sepia(25%) saturate(140%)"
+  };
+
+  video.style.filter = filters[clip.filter || "none"];
+
+  // Playback speed
+  video.playbackRate = Number(clip.speed) || 1;
+}
 
   function loadClip(id, sourceTime, autoplay = false) {
     const clip = getClip(id);
@@ -3704,6 +3772,8 @@ function showEditor() {
 
     selectedClipId = id;
     currentClipId = id;
+    applyClipEffects(clip);
+    
 
     video.style.display = "block";
     placeholder.style.display = "none";
@@ -4123,6 +4193,178 @@ function showEditor() {
         openTool("trim");
       });
     }
+    if (tool === "text") {
+  const clip = getClip(selectedClipId);
+
+  if (!clip) {
+    panel.innerHTML = `
+      <h3>Text Editor</h3>
+      <p class="studio-muted">Select a video clip first.</p>
+    `;
+    return;
+  }
+
+  if (clip.text === undefined) clip.text = "";
+
+  panel.innerHTML = `
+    <h3>Text Overlay</h3>
+
+    <p class="studio-muted" style="margin:10px 0;">
+      Enter the text you want to display over your video.
+    </p>
+
+    <input id="studioTextInput"
+      type="text"
+      maxlength="100"
+      placeholder="Enter your text..."
+      value="${escapeHTML(clip.text)}">
+
+    <p class="studio-muted" style="margin:12px 0 6px;">
+      Text size
+    </p>
+
+    <input id="studioTextSize"
+      type="range" min="14" max="60" value="${clip.textSize || 28}">
+
+    <button id="studioApplyText" style="margin-top:12px;">
+      Apply Text
+    </button>
+
+    <button id="studioRemoveText" style="margin-top:12px;">
+      Remove Text
+    </button>
+  `;
+
+  document.getElementById("studioApplyText")
+    .addEventListener("click", () => {
+      clip.text = document.getElementById("studioTextInput").value;
+      clip.textSize = Number(document.getElementById("studioTextSize").value);
+
+      const overlay = document.getElementById("studioTextOverlay");
+      overlay.textContent = clip.text;
+      overlay.style.fontSize = clip.textSize + "px";
+      overlay.style.display = clip.text ? "block" : "none";
+
+      saveEdit();
+      status.textContent = "Text applied to selected clip.";
+    });
+
+  document.getElementById("studioRemoveText")
+    .addEventListener("click", () => {
+      clip.text = "";
+      const overlay = document.getElementById("studioTextOverlay");
+      overlay.textContent = "";
+      overlay.style.display = "none";
+
+      saveEdit();
+      status.textContent = "Text removed.";
+      openTool("text");
+    });
+}
+    if (tool === "filters") {
+  const clip = getClip(selectedClipId);
+
+  if (!clip) {
+    panel.innerHTML = `
+      <h3>Video Filters</h3>
+      <p class="studio-muted">Select a video clip first.</p>
+    `;
+    return;
+  }
+
+  if (!clip.filter) clip.filter = "none";
+
+  panel.innerHTML = `
+    <h3>Video Filters</h3>
+
+    <p class="studio-muted" style="margin:10px 0;">
+      Choose a visual effect for your selected clip.
+    </p>
+
+    <select id="studioFilterSelect"
+      style="width:100%;padding:12px;background:#252525;color:white;border:1px solid #444;border-radius:7px;">
+
+      <option value="none">Original</option>
+      <option value="grayscale">Black and White</option>
+      <option value="sepia">Sepia</option>
+      <option value="vintage">Vintage</option>
+      <option value="blur">Blur</option>
+      <option value="bright">Bright</option>
+      <option value="contrast">High Contrast</option>
+      <option value="warm">Warm</option>
+    </select>
+
+    <button id="studioApplyFilter" style="margin-top:12px;">
+      Apply Filter
+    </button>
+  `;
+
+  const filterSelect = document.getElementById("studioFilterSelect");
+  filterSelect.value = clip.filter;
+
+  document.getElementById("studioApplyFilter")
+    .addEventListener("click", () => {
+      clip.filter = filterSelect.value;
+
+      applyClipEffects(clip);
+      saveEdit();
+
+      status.textContent = "Filter applied to selected clip.";
+    });
+}
+    if (tool === "speed") {
+  const clip = getClip(selectedClipId);
+
+  if (!clip) {
+    panel.innerHTML = `
+      <h3>Playback Speed</h3>
+      <p class="studio-muted">Select a video clip first.</p>
+    `;
+    return;
+  }
+
+  if (!clip.speed) clip.speed = 1;
+
+  panel.innerHTML = `
+    <h3>Playback Speed</h3>
+
+    <p class="studio-muted" style="margin:10px 0;">
+      Change how fast or slow your selected clip plays.
+    </p>
+
+    <select id="studioSpeedSelect"
+      style="width:100%;padding:12px;background:#252525;color:white;border:1px solid #444;border-radius:7px;">
+
+      <option value="0.25">0.25× Very Slow</option>
+      <option value="0.5">0.5× Slow</option>
+      <option value="0.75">0.75×</option>
+      <option value="1">1× Normal</option>
+      <option value="1.25">1.25×</option>
+      <option value="1.5">1.5× Fast</option>
+      <option value="2">2× Very Fast</option>
+      <option value="3">3×</option>
+    </select>
+
+    <button id="studioApplySpeed" style="margin-top:12px;">
+      Apply Speed
+    </button>
+  `;
+
+  const speedSelect = document.getElementById("studioSpeedSelect");
+  speedSelect.value = String(clip.speed);
+
+  document.getElementById("studioApplySpeed")
+    .addEventListener("click", () => {
+      clip.speed = Number(speedSelect.value);
+
+      applyClipEffects(clip);
+      saveEdit();
+
+      status.textContent =
+        "Playback speed set to " + clip.speed + "×.";
+    });
+}
+    
 
     if (tool === "audio") {
       panel.innerHTML = `

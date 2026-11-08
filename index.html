@@ -3217,7 +3217,7 @@ function showEditor() {
 
     updateLabels();
   });
-
+  
 async function loadFFmpeg() {
   if (ffmpegLoaded) return;
 
@@ -3238,6 +3238,13 @@ async function loadFFmpeg() {
   const baseURL =
     "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd";
 
+  const appBase = new URL("./", document.baseURI).href;
+
+  const workerURL = new URL(
+    "ffmpeg/worker.js",
+    appBase
+  ).href;
+
   currentStage = "Loading FFmpeg core";
 
   await ffmpeg.load({
@@ -3245,14 +3252,22 @@ async function loadFFmpeg() {
       baseURL + "/ffmpeg-core.js",
       "text/javascript"
     ),
+
     wasmURL: await toBlobURL(
       baseURL + "/ffmpeg-core.wasm",
       "application/wasm"
-    )
+    ),
+
+    classWorkerURL: workerURL
   });
 
   ffmpegLoaded = true;
-}  
+
+  currentStage = "FFmpeg ready";
+}
+
+
+
   exportButton.addEventListener("click", async () => {
     if (!videoInput.files[0]) return;
 

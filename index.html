@@ -3020,342 +3020,6 @@ async function selectTool(tool, button) {
   `;
 }
 
-function showEditor() {
-  const chatMessages = document.getElementById("chatMessages");
-
-  chatMessages.innerHTML = `
-    <h2>Video Editor</h2>
-    <p class="chat-answer">
-      Upload a video, select a section and export it as a new MP4.
-    </p>
-
-    <input
-      id="editorVideoInput"
-      type="file"
-      accept="video/*"
-      style="display:block; margin:20px auto; max-width:100%;"
-    >
-
-    <video
-      id="editorVideoPreview"
-      controls
-      playsinline
-      style="display:none; width:100%; max-width:750px;
-      max-height:60vh; margin:20px auto; background:#000;
-      border-radius:10px;"
-    ></video>
-
-    <div style="max-width:650px; margin:20px auto; text-align:left;">
-
-      <label>
-        Start:
-        <span id="trimStartLabel">0.0</span>s
-      </label>
-
-      <input
-        id="trimStart"
-        type="range"
-        min="0"
-        max="0"
-        step="0.1"
-        value="0"
-        disabled
-        style="width:100%;"
-      >
-
-      <label>
-        End:
-        <span id="trimEndLabel">0.0</span>s
-      </label>
-
-      <input
-        id="trimEnd"
-        type="range"
-        min="0"
-        max="0"
-        step="0.1"
-        value="0"
-        disabled
-        style="width:100%;"
-      >
-
-      <p id="editorStatus" class="chat-answer">
-        Choose a video to begin.
-      </p>
-
-      <progress
-        id="editorProgress"
-        value="0"
-        max="100"
-        style="width:100%; display:none;"
-      ></progress>
-
-      <button
-        id="exportTrimButton"
-        class="primary"
-        disabled
-        style="margin-top:15px;"
-      >
-        Export trimmed MP4
-      </button>
-
-      <a
-        id="downloadEditedVideo"
-        style="display:none; margin-top:20px;
-        color:#ff3030; font-weight:bold;"
-        download="edited-video.mp4"
-      >
-        Download edited video
-      </a>
-    </div>
-  `;
-
-  const videoInput = document.getElementById("editorVideoInput");
-  const video = document.getElementById("editorVideoPreview");
-  const startSlider = document.getElementById("trimStart");
-  const endSlider = document.getElementById("trimEnd");
-  const startLabel = document.getElementById("trimStartLabel");
-  const endLabel = document.getElementById("trimEndLabel");
-  const exportButton = document.getElementById("exportTrimButton");
-  const status = document.getElementById("editorStatus");
-  const progressBar = document.getElementById("editorProgress");
-  const downloadLink = document.getElementById("downloadEditedVideo");
-
-  let videoUrl = null;
-  let editedUrl = null;
-  let ffmpeg = null;
-  let ffmpegLoaded = false;
-  let currentStage = "Not started";
-  let trimStart = 0;
-  let trimEnd = 0;
-
-  function updateLabels() {
-    startLabel.textContent = trimStart.toFixed(1);
-    endLabel.textContent = trimEnd.toFixed(1);
-  }
-
-  videoInput.addEventListener("change", () => {
-    const file = videoInput.files[0];
-
-    if (!file) return;
-
-    if (!file.type.startsWith("video/")) {
-      status.textContent = "Please select a valid video.";
-      return;
-    }
-
-    // Keep mobile memory usage manageable.
-    if (file.size > 100 * 1024 * 1024) {
-      status.textContent =
-        "This video is over 100 MB. Please try a smaller video.";
-      videoInput.value = "";
-      return;
-    }
-
-    if (videoUrl) URL.revokeObjectURL(videoUrl);
-    if (editedUrl) URL.revokeObjectURL(editedUrl);
-
-    downloadLink.style.display = "none";
-    progressBar.style.display = "none";
-
-    videoUrl = URL.createObjectURL(file);
-    video.src = videoUrl;
-    video.style.display = "block";
-
-    status.textContent = "Loading video...";
-
-    startSlider.disabled = true;
-    endSlider.disabled = true;
-    exportButton.disabled = true;
-  });
-
-  video.addEventListener("loadedmetadata", () => {
-    const duration = video.duration;
-
-    if (!Number.isFinite(duration)) {
-      status.textContent = "Could not read this video's duration.";
-      return;
-    }
-
-    trimStart = 0;
-    trimEnd = duration;
-
-    startSlider.max = duration;
-    endSlider.max = duration;
-
-    startSlider.value = 0;
-    endSlider.value = duration;
-
-    startSlider.disabled = false;
-    endSlider.disabled = false;
-    exportButton.disabled = false;
-
-    updateLabels();
-
-    status.textContent =
-      "Video ready. Select the section you want to export.";
-  });
-
-  startSlider.addEventListener("input", () => {
-    trimStart = Number(startSlider.value);
-
-    if (trimStart >= trimEnd) {
-      trimStart = Math.max(0, trimEnd - 0.1);
-      startSlider.value = trimStart;
-    }
-
-    updateLabels();
-  });
-
-  endSlider.addEventListener("input", () => {
-    trimEnd = Number(endSlider.value);
-
-    if (trimEnd <= trimStart) {
-      trimEnd = Math.min(video.duration, trimStart + 0.1);
-      endSlider.value = trimEnd;
-    }
-
-    updateLabels();
-  });
-  
-async function loadFFmpeg() {
-  if (ffmpegLoaded) return;
-
-  currentStage = "Importing FFmpeg";
-
-  const { FFmpeg } = await import(
-    "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js"
-  );
-
-  const { toBlobURL } = await import(
-    "https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/esm/index.js"
-  );
-
-  currentStage = "Creating FFmpeg";
-
-  ffmpeg = new FFmpeg();
-
-  const baseURL =
-    "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd";
-
-  currentStage = "Loading FFmpeg core";
-
-  const coreURL = await toBlobURL(
-    baseURL + "/ffmpeg-core.js",
-    "text/javascript"
-  );
-
-  const wasmURL = await toBlobURL(
-    baseURL + "/ffmpeg-core.wasm",
-    "application/wasm"
-  );
-
-  await ffmpeg.load({
-    coreURL,
-    wasmURL
-  });
-
-  ffmpegLoaded = true;
-  currentStage = "FFmpeg ready";
-}
-
-  
-
-
-
-
-  exportButton.addEventListener("click", async () => {
-    if (!videoInput.files[0]) return;
-
-    if (trimEnd <= trimStart) {
-      status.textContent = "Please select a valid time range.";
-      return;
-    }
-
-    const file = videoInput.files[0];
-
-    exportButton.disabled = true;
-    progressBar.style.display = "block";
-    progressBar.value = 0;
-    downloadLink.style.display = "none";
-
-    try {
-      await loadFFmpeg();
-
-      status.textContent = "Preparing your video...";
-
-      ffmpeg.on("progress", ({ progress }) => {
-        const percent = Math.max(
-          0,
-          Math.min(100, Math.round(progress * 100))
-        );
-
-        progressBar.value = percent;
-        status.textContent = "Processing video: " + percent + "%";
-      });
-      currentStage = "Reading uploaded video";
-
-      await ffmpeg.writeFile(
-        "input_video",
-        new Uint8Array(await file.arrayBuffer())
-      );
-
-      const selectedDuration = trimEnd - trimStart;
-
-      status.textContent = "encoding video...";
-
-      const result = await ffmpeg.exec([
-        "-ss", trimStart.toFixed(2),
-        "-i", "input_video",
-        "-t", selectedDuration.toFixed(2),
-        "-c:v", "libx264",
-        "-preset", "ultrafast",
-        "-crf", "28",
-        "-c:a", "aac",
-        "-b:a", "128k",
-        "-movflags", "+faststart",
-        "edited.mp4"
-      ]);
-
-      if (result !== 0) {
-        throw new Error("Video processing failed.");
-      }
-      currentStage = "Reading exported video";
-
-      const output = await ffmpeg.readFile("edited.mp4");
-
-      if (!output || output.length === 0) {
-        throw new Error("No output video was created.");
-      }
-
-      const blob = new Blob([output], {
-        type: "video/mp4"
-      });
-
-      if (editedUrl) URL.revokeObjectURL(editedUrl);
-
-      editedUrl = URL.createObjectURL(blob);
-
-      downloadLink.href = editedUrl;
-      downloadLink.style.display = "inline-block";
-
-      status.textContent =
-        "Your trimmed video is ready!";
-
-      progressBar.value = 100;
-    
-  
-  } catch (error) {
-  console.error("FULL FFmpeg ERROR:", error);
-  console.error("Error type:", typeof error);
-  console.error("Error details:", String(error));
-
-  status.textContent =
-    "Failed at: " + currentStage +
-    " | " + String(error);
-    }
-});
-}
   
 
 function showAudioGenerator() {
@@ -3588,6 +3252,323 @@ function toggleThemeQuick() {
 }
 
 
+
+function showEditor() {
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <div style="max-width:850px;margin:auto;text-align:center;">
+      <h2>Manual Video Editor</h2>
+      <p class="chat-answer">
+        Upload, preview and arrange your video editing timeline.
+      </p>
+
+      <input
+        id="editorVideoInput"
+        type="file"
+        accept="video/*"
+        style="display:block;margin:20px auto;max-width:100%;"
+      >
+
+      <video
+        id="editorVideoPreview"
+        controls
+        playsinline
+        style="display:none;width:100%;max-height:45vh;
+        margin:20px auto;background:#000;border-radius:10px;"
+      ></video>
+
+      <div style="display:flex;gap:10px;justify-content:center;
+      flex-wrap:wrap;margin:20px 0;">
+
+        <button id="undoEdit" class="primary" disabled>
+          Undo
+        </button>
+
+        <button id="redoEdit" class="primary" disabled>
+          Redo
+        </button>
+
+        <button id="deleteClip" class="primary" disabled>
+          Delete Clip
+        </button>
+      </div>
+
+      <div style="text-align:left;margin-top:25px;">
+        <h3>Timeline</h3>
+
+        <div id="timelineArea"
+          style="background:#171717;border:1px solid #444;
+          border-radius:10px;padding:18px;margin-top:12px;">
+
+          <div id="timelineClip"
+            style="background:#292929;border:2px dashed #666;
+            padding:20px;border-radius:8px;text-align:center;">
+            No clips added yet
+          </div>
+
+          <label style="display:block;margin-top:20px;">
+            Playhead
+            <span id="playheadLabel">0.0s</span>
+          </label>
+
+          <input id="playhead" type="range"
+            min="0" max="0" value="0" step="0.1"
+            disabled style="width:100%;">
+        </div>
+      </div>
+
+      <div style="text-align:left;margin-top:25px;">
+        <h3>Trim selected clip</h3>
+
+        <label>
+          Start: <span id="trimStartLabel">0.0</span>s
+        </label>
+
+        <input id="trimStart" type="range"
+          min="0" max="0" value="0" step="0.1"
+          disabled style="width:100%;">
+
+        <label>
+          End: <span id="trimEndLabel">0.0</span>s
+        </label>
+
+        <input id="trimEnd" type="range"
+          min="0" max="0" value="0" step="0.1"
+          disabled style="width:100%;">
+      </div>
+
+      <p id="editorStatus" class="chat-answer"
+        style="margin-top:20px;">
+        Upload a video to begin.
+      </p>
+    </div>
+  `;
+
+  const input = document.getElementById("editorVideoInput");
+  const video = document.getElementById("editorVideoPreview");
+  const startSlider = document.getElementById("trimStart");
+  const endSlider = document.getElementById("trimEnd");
+  const playhead = document.getElementById("playhead");
+  const startLabel = document.getElementById("trimStartLabel");
+  const endLabel = document.getElementById("trimEndLabel");
+  const playheadLabel = document.getElementById("playheadLabel");
+  const timelineClip = document.getElementById("timelineClip");
+  const status = document.getElementById("editorStatus");
+  const undoButton = document.getElementById("undoEdit");
+  const redoButton = document.getElementById("redoEdit");
+  const deleteButton = document.getElementById("deleteClip");
+
+  let clip = null;
+  let videoUrl = null;
+
+  let history = [];
+  let historyIndex = -1;
+
+  function saveHistory() {
+    history = history.slice(0, historyIndex + 1);
+
+    history.push(clip ? { ...clip } : null);
+    historyIndex++;
+
+    updateHistoryButtons();
+  }
+
+  function updateHistoryButtons() {
+    undoButton.disabled = historyIndex <= 0;
+    redoButton.disabled = historyIndex >= history.length - 1;
+  }
+
+  function updateEditor() {
+    if (!clip) return;
+
+    startSlider.value = clip.start;
+    endSlider.value = clip.end;
+
+    startLabel.textContent = clip.start.toFixed(1);
+    endLabel.textContent = clip.end.toFixed(1);
+
+    playhead.max = clip.duration;
+    playhead.value = video.currentTime || clip.start;
+
+    playheadLabel.textContent =
+      Number(playhead.value).toFixed(1) + "s";
+
+    timelineClip.textContent =
+      "VIDEO CLIP | " +
+      clip.start.toFixed(1) + "s - " +
+      clip.end.toFixed(1) + "s";
+
+    timelineClip.style.border = "2px solid #ff3030";
+
+    startSlider.disabled = false;
+    endSlider.disabled = false;
+    playhead.disabled = false;
+    deleteButton.disabled = false;
+  }
+
+  function restoreHistory(index) {
+    historyIndex = index;
+    clip = history[index] ? { ...history[index] } : null;
+
+    if (clip) {
+      video.currentTime = Math.min(
+        clip.start,
+        video.duration
+      );
+      updateEditor();
+    } else {
+      timelineClip.textContent = "No clips added yet";
+      timelineClip.style.border = "2px dashed #666";
+
+      startSlider.disabled = true;
+      endSlider.disabled = true;
+      playhead.disabled = true;
+      deleteButton.disabled = true;
+    }
+
+    updateHistoryButtons();
+  }
+
+  input.addEventListener("change", () => {
+    const file = input.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("video/")) {
+      status.textContent = "Please select a valid video.";
+      return;
+    }
+
+    if (file.size > 100 * 1024 * 1024) {
+      status.textContent =
+        "Please select a video smaller than 100 MB.";
+      input.value = "";
+      return;
+    }
+
+    if (videoUrl) URL.revokeObjectURL(videoUrl);
+
+    videoUrl = URL.createObjectURL(file);
+    video.src = videoUrl;
+    video.style.display = "block";
+
+    status.textContent = "Loading video...";
+  });
+
+  video.addEventListener("loadedmetadata", () => {
+    if (!Number.isFinite(video.duration)) {
+      status.textContent = "Could not read video duration.";
+      return;
+    }
+
+    clip = {
+      name: input.files[0].name,
+      duration: video.duration,
+      start: 0,
+      end: video.duration
+    };
+
+    startSlider.max = video.duration;
+    endSlider.max = video.duration;
+    playhead.max = video.duration;
+
+    saveHistory();
+    updateEditor();
+
+    status.textContent =
+      "Video added to timeline. Your editing workspace is ready.";
+  });
+
+  startSlider.addEventListener("input", () => {
+    if (!clip) return;
+
+    clip.start = Number(startSlider.value);
+
+    if (clip.start >= clip.end) {
+      clip.start = Math.max(0, clip.end - 0.1);
+    }
+
+    if (video.currentTime < clip.start) {
+      video.currentTime = clip.start;
+    }
+
+    updateEditor();
+  });
+
+  endSlider.addEventListener("input", () => {
+    if (!clip) return;
+
+    clip.end = Number(endSlider.value);
+
+    if (clip.end <= clip.start) {
+      clip.end = Math.min(
+        clip.duration,
+        clip.start + 0.1
+      );
+    }
+
+    if (video.currentTime > clip.end) {
+      video.currentTime = clip.end;
+    }
+
+    updateEditor();
+  });
+
+  playhead.addEventListener("input", () => {
+    if (!clip) return;
+
+    video.currentTime = Number(playhead.value);
+    playheadLabel.textContent =
+      Number(playhead.value).toFixed(1) + "s";
+  });
+
+  video.addEventListener("timeupdate", () => {
+    if (!clip) return;
+
+    playhead.value = video.currentTime;
+    playheadLabel.textContent =
+      video.currentTime.toFixed(1) + "s";
+
+    if (video.currentTime >= clip.end) {
+      video.pause();
+    }
+  });
+
+  undoButton.addEventListener("click", () => {
+    if (historyIndex > 0) {
+      restoreHistory(historyIndex - 1);
+      status.textContent = "Last edit undone.";
+    }
+  });
+
+  redoButton.addEventListener("click", () => {
+    if (historyIndex < history.length - 1) {
+      restoreHistory(historyIndex + 1);
+      status.textContent = "Edit restored.";
+    }
+  });
+
+  deleteButton.addEventListener("click", () => {
+    if (!clip) return;
+
+    clip = null;
+    saveHistory();
+
+    timelineClip.textContent = "No clips added yet";
+    timelineClip.style.border = "2px dashed #666";
+
+    startSlider.disabled = true;
+    endSlider.disabled = true;
+    playhead.disabled = true;
+    deleteButton.disabled = true;
+
+    video.pause();
+
+    status.textContent =
+      "Clip deleted. You can undo this action.";
+  });
+}
 
 
 function loadSettings() {

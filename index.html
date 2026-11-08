@@ -1489,6 +1489,22 @@ body.light-theme .primary {
 body.light-theme .menu-title {
   color: #000000;
 }
+/* Keep all sidebar icons red */
+.side-menu .menu-item svg {
+  color: #ff3030 !important;
+  stroke: #ff3030 !important;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Keep icons red on hover and when selected */
+.side-menu .menu-item:hover svg,
+.side-menu .menu-item.active svg,
+.side-menu .menu-item:focus svg {
+  color: #ff3030 !important;
+  stroke: #ff3030 !important;
+}
   
 
 

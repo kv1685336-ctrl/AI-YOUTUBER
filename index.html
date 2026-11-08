@@ -3125,6 +3125,7 @@ function showEditor() {
   let editedUrl = null;
   let ffmpeg = null;
   let ffmpegLoaded = false;
+  let currentStage = "Not started";
   let trimStart = 0;
   let trimEnd = 0;
 
@@ -3217,30 +3218,41 @@ function showEditor() {
     updateLabels();
   });
 
-  async function loadFFmpeg() {
-    if (ffmpegLoaded) return;
+async function loadFFmpeg() {
+  if (ffmpegLoaded) return;
 
-    status.textContent = "Loading video processing engine...";
+  currentStage = "Importing FFmpeg";
 
-    const { FFmpeg } = await import(
-      "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js"
-    );
+  const { FFmpeg } = await import(
+    "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js"
+  );
 
-  
+  const { toBlobURL } = await import(
+    "https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/esm/index.js"
+  );
 
-    ffmpeg = new FFmpeg();
+  currentStage = "Creating FFmpeg";
 
-    const baseURL =
-      "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd";
+  ffmpeg = new FFmpeg();
 
-    await ffmpeg.load({
-      
-      coreURL: baseURL + "/ffmpeg-core.js",
-      wasmURL: baseURL + "/ffmpeg-core.wasm"
+  const baseURL =
+    "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd";
+
+  currentStage = "Loading FFmpeg core";
+
+  await ffmpeg.load({
+    coreURL: await toBlobURL(
+      baseURL + "/ffmpeg-core.js",
+      "text/javascript"
+    ),
+    wasmURL: await toBlobURL(
+      baseURL + "/ffmpeg-core.wasm",
+      "application/wasm"
+    )
   });
-    ffmpegLoaded = true;
-  }
 
+  ffmpegLoaded = true;
+}  
   exportButton.addEventListener("click", async () => {
     if (!videoInput.files[0]) return;
 
@@ -3270,6 +3282,7 @@ function showEditor() {
         progressBar.value = percent;
         status.textContent = "Processing video: " + percent + "%";
       });
+      currentStage = "Reading uploaded video";
 
       await ffmpeg.writeFile(
         "input_video",
@@ -3278,7 +3291,7 @@ function showEditor() {
 
       const selectedDuration = trimEnd - trimStart;
 
-      status.textContent = "Trimming and encoding video...";
+      status.textContent = "encoding video...";
 
       const result = await ffmpeg.exec([
         "-ss", trimStart.toFixed(2),
@@ -3296,6 +3309,7 @@ function showEditor() {
       if (result !== 0) {
         throw new Error("Video processing failed.");
       }
+      currentStage = "Reading exported video";
 
       const output = await ffmpeg.readFile("edited.mp4");
 
@@ -3318,19 +3332,21 @@ function showEditor() {
         "Your trimmed video is ready!";
 
       progressBar.value = 100;
-
+    });
+  }
     } catch (error) {
-      console.error("FFmpeg Export Error:", error);
-      
+  console.error("FFmpeg error:", error);
 
-      status.textContent =
-        "Export failed: " + (error.message || string(error));
+  status.textContent =
+    "Failed at: " + currentStage +
+    " | " + error.name +
+    ": " + error.message;
 
-    } finally {
-      exportButton.disabled = false;
-    }
-  });
+} finally {
+  exportButton.disabled = false;
 }
+  
+  
 
 function showAudioGenerator() {
   const chatMessages = document.getElementById("chatMessages");

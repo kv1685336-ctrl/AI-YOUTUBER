@@ -3251,9 +3251,6 @@ function toggleThemeQuick() {
   }
 }
 
-
-
-
 function showEditor() {
   const chatMessages = document.getElementById("chatMessages");
 
@@ -3264,11 +3261,10 @@ function showEditor() {
         max-width:1100px;
         margin:auto;
         color:white;
-        text-align:left;
         font-family:Arial,sans-serif;
       }
 
-      .studio button, .studio select, .studio input {
+      .studio button, .studio input, .studio select {
         font:inherit;
       }
 
@@ -3283,28 +3279,35 @@ function showEditor() {
 
       .studio button:disabled {
         opacity:.4;
-        cursor:not-allowed;
       }
 
       .studio button.active {
         background:#ff3030;
-        border-color:#ff3030;
       }
 
-      .studio-top {
+      .studio-top, .studio-row {
         display:flex;
         align-items:center;
         justify-content:space-between;
         gap:10px;
         flex-wrap:wrap;
+      }
+
+      .studio-top {
         padding:12px 0;
         border-bottom:1px solid #333;
       }
 
-      .studio-preview-area {
-        background:#111;
-        border:1px solid #333;
-        border-radius:12px;
+      .studio-muted {
+        color:#999;
+        font-size:12px;
+      }
+
+      .studio-preview-area, .studio-timeline,
+      .studio-panel {
+        background:#151515;
+        border:1px solid #383838;
+        border-radius:10px;
         padding:15px;
         margin-top:15px;
       }
@@ -3316,8 +3319,8 @@ function showEditor() {
         height:320px;
         margin:auto;
         display:flex;
-        justify-content:center;
         align-items:center;
+        justify-content:center;
         background:#000;
         overflow:hidden;
         border-radius:8px;
@@ -3329,73 +3332,27 @@ function showEditor() {
         object-fit:contain;
       }
 
-      .studio-overlay {
-        position:absolute;
-        top:50%;
-        left:50%;
-        transform:translate(-50%,-50%);
-        color:white;
-        font-size:25px;
-        font-weight:bold;
-        text-align:center;
-        width:90%;
-        pointer-events:none;
-        text-shadow:2px 2px 5px black;
-      }
-
       .studio-tools {
-        display:grid;
-        grid-template-columns:repeat(8,minmax(65px,1fr));
+        display:flex;
         gap:8px;
         overflow-x:auto;
         padding:15px 0;
       }
 
-      .studio-tool {
-        min-width:65px;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        gap:6px;
-        font-size:12px;
-      }
-
-      .studio-tool span {
-        font-size:20px;
-      }
-
-      .studio-panel {
-        background:#171717;
-        border:1px solid #383838;
-        padding:15px;
-        border-radius:10px;
-        margin:10px 0;
-      }
-
-      .studio-panel input[type="range"] {
-        width:100%;
-        accent-color:#ff3030;
-      }
-
-      .studio-timeline {
-        background:#111;
-        border:1px solid #383838;
-        border-radius:10px;
-        padding:15px;
-        margin-top:15px;
-        overflow-x:auto;
+      .studio-tools button {
+        min-width:85px;
       }
 
       .studio-track {
         display:flex;
         align-items:center;
         gap:8px;
-        min-width:500px;
         margin:12px 0;
+        min-width:500px;
       }
 
       .studio-track-name {
-        width:75px;
+        width:65px;
         flex-shrink:0;
         color:#aaa;
         font-size:12px;
@@ -3403,44 +3360,47 @@ function showEditor() {
 
       .studio-track-content {
         flex:1;
-        min-height:42px;
+        min-height:65px;
         background:#202020;
         border:1px dashed #555;
         border-radius:6px;
         display:flex;
         align-items:center;
-        padding:5px;
-        gap:5px;
+        gap:7px;
+        padding:7px;
+        overflow-x:auto;
       }
 
       .studio-clip {
         min-width:100px;
-        padding:12px 8px;
-        background:#8b2929;
+        max-width:220px;
+        height:48px;
+        flex-shrink:0;
+        padding:7px;
+        background:#792c2c;
         border:2px solid #ff5555;
-        border-radius:5px;
+        border-radius:6px;
+        color:white;
         font-size:11px;
+        text-align:left;
         overflow:hidden;
-        text-overflow:ellipsis;
         white-space:nowrap;
+        text-overflow:ellipsis;
       }
 
-      .studio-muted {
-        color:#999;
-        font-size:12px;
+      .studio-clip.selected {
+        border:2px solid #fff;
+        background:#c52c2c;
       }
 
-      .studio-row {
-        display:flex;
-        align-items:center;
-        gap:10px;
-        flex-wrap:wrap;
+      .studio-panel input[type="range"] {
+        width:100%;
+        accent-color:#ff3030;
       }
 
-      .studio-row input[type="text"] {
-        flex:1;
-        min-width:120px;
-        padding:11px;
+      .studio-panel input[type="text"] {
+        width:100%;
+        padding:10px;
         background:#252525;
         color:white;
         border:1px solid #444;
@@ -3449,20 +3409,11 @@ function showEditor() {
 
       .studio-export {
         background:#ff3030 !important;
-        border-color:#ff3030 !important;
       }
 
       @media(max-width:600px) {
         .studio-preview {
           height:260px;
-        }
-
-        .studio-tools {
-          grid-template-columns:repeat(8,75px);
-        }
-
-        .studio-top h2 {
-          font-size:17px;
         }
       }
     </style>
@@ -3478,21 +3429,17 @@ function showEditor() {
         <div class="studio-row">
           <button id="studioUndo" disabled>↶</button>
           <button id="studioRedo" disabled>↷</button>
-          <button id="studioExport" class="studio-export">
-            Export
-          </button>
+          <button id="studioExport" class="studio-export">Export</button>
         </div>
       </div>
 
       <div class="studio-preview-area">
 
-        <div class="studio-row"
-          style="justify-content:space-between;margin-bottom:12px;">
-
+        <div class="studio-row" style="margin-bottom:12px;">
           <span class="studio-muted">VIDEO PREVIEW</span>
 
           <select id="studioRatio"
-            style="background:#252525;color:white;padding:8px;border-radius:7px;">
+            style="background:#252525;color:white;padding:8px;">
             <option value="16:9">16:9 YouTube</option>
             <option value="9:16">9:16 Shorts</option>
             <option value="1:1">1:1 Square</option>
@@ -3500,149 +3447,83 @@ function showEditor() {
         </div>
 
         <div class="studio-preview" id="studioPreview">
-          <div id="studioPlaceholder" class="studio-muted">
-            Upload a video to begin editing
-          </div>
+          <span id="studioPlaceholder" class="studio-muted">
+            Import videos to begin editing
+          </span>
 
-          <video id="studioVideo"
-            playsinline
-            style="display:none;">
-          </video>
-
-          <div id="studioTextOverlay" class="studio-overlay"></div>
+          <video id="studioVideo" playsinline
+            style="display:none;"></video>
         </div>
 
-        <div class="studio-row"
-          style="justify-content:center;margin-top:15px;">
-
+        <div class="studio-row" style="justify-content:center;margin-top:15px;">
           <button id="studioPlay">▶ Play</button>
           <button id="studioPause">Ⅱ Pause</button>
-
-          <span id="studioTime" class="studio-muted">
-            0:00 / 0:00
-          </span>
+          <span id="studioTime" class="studio-muted">0:00 / 0:00</span>
         </div>
+
       </div>
 
-      <div style="margin-top:20px;">
-        <div class="studio-row"
-          style="justify-content:space-between;">
-          <h3>Editing Tools</h3>
-          <span class="studio-muted">Select a tool</span>
-        </div>
+      <h3 style="margin-top:20px;">Editing Tools</h3>
 
-        <div class="studio-tools">
+      <div class="studio-tools">
+        <button data-tool="media">＋ Media</button>
+        <button data-tool="trim">✂ Trim</button>
+        <button data-tool="split">⫽ Split</button>
+        <button data-tool="audio">♫ Audio</button>
+      </div>
 
-          <button class="studio-tool" data-tool="media">
-            <span>＋</span>Media
-          </button>
-
-          <button class="studio-tool" data-tool="trim">
-            <span>✂️</span>Trim
-          </button>
-
-          <button class="studio-tool" data-tool="split">
-            <span>⫽</span>Split
-          </button>
-
-          <button class="studio-tool" data-tool="text">
-            <span>T</span>Text
-          </button>
-
-          <button class="studio-tool" data-tool="audio">
-            <span>♫</span>Audio
-          </button>
-
-          <button class="studio-tool" data-tool="speed">
-            <span>⏩</span>Speed
-          </button>
-
-          <button class="studio-tool" data-tool="crop">
-            <span>▣</span>Crop
-          </button>
-
-          <button class="studio-tool" data-tool="filters">
-            <span>◐</span>Filters
-          </button>
-
-        </div>
-
-        <div id="studioToolPanel" class="studio-panel">
-          <span class="studio-muted">
-            Select an editing tool above.
-          </span>
-        </div>
+      <div class="studio-panel" id="studioToolPanel">
+        <span class="studio-muted">
+          Select a tool to begin.
+        </span>
       </div>
 
       <div class="studio-timeline">
 
-        <div class="studio-row"
-          style="justify-content:space-between;">
+        <div class="studio-row">
           <h3>Timeline</h3>
           <span id="studioDuration" class="studio-muted">
-            No video loaded
+            No videos
           </span>
         </div>
 
         <div class="studio-track">
           <div class="studio-track-name">VIDEO</div>
           <div class="studio-track-content" id="videoTrack">
-            <span class="studio-muted">No video</span>
+            <span class="studio-muted">No clips</span>
           </div>
         </div>
 
-        <div class="studio-track">
-          <div class="studio-track-name">AUDIO</div>
-          <div class="studio-track-content" id="audioTrack">
-            <span class="studio-muted">No audio</span>
-          </div>
-        </div>
-
-        <div class="studio-track">
-          <div class="studio-track-name">TEXT</div>
-          <div class="studio-track-content" id="textTrack">
-            <span class="studio-muted">No text</span>
-          </div>
-        </div>
-
-        <label class="studio-muted">
+        <p class="studio-muted">
           Timeline position:
           <span id="studioPosition">0.0s</span>
-        </label>
+        </p>
 
-        <input id="studioPlayhead"
-          type="range"
-          min="0"
-          max="0"
-          value="0"
-          step="0.1"
-          disabled
-          style="width:100%;accent-color:#ff3030;">
+        <input id="studioPlayhead" type="range"
+          min="0" max="0" value="0" step="0.1"
+          disabled style="width:100%;accent-color:#ff3030;">
+
       </div>
 
       <div class="studio-panel">
+
         <h3>Media Library</h3>
 
-        <p class="studio-muted" style="margin:8px 0;">
-          Import your video and audio files.
+        <p class="studio-muted" style="margin:10px 0;">
+          Select multiple video files.
         </p>
 
         <input id="studioVideoInput"
-          type="file"
-          accept="video/*"
+          type="file" accept="video/*" multiple
           style="max-width:100%;">
 
-        <div style="margin-top:12px;">
-          <input id="studioAudioInput"
-            type="file"
-            accept="audio/*"
-            style="max-width:100%;">
-        </div>
+        <div id="studioMediaList" style="margin-top:12px;"></div>
 
         <p id="studioStatus" class="studio-muted"
           style="margin-top:12px;">
           Ready to edit.
         </p>
+
       </div>
 
     </div>
@@ -3650,31 +3531,26 @@ function showEditor() {
 
   const video = document.getElementById("studioVideo");
   const videoInput = document.getElementById("studioVideoInput");
-  const audioInput = document.getElementById("studioAudioInput");
-  const preview = document.getElementById("studioPreview");
-  const placeholder = document.getElementById("studioPlaceholder");
+  const videoTrack = document.getElementById("videoTrack");
+  const playhead = document.getElementById("studioPlayhead");
   const status = document.getElementById("studioStatus");
   const panel = document.getElementById("studioToolPanel");
-  const playhead = document.getElementById("studioPlayhead");
+  const placeholder = document.getElementById("studioPlaceholder");
 
-  const videoTrack = document.getElementById("videoTrack");
-  const audioTrack = document.getElementById("audioTrack");
-  const textTrack = document.getElementById("textTrack");
+  // Each imported file is stored once.
+  const sources = {};
 
-  const overlay = document.getElementById("studioTextOverlay");
+  // Each timeline segment refers to an imported source.
+  let clips = [];
 
-  let videoUrl = null;
-  let audioUrl = null;
-  let audioElement = null;
+  let selectedClipId = null;
+  let currentClipId = null;
+  let clipCounter = 0;
+  let sourceCounter = 0;
 
-  let trimStart = 0;
-  let trimEnd = 0;
-  let textContent = "";
-  let playbackSpeed = 1;
-  let selectedFilter = "none";
-
-  let editHistory = [];
+  let history = [];
   let historyIndex = -1;
+  let pendingLoad = null;
 
   function formatTime(seconds) {
     if (!Number.isFinite(seconds)) return "0:00";
@@ -3685,20 +3561,34 @@ function showEditor() {
     return minutes + ":" + String(secs).padStart(2, "0");
   }
 
-  function saveEdit() {
-    const state = {
-      trimStart,
-      trimEnd,
-      textContent,
-      playbackSpeed,
-      selectedFilter
-    };
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    })[char]);
+  }
 
-    editHistory = editHistory.slice(0, historyIndex + 1);
-    editHistory.push(state);
-    historyIndex++;
+  function getClip(id) {
+    return clips.find(clip => clip.id === id);
+  }
 
-    updateHistoryButtons();
+  function clipDuration(clip) {
+    return clip.end - clip.start;
+  }
+
+  function totalDuration() {
+    return clips.reduce(
+      (total, clip) => total + clipDuration(clip), 0
+    );
+  }
+
+  function selectedIndex() {
+    return clips.findIndex(
+      clip => clip.id === selectedClipId
+    );
   }
 
   function updateHistoryButtons() {
@@ -3706,129 +3596,314 @@ function showEditor() {
       historyIndex <= 0;
 
     document.getElementById("studioRedo").disabled =
-      historyIndex >= editHistory.length - 1;
+      historyIndex >= history.length - 1;
   }
 
-  function applyState(state) {
-    trimStart = state.trimStart;
-    trimEnd = state.trimEnd;
-    textContent = state.textContent;
-    playbackSpeed = state.playbackSpeed;
-    selectedFilter = state.selectedFilter;
+  function saveEdit() {
+    const snapshot = {
+      clips: JSON.parse(JSON.stringify(clips)),
+      selectedClipId
+    };
 
-    video.playbackRate = playbackSpeed;
-    overlay.textContent = textContent;
+    history = history.slice(0, historyIndex + 1);
+    history.push(snapshot);
+    historyIndex++;
 
-    video.style.filter =
-      selectedFilter === "none" ? "none" : selectedFilter;
-
-    updateTracks();
     updateHistoryButtons();
   }
 
-  function updateTracks() {
-    if (videoUrl) {
-      videoTrack.innerHTML = `
-        <div class="studio-clip">
-          ${videoInput.files[0].name}
-        </div>
-      `;
+  function updateTimeline() {
+    const total = totalDuration();
+
+    document.getElementById("studioDuration").textContent =
+      clips.length + " clips · " + formatTime(total);
+
+    playhead.max = total;
+    playhead.disabled = clips.length === 0;
+
+    if (clips.length === 0) {
+      videoTrack.innerHTML =
+        '<span class="studio-muted">No clips</span>';
+
+      return;
     }
 
-    if (audioUrl) {
-      audioTrack.innerHTML = `
-        <div class="studio-clip"
-          style="background:#225c42;border-color:#42c98a;">
-          Audio file
-        </div>
-      `;
-    }
+    videoTrack.innerHTML = clips.map((clip, index) => {
+      const source = sources[clip.sourceId];
 
-    if (textContent) {
-      textTrack.innerHTML = `
-        <div class="studio-clip"
-          style="background:#354c85;border-color:#7097ff;">
-          ${textContent.replace(/[&<>"']/g, char =>
-            ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[char]
-          )}
-        </div>
+      const name = source ? source.name : "Video";
+
+      return `
+        <button class="studio-clip
+          ${clip.id === selectedClipId ? "selected" : ""}"
+          data-clip-id="${clip.id}"
+          style="width:${Math.max(100, clipDuration(clip) * 18)}px;">
+          ${index + 1}. ${escapeHTML(name)}
+          <br>
+          ${clipDuration(clip).toFixed(1)}s
+        </button>
       `;
-    } else {
-      textTrack.innerHTML =
-        '<span class="studio-muted">No text</span>';
-    }
+    }).join("");
+
+    videoTrack.querySelectorAll("[data-clip-id]").forEach(button => {
+      button.addEventListener("click", () => {
+        selectClip(button.dataset.clipId);
+      });
+    });
   }
 
-  videoInput.addEventListener("change", () => {
-    const file = videoInput.files[0];
+  function updateMediaList() {
+    const list = document.getElementById("studioMediaList");
 
-    if (!file) return;
+    list.innerHTML = Object.values(sources).map(source => `
+      <p class="studio-muted" style="margin:6px 0;">
+        🎬 ${escapeHTML(source.name)}
+        · ${formatTime(source.duration)}
+      </p>
+    `).join("");
+  }
 
-    if (!file.type.startsWith("video/")) {
-      status.textContent = "Please choose a valid video.";
-      return;
+  function getGlobalPosition() {
+    let position = 0;
+
+    for (const clip of clips) {
+      if (clip.id === currentClipId) {
+        return position + Math.max(
+          0,
+          Math.min(video.currentTime - clip.start, clipDuration(clip))
+        );
+      }
+
+      position += clipDuration(clip);
     }
 
-    if (file.size > 100 * 1024 * 1024) {
-      status.textContent = "Please choose a video under 100 MB.";
-      videoInput.value = "";
-      return;
-    }
+    return 0;
+  }
 
-    if (videoUrl) URL.revokeObjectURL(videoUrl);
+  function updateClock() {
+    const position = getGlobalPosition();
+    const total = totalDuration();
 
-    videoUrl = URL.createObjectURL(file);
-    video.src = videoUrl;
+    playhead.value = position;
+
+    document.getElementById("studioPosition").textContent =
+      position.toFixed(1) + "s";
+
+    document.getElementById("studioTime").textContent =
+      formatTime(position) + " / " + formatTime(total);
+  }
+
+  function loadClip(id, sourceTime, autoplay = false) {
+    const clip = getClip(id);
+
+    if (!clip) return;
+
+    const source = sources[clip.sourceId];
+
+    if (!source) return;
+
+    selectedClipId = id;
+    currentClipId = id;
+
     video.style.display = "block";
     placeholder.style.display = "none";
 
-    status.textContent = "Loading video...";
-  });
+    const sameSource =
+      video.dataset.sourceId === clip.sourceId &&
+      video.readyState >= 1;
+
+    if (sameSource) {
+      video.currentTime = Math.max(
+        clip.start,
+        Math.min(sourceTime, clip.end)
+      );
+
+      if (autoplay) {
+        video.play().catch(() => {
+          status.textContent = "Could not play this video.";
+        });
+      }
+    } else {
+      pendingLoad = {
+        id,
+        time: Math.max(clip.start, Math.min(sourceTime, clip.end)),
+        autoplay
+      };
+
+      video.pause();
+      video.dataset.sourceId = clip.sourceId;
+      video.src = source.url;
+      video.load();
+    }
+
+    updateTimeline();
+    updateClock();
+  }
+
+  function selectClip(id) {
+    const clip = getClip(id);
+
+    if (!clip) return;
+
+    video.pause();
+    loadClip(id, clip.start);
+    status.textContent = "Selected: " + sources[clip.sourceId].name;
+  }
+
+  function findNextClip() {
+    const index = clips.findIndex(
+      clip => clip.id === currentClipId
+    );
+
+    if (index >= 0 && index < clips.length - 1) {
+      return clips[index + 1];
+    }
+
+    return null;
+  }
+
+  function playNextClip() {
+    const next = findNextClip();
+
+    if (next) {
+      loadClip(next.id, next.start, true);
+    } else {
+      video.pause();
+      status.textContent = "Timeline playback finished.";
+    }
+  }
 
   video.addEventListener("loadedmetadata", () => {
-    trimStart = 0;
-    trimEnd = video.duration;
+    if (!pendingLoad) return;
 
-    playhead.max = video.duration;
-    playhead.disabled = false;
+    const request = pendingLoad;
+    pendingLoad = null;
 
-    document.getElementById("studioDuration").textContent =
-      formatTime(video.duration);
+    const clip = getClip(request.id);
 
-    document.getElementById("studioTime").textContent =
-      "0:00 / " + formatTime(video.duration);
+    if (!clip) return;
 
-    updateTracks();
-    saveEdit();
+    video.currentTime = request.time;
 
-    status.textContent = "Video loaded successfully.";
+    updateClock();
+
+    if (request.autoplay) {
+      video.play().catch(() => {
+        status.textContent = "Could not play this video.";
+      });
+    }
   });
 
   video.addEventListener("timeupdate", () => {
-    if (!videoUrl) return;
+    const clip = getClip(currentClipId);
 
-    if (video.currentTime >= trimEnd) {
-      video.pause();
-    }
+    if (!clip) return;
 
-    playhead.value = video.currentTime;
+    if (video.currentTime >= clip.end - 0.04) {
+      if (!video.paused) {
+        playNextClip();
+      }
 
-    document.getElementById("studioPosition").textContent =
-      video.currentTime.toFixed(1) + "s";
-
-    document.getElementById("studioTime").textContent =
-      formatTime(video.currentTime) + " / " +
-      formatTime(video.duration);
-  });
-
-  document.getElementById("studioPlay").addEventListener("click", () => {
-    if (!videoUrl) {
-      status.textContent = "Upload a video first.";
       return;
     }
 
-    if (video.currentTime >= trimEnd) {
-      video.currentTime = trimStart;
+    updateClock();
+  });
+
+  video.addEventListener("ended", () => {
+    playNextClip();
+  });
+
+  // Import multiple videos and read their durations.
+  videoInput.addEventListener("change", async () => {
+    const files = Array.from(videoInput.files || []);
+
+    if (!files.length) return;
+
+    let imported = 0;
+
+    for (const file of files) {
+      if (!file.type.startsWith("video/")) {
+        status.textContent = "Skipped an invalid video file.";
+        continue;
+      }
+
+      if (file.size > 100 * 1024 * 1024) {
+        status.textContent = "Skipped a video larger than 100 MB.";
+        continue;
+      }
+
+      status.textContent = "Reading " + file.name + "...";
+
+      const url = URL.createObjectURL(file);
+
+      const duration = await new Promise(resolve => {
+        const probe = document.createElement("video");
+
+        probe.preload = "metadata";
+        probe.onloadedmetadata = () => resolve(probe.duration);
+        probe.onerror = () => resolve(0);
+        probe.src = url;
+      });
+
+      if (!Number.isFinite(duration) || duration <= 0) {
+        URL.revokeObjectURL(url);
+        status.textContent = "Could not read " + file.name;
+        continue;
+      }
+
+      const sourceId = "source_" + (++sourceCounter);
+
+      sources[sourceId] = {
+        name: file.name,
+        url,
+        duration
+      };
+
+      const clip = {
+        id: "clip_" + (++clipCounter),
+        sourceId,
+        start: 0,
+        end: duration
+      };
+
+      clips.push(clip);
+      imported++;
+    }
+
+    videoInput.value = "";
+
+    updateMediaList();
+    updateTimeline();
+    saveEdit();
+
+    if (!selectedClipId && clips.length) {
+      selectClip(clips[0].id);
+    }
+
+    status.textContent =
+      imported + " video(s) imported successfully.";
+  });
+
+  // Playback controls.
+  document.getElementById("studioPlay").addEventListener("click", () => {
+    if (!clips.length) {
+      status.textContent = "Import a video first.";
+      return;
+    }
+
+    let clip = getClip(currentClipId);
+
+    if (!clip) {
+      clip = clips[0];
+      loadClip(clip.id, clip.start);
+    }
+
+    if (
+      video.currentTime < clip.start ||
+      video.currentTime >= clip.end
+    ) {
+      video.currentTime = clip.start;
     }
 
     video.play().catch(() => {
@@ -3840,14 +3915,39 @@ function showEditor() {
     video.pause();
   });
 
+  // Seek through the entire timeline.
+  function seekTimeline(position) {
+    if (!clips.length) return;
+
+    let remaining = Math.max(
+      0,
+      Math.min(position, totalDuration())
+    );
+
+    for (const clip of clips) {
+      const duration = clipDuration(clip);
+
+      if (remaining <= duration) {
+        loadClip(clip.id, clip.start + remaining);
+        return;
+      }
+
+      remaining -= duration;
+    }
+
+    const last = clips[clips.length - 1];
+    loadClip(last.id, last.end);
+  }
+
   playhead.addEventListener("input", () => {
-    video.currentTime = Number(playhead.value);
+    video.pause();
+    seekTimeline(Number(playhead.value));
   });
 
+  // Change preview shape.
   document.getElementById("studioRatio").addEventListener("change", event => {
+    const preview = document.getElementById("studioPreview");
     const ratio = event.target.value;
-
-    preview.style.aspectRatio = ratio.replace(":", "/");
 
     if (ratio === "9:16") {
       preview.style.maxWidth = "230px";
@@ -3859,39 +3959,63 @@ function showEditor() {
       preview.style.maxWidth = "650px";
       preview.style.height = "320px";
     }
+
+    preview.style.aspectRatio = ratio.replace(":", "/");
   });
 
-  audioInput.addEventListener("change", () => {
-    const file = audioInput.files[0];
+  // Real split: create two timeline segments from one clip.
+  function splitSelectedClip() {
+    const index = selectedIndex();
 
-    if (!file) return;
-
-    if (!file.type.startsWith("audio/")) {
-      status.textContent = "Please choose a valid audio file.";
+    if (index < 0) {
+      status.textContent = "Select a clip first.";
       return;
     }
 
-    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    const clip = clips[index];
 
-    audioUrl = URL.createObjectURL(file);
+    if (currentClipId !== clip.id) {
+      status.textContent = "Select the clip you want to split.";
+      return;
+    }
 
-    if (audioElement) audioElement.pause();
+    const splitTime = video.currentTime;
 
-    audioElement = new Audio(audioUrl);
-    audioTrack.innerHTML = `
-      <div class="studio-clip"
-        style="background:#225c42;border-color:#42c98a;">
-        ${file.name}
-      </div>
-    `;
+    if (
+      splitTime <= clip.start + 0.1 ||
+      splitTime >= clip.end - 0.1
+    ) {
+      status.textContent =
+        "Move the playhead inside the selected clip before splitting.";
+      return;
+    }
 
-    status.textContent =
-      "Audio imported. Audio preview is available separately.";
+    const left = {
+      ...clip,
+      id: "clip_" + (++clipCounter),
+      end: splitTime
+    };
 
-  });
+    const right = {
+      ...clip,
+      id: "clip_" + (++clipCounter),
+      start: splitTime
+    };
 
+    clips.splice(index, 1, left, right);
+
+    selectedClipId = right.id;
+
+    saveEdit();
+    updateTimeline();
+    loadClip(right.id, right.start);
+
+    status.textContent = "Clip successfully split into two segments.";
+  }
+
+  // Tool panels.
   function openTool(tool) {
-    document.querySelectorAll(".studio-tool").forEach(button => {
+    document.querySelectorAll("[data-tool]").forEach(button => {
       button.classList.toggle(
         "active",
         button.dataset.tool === tool
@@ -3900,277 +4024,277 @@ function showEditor() {
 
     if (tool === "media") {
       panel.innerHTML = `
-        <h3>Import Media</h3>
+        <h3>Media Library</h3>
         <p class="studio-muted">
-          Add a video or audio file using the Media Library below.
+          Import multiple videos using the file picker below.
         </p>
       `;
-    }
-
-    if (tool === "trim") {
-      panel.innerHTML = `
-        <h3>Trim Video</h3>
-        <p class="studio-muted">Start time</p>
-        <input id="toolTrimStart" type="range"
-          min="0" max="${video.duration || 0}"
-          step="0.1" value="${trimStart}"
-          ${!videoUrl ? "disabled" : ""}>
-        <p id="toolStartValue">${trimStart.toFixed(1)}s</p>
-
-        <p class="studio-muted">End time</p>
-        <input id="toolTrimEnd" type="range"
-          min="0" max="${video.duration || 0}"
-          step="0.1" value="${trimEnd}"
-          ${!videoUrl ? "disabled" : ""}>
-        <p id="toolEndValue">${trimEnd.toFixed(1)}s</p>
-
-        <button id="applyTrim">Apply Trim</button>
-      `;
-
-      const start = document.getElementById("toolTrimStart");
-      const end = document.getElementById("toolTrimEnd");
-
-      start.addEventListener("input", () => {
-        document.getElementById("toolStartValue").textContent =
-          Number(start.value).toFixed(1) + "s";
-      });
-
-      end.addEventListener("input", () => {
-        document.getElementById("toolEndValue").textContent =
-          Number(end.value).toFixed(1) + "s";
-      });
-
-      document.getElementById("applyTrim").addEventListener("click", () => {
-        if (!videoUrl) return;
-
-        const newStart = Number(start.value);
-        const newEnd = Number(end.value);
-
-        if (newEnd <= newStart) {
-          status.textContent = "End must be after start.";
-          return;
-        }
-
-        trimStart = newStart;
-        trimEnd = newEnd;
-
-        if (video.currentTime < trimStart ||
-            video.currentTime > trimEnd) {
-          video.currentTime = trimStart;
-        }
-
-        saveEdit();
-        status.textContent =
-          "Trim points applied to the preview.";
-      });
     }
 
     if (tool === "split") {
       panel.innerHTML = `
         <h3>Split Clip</h3>
-        <p class="studio-muted">
-          Split point: current playhead position.
+        <p class="studio-muted" style="margin:10px 0;">
+          Select a clip, move the playhead to the split point,
+          and press the button.
         </p>
-        <p id="splitPosition">
-          ${video.currentTime.toFixed(1)}s
-        </p>
-        <button id="markSplit" ${!videoUrl ? "disabled" : ""}>
-          Mark Split Point
-        </button>
-        <p class="studio-muted">
-          Actual clip separation will be added with the multi-clip timeline.
-        </p>
+        <button id="studioDoSplit">Split Selected Clip</button>
       `;
 
-      document.getElementById("markSplit").addEventListener("click", () => {
-        status.textContent =
-          "Split point marked at " +
-          video.currentTime.toFixed(1) + " seconds.";
-      });
+      document.getElementById("studioDoSplit").addEventListener(
+        "click",
+        splitSelectedClip
+      );
     }
 
-    if (tool === "text") {
+    if (tool === "trim") {
+      const clip = getClip(selectedClipId);
+
+      if (!clip) {
+        panel.innerHTML = `
+          <h3>Trim Clip</h3>
+          <p class="studio-muted">Select a timeline clip first.</p>
+        `;
+        return;
+      }
+
+      const source = sources[clip.sourceId];
+
       panel.innerHTML = `
-        <h3>Text and Titles</h3>
-        <div class="studio-row">
-          <input id="studioTextInput"
-            type="text"
-            placeholder="Enter your video text"
-            value="${textContent.replace(/&/g,"&amp;").replace(/"/g,"&quot;")}">
-          <button id="applyText">Add Text</button>
-        </div>
-        <button id="removeText" style="margin-top:10px;">
-          Remove Text
+        <h3>Trim Selected Clip</h3>
+
+        <p class="studio-muted" style="margin-top:12px;">
+          Start: <span id="trimStartValue">${clip.start.toFixed(1)}</span>s
+        </p>
+
+        <input id="trimStart" type="range"
+          min="0" max="${source.duration}"
+          step="0.1" value="${clip.start}">
+
+        <p class="studio-muted" style="margin-top:12px;">
+          End: <span id="trimEndValue">${clip.end.toFixed(1)}</span>s
+        </p>
+
+        <input id="trimEnd" type="range"
+          min="0" max="${source.duration}"
+          step="0.1" value="${clip.end}">
+
+        <button id="applyTrim" style="margin-top:12px;">
+          Apply Trim
         </button>
+
+        <p class="studio-muted" style="margin-top:10px;">
+          Trim changes the selected timeline segment's boundaries.
+        </p>
       `;
 
-      document.getElementById("applyText").addEventListener("click", () => {
-        textContent =
-          document.getElementById("studioTextInput").value;
+      const start = document.getElementById("trimStart");
+      const end = document.getElementById("trimEnd");
 
-        overlay.textContent = textContent;
-
-        updateTracks();
-        saveEdit();
-
-        status.textContent = "Preview text updated.";
+      start.addEventListener("input", () => {
+        document.getElementById("trimStartValue").textContent =
+          Number(start.value).toFixed(1);
       });
 
-      document.getElementById("removeText").addEventListener("click", () => {
-        textContent = "";
-        overlay.textContent = "";
+      end.addEventListener("input", () => {
+        document.getElementById("trimEndValue").textContent =
+          Number(end.value).toFixed(1);
+      });
 
-        updateTracks();
+      document.getElementById("applyTrim").addEventListener("click", () => {
+        const newStart = Number(start.value);
+        const newEnd = Number(end.value);
+
+        if (newEnd <= newStart + 0.1) {
+          status.textContent = "End time must be after start time.";
+          return;
+        }
+
+        clip.start = newStart;
+        clip.end = newEnd;
+
+        video.pause();
+
         saveEdit();
+        updateTimeline();
+        loadClip(clip.id, clip.start);
 
-        status.textContent = "Text removed.";
+        status.textContent = "Trim applied to the timeline.";
+        openTool("trim");
       });
     }
 
     if (tool === "audio") {
       panel.innerHTML = `
-        <h3>Audio Tools</h3>
-        <p class="studio-muted">
-          Import audio from the Media Library below.
-        </p>
-        <button id="playAudio" ${!audioElement ? "disabled" : ""}>
-          Play Audio
-        </button>
-        <button id="pauseAudio" ${!audioElement ? "disabled" : ""}>
-          Pause Audio
-        </button>
-      `;
-
-      document.getElementById("playAudio").addEventListener("click", () => {
-        if (audioElement) audioElement.play();
-      });
-
-      document.getElementById("pauseAudio").addEventListener("click", () => {
-        if (audioElement) audioElement.pause();
-      });
-    }
-
-    if (tool === "speed") {
-      panel.innerHTML = `
-        <h3>Playback Speed</h3>
-        <select id="studioSpeed"
-          style="background:#252525;color:white;padding:10px;">
-          <option value="0.5">0.5x</option>
-          <option value="0.75">0.75x</option>
-          <option value="1">1x Normal</option>
-          <option value="1.25">1.25x</option>
-          <option value="1.5">1.5x</option>
-          <option value="2">2x</option>
-        </select>
-        <button id="applySpeed">Apply Speed</button>
-      `;
-
-      document.getElementById("studioSpeed").value =
-        String(playbackSpeed);
-
-      document.getElementById("applySpeed").addEventListener("click", () => {
-        playbackSpeed =
-          Number(document.getElementById("studioSpeed").value);
-
-        video.playbackRate = playbackSpeed;
-
-        saveEdit();
-        status.textContent =
-          "Preview speed set to " + playbackSpeed + "x.";
-      });
-    }
-
-    if (tool === "crop") {
-      panel.innerHTML = `
-        <h3>Preview Format</h3>
-        <p class="studio-muted">
-          Choose the format from the selector above the preview.
-        </p>
-        <button id="ratioShort">Shorts 9:16</button>
-        <button id="ratioWide">YouTube 16:9</button>
-        <button id="ratioSquare">Square 1:1</button>
-      `;
-
-      document.getElementById("ratioShort").addEventListener("click", () => {
-        document.getElementById("studioRatio").value = "9:16";
-        document.getElementById("studioRatio").dispatchEvent(
-          new Event("change")
-        );
-      });
-
-      document.getElementById("ratioWide").addEventListener("click", () => {
-        document.getElementById("studioRatio").value = "16:9";
-        document.getElementById("studioRatio").dispatchEvent(
-          new Event("change")
-        );
-      });
-
-      document.getElementById("ratioSquare").addEventListener("click", () => {
-        document.getElementById("studioRatio").value = "1:1";
-        document.getElementById("studioRatio").dispatchEvent(
-          new Event("change")
-        );
-      });
-    }
-
-    if (tool === "filters") {
-      panel.innerHTML = `
-        <h3>Video Filters</h3>
-        <div class="studio-row">
-          <button data-filter="none">Normal</button>
-          <button data-filter="grayscale(1)">B&W</button>
-          <button data-filter="sepia(1)">Sepia</button>
-          <button data-filter="brightness(1.3)">Bright</button>
-          <button data-filter="contrast(1.5)">Contrast</button>
-        </div>
+        <h3>Audio Editing</h3>
         <p class="studio-muted" style="margin-top:10px;">
-          Filters currently affect the preview only.
+          Synchronized music and voiceover tracks are our next
+          development stage. Audio is not connected yet.
         </p>
       `;
-
-      panel.querySelectorAll("[data-filter]").forEach(button => {
-        button.addEventListener("click", () => {
-          selectedFilter = button.dataset.filter;
-
-          video.style.filter =
-            selectedFilter === "none" ? "none" : selectedFilter;
-
-          saveEdit();
-          status.textContent = "Preview filter applied.";
-        });
-      });
     }
   }
 
-  document.querySelectorAll(".studio-tool").forEach(button => {
+  document.querySelectorAll("[data-tool]").forEach(button => {
     button.addEventListener("click", () => {
       openTool(button.dataset.tool);
     });
   });
 
+  // Delete selected clip.
+  function deleteSelectedClip() {
+    const index = selectedIndex();
+
+    if (index < 0) return;
+
+    const wasCurrent = currentClipId === selectedClipId;
+
+    clips.splice(index, 1);
+
+    selectedClipId = clips[index]?.id ||
+      clips[index - 1]?.id || null;
+
+    if (wasCurrent) {
+      video.pause();
+      currentClipId = null;
+    }
+
+    saveEdit();
+    updateTimeline();
+
+    if (selectedClipId) {
+      selectClip(selectedClipId);
+    } else {
+      video.removeAttribute("src");
+      video.style.display = "none";
+      placeholder.style.display = "block";
+      updateClock();
+    }
+
+    status.textContent = "Selected clip deleted.";
+  }
+
+  // Move a selected clip left or right.
+  function moveSelectedClip(direction) {
+    const index = selectedIndex();
+    const newIndex = index + direction;
+
+    if (
+      index < 0 ||
+      newIndex < 0 ||
+      newIndex >= clips.length
+    ) return;
+
+    const [clip] = clips.splice(index, 1);
+    clips.splice(newIndex, 0, clip);
+
+    saveEdit();
+    updateTimeline();
+
+    status.textContent = "Clip order changed.";
+  }
+
+  function showSelectedClipControls() {
+    const clip = getClip(selectedClipId);
+
+    if (!clip) return;
+
+    panel.innerHTML = `
+      <h3>Selected Clip</h3>
+
+      <p class="studio-muted" style="margin:10px 0;">
+        ${escapeHTML(sources[clip.sourceId].name)}
+        · ${clipDuration(clip).toFixed(1)} seconds
+      </p>
+
+      <div class="studio-row">
+        <button id="moveClipLeft">← Move Left</button>
+        <button id="moveClipRight">Move Right →</button>
+        <button id="deleteClip">Delete Clip</button>
+      </div>
+    `;
+
+    document.getElementById("moveClipLeft").addEventListener(
+      "click", () => moveSelectedClip(-1)
+    );
+
+    document.getElementById("moveClipRight").addEventListener(
+      "click", () => moveSelectedClip(1)
+    );
+
+    document.getElementById("deleteClip").addEventListener(
+      "click", deleteSelectedClip
+    );
+  }
+
+  // Undo and redo restore timeline structure.
+  function restoreHistory(index) {
+    const state = history[index];
+
+    if (!state) return;
+
+    video.pause();
+
+    clips = JSON.parse(JSON.stringify(state.clips));
+
+    selectedClipId = clips.some(
+      clip => clip.id === state.selectedClipId
+    ) ? state.selectedClipId : clips[0]?.id || null;
+
+    historyIndex = index;
+
+    updateTimeline();
+    updateHistoryButtons();
+
+    if (selectedClipId) {
+      selectClip(selectedClipId);
+    } else {
+      currentClipId = null;
+      video.removeAttribute("src");
+      video.style.display = "none";
+      placeholder.style.display = "block";
+    }
+
+    status.textContent = "Timeline history restored.";
+  }
+
   document.getElementById("studioUndo").addEventListener("click", () => {
     if (historyIndex > 0) {
-      historyIndex--;
-      applyState(editHistory[historyIndex]);
-      status.textContent = "Last edit undone.";
+      restoreHistory(historyIndex - 1);
     }
   });
 
   document.getElementById("studioRedo").addEventListener("click", () => {
-    if (historyIndex < editHistory.length - 1) {
-      historyIndex++;
-      applyState(editHistory[historyIndex]);
-      status.textContent = "Edit restored.";
+    if (historyIndex < history.length - 1) {
+      restoreHistory(historyIndex + 1);
     }
   });
 
   document.getElementById("studioExport").addEventListener("click", () => {
     status.textContent =
-      "MP4 rendering is not connected yet. We will build the export engine separately.";
+      "MP4 export is not connected yet. We will build the rendering engine separately.";
   });
 
+  // Initial history state.
   saveEdit();
+
+  updateTimeline();
+
+  // Show clip controls whenever a clip is selected.
+  const originalSelectClip = selectClip;
+
+  // Keep the main selection function connected to the controls.
+  videoTrack.addEventListener("click", event => {
+    if (event.target.closest("[data-clip-id]")) {
+      setTimeout(showSelectedClipControls, 0);
+    }
+  });
 }
+
+
+
+
+
 
 function loadSettings() {
   const key = settingsStorageKey();

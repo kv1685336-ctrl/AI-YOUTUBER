@@ -3253,197 +3253,525 @@ function toggleThemeQuick() {
 
 
 
+
 function showEditor() {
   const chatMessages = document.getElementById("chatMessages");
 
   chatMessages.innerHTML = `
-    <div style="max-width:850px;margin:auto;text-align:center;">
-      <h2>Manual Video Editor</h2>
-      <p class="chat-answer">
-        Upload, preview and arrange your video editing timeline.
-      </p>
+    <style>
+      .studio {
+        width:100%;
+        max-width:1100px;
+        margin:auto;
+        color:white;
+        text-align:left;
+        font-family:Arial,sans-serif;
+      }
 
-      <input
-        id="editorVideoInput"
-        type="file"
-        accept="video/*"
-        style="display:block;margin:20px auto;max-width:100%;"
-      >
+      .studio button, .studio select, .studio input {
+        font:inherit;
+      }
 
-      <video
-        id="editorVideoPreview"
-        controls
-        playsinline
-        style="display:none;width:100%;max-height:45vh;
-        margin:20px auto;background:#000;border-radius:10px;"
-      ></video>
+      .studio button {
+        background:#252525;
+        color:white;
+        border:1px solid #444;
+        border-radius:8px;
+        padding:10px 13px;
+        cursor:pointer;
+      }
 
-      <div style="display:flex;gap:10px;justify-content:center;
-      flex-wrap:wrap;margin:20px 0;">
+      .studio button:disabled {
+        opacity:.4;
+        cursor:not-allowed;
+      }
 
-        <button id="undoEdit" class="primary" disabled>
-          Undo
-        </button>
+      .studio button.active {
+        background:#ff3030;
+        border-color:#ff3030;
+      }
 
-        <button id="redoEdit" class="primary" disabled>
-          Redo
-        </button>
+      .studio-top {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        flex-wrap:wrap;
+        padding:12px 0;
+        border-bottom:1px solid #333;
+      }
 
-        <button id="deleteClip" class="primary" disabled>
-          Delete Clip
-        </button>
-      </div>
+      .studio-preview-area {
+        background:#111;
+        border:1px solid #333;
+        border-radius:12px;
+        padding:15px;
+        margin-top:15px;
+      }
 
-      <div style="text-align:left;margin-top:25px;">
-        <h3>Timeline</h3>
+      .studio-preview {
+        position:relative;
+        width:100%;
+        max-width:650px;
+        height:320px;
+        margin:auto;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        background:#000;
+        overflow:hidden;
+        border-radius:8px;
+      }
 
-        <div id="timelineArea"
-          style="background:#171717;border:1px solid #444;
-          border-radius:10px;padding:18px;margin-top:12px;">
+      .studio-preview video {
+        width:100%;
+        height:100%;
+        object-fit:contain;
+      }
 
-          <div id="timelineClip"
-            style="background:#292929;border:2px dashed #666;
-            padding:20px;border-radius:8px;text-align:center;">
-            No clips added yet
-          </div>
+      .studio-overlay {
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        color:white;
+        font-size:25px;
+        font-weight:bold;
+        text-align:center;
+        width:90%;
+        pointer-events:none;
+        text-shadow:2px 2px 5px black;
+      }
 
-          <label style="display:block;margin-top:20px;">
-            Playhead
-            <span id="playheadLabel">0.0s</span>
-          </label>
+      .studio-tools {
+        display:grid;
+        grid-template-columns:repeat(8,minmax(65px,1fr));
+        gap:8px;
+        overflow-x:auto;
+        padding:15px 0;
+      }
 
-          <input id="playhead" type="range"
-            min="0" max="0" value="0" step="0.1"
-            disabled style="width:100%;">
+      .studio-tool {
+        min-width:65px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:6px;
+        font-size:12px;
+      }
+
+      .studio-tool span {
+        font-size:20px;
+      }
+
+      .studio-panel {
+        background:#171717;
+        border:1px solid #383838;
+        padding:15px;
+        border-radius:10px;
+        margin:10px 0;
+      }
+
+      .studio-panel input[type="range"] {
+        width:100%;
+        accent-color:#ff3030;
+      }
+
+      .studio-timeline {
+        background:#111;
+        border:1px solid #383838;
+        border-radius:10px;
+        padding:15px;
+        margin-top:15px;
+        overflow-x:auto;
+      }
+
+      .studio-track {
+        display:flex;
+        align-items:center;
+        gap:8px;
+        min-width:500px;
+        margin:12px 0;
+      }
+
+      .studio-track-name {
+        width:75px;
+        flex-shrink:0;
+        color:#aaa;
+        font-size:12px;
+      }
+
+      .studio-track-content {
+        flex:1;
+        min-height:42px;
+        background:#202020;
+        border:1px dashed #555;
+        border-radius:6px;
+        display:flex;
+        align-items:center;
+        padding:5px;
+        gap:5px;
+      }
+
+      .studio-clip {
+        min-width:100px;
+        padding:12px 8px;
+        background:#8b2929;
+        border:2px solid #ff5555;
+        border-radius:5px;
+        font-size:11px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+      }
+
+      .studio-muted {
+        color:#999;
+        font-size:12px;
+      }
+
+      .studio-row {
+        display:flex;
+        align-items:center;
+        gap:10px;
+        flex-wrap:wrap;
+      }
+
+      .studio-row input[type="text"] {
+        flex:1;
+        min-width:120px;
+        padding:11px;
+        background:#252525;
+        color:white;
+        border:1px solid #444;
+        border-radius:7px;
+      }
+
+      .studio-export {
+        background:#ff3030 !important;
+        border-color:#ff3030 !important;
+      }
+
+      @media(max-width:600px) {
+        .studio-preview {
+          height:260px;
+        }
+
+        .studio-tools {
+          grid-template-columns:repeat(8,75px);
+        }
+
+        .studio-top h2 {
+          font-size:17px;
+        }
+      }
+    </style>
+
+    <div class="studio">
+
+      <div class="studio-top">
+        <div>
+          <h2>AI YOUTUBER STUDIO</h2>
+          <span class="studio-muted">Manual Video Editor</span>
+        </div>
+
+        <div class="studio-row">
+          <button id="studioUndo" disabled>↶</button>
+          <button id="studioRedo" disabled>↷</button>
+          <button id="studioExport" class="studio-export">
+            Export
+          </button>
         </div>
       </div>
 
-      <div style="text-align:left;margin-top:25px;">
-        <h3>Trim selected clip</h3>
+      <div class="studio-preview-area">
 
-        <label>
-          Start: <span id="trimStartLabel">0.0</span>s
-        </label>
+        <div class="studio-row"
+          style="justify-content:space-between;margin-bottom:12px;">
 
-        <input id="trimStart" type="range"
-          min="0" max="0" value="0" step="0.1"
-          disabled style="width:100%;">
+          <span class="studio-muted">VIDEO PREVIEW</span>
 
-        <label>
-          End: <span id="trimEndLabel">0.0</span>s
-        </label>
+          <select id="studioRatio"
+            style="background:#252525;color:white;padding:8px;border-radius:7px;">
+            <option value="16:9">16:9 YouTube</option>
+            <option value="9:16">9:16 Shorts</option>
+            <option value="1:1">1:1 Square</option>
+          </select>
+        </div>
 
-        <input id="trimEnd" type="range"
-          min="0" max="0" value="0" step="0.1"
-          disabled style="width:100%;">
+        <div class="studio-preview" id="studioPreview">
+          <div id="studioPlaceholder" class="studio-muted">
+            Upload a video to begin editing
+          </div>
+
+          <video id="studioVideo"
+            playsinline
+            style="display:none;">
+          </video>
+
+          <div id="studioTextOverlay" class="studio-overlay"></div>
+        </div>
+
+        <div class="studio-row"
+          style="justify-content:center;margin-top:15px;">
+
+          <button id="studioPlay">▶ Play</button>
+          <button id="studioPause">Ⅱ Pause</button>
+
+          <span id="studioTime" class="studio-muted">
+            0:00 / 0:00
+          </span>
+        </div>
       </div>
 
-      <p id="editorStatus" class="chat-answer"
-        style="margin-top:20px;">
-        Upload a video to begin.
-      </p>
+      <div style="margin-top:20px;">
+        <div class="studio-row"
+          style="justify-content:space-between;">
+          <h3>Editing Tools</h3>
+          <span class="studio-muted">Select a tool</span>
+        </div>
+
+        <div class="studio-tools">
+
+          <button class="studio-tool" data-tool="media">
+            <span>＋</span>Media
+          </button>
+
+          <button class="studio-tool" data-tool="trim">
+            <span>✂️</span>Trim
+          </button>
+
+          <button class="studio-tool" data-tool="split">
+            <span>⫽</span>Split
+          </button>
+
+          <button class="studio-tool" data-tool="text">
+            <span>T</span>Text
+          </button>
+
+          <button class="studio-tool" data-tool="audio">
+            <span>♫</span>Audio
+          </button>
+
+          <button class="studio-tool" data-tool="speed">
+            <span>⏩</span>Speed
+          </button>
+
+          <button class="studio-tool" data-tool="crop">
+            <span>▣</span>Crop
+          </button>
+
+          <button class="studio-tool" data-tool="filters">
+            <span>◐</span>Filters
+          </button>
+
+        </div>
+
+        <div id="studioToolPanel" class="studio-panel">
+          <span class="studio-muted">
+            Select an editing tool above.
+          </span>
+        </div>
+      </div>
+
+      <div class="studio-timeline">
+
+        <div class="studio-row"
+          style="justify-content:space-between;">
+          <h3>Timeline</h3>
+          <span id="studioDuration" class="studio-muted">
+            No video loaded
+          </span>
+        </div>
+
+        <div class="studio-track">
+          <div class="studio-track-name">VIDEO</div>
+          <div class="studio-track-content" id="videoTrack">
+            <span class="studio-muted">No video</span>
+          </div>
+        </div>
+
+        <div class="studio-track">
+          <div class="studio-track-name">AUDIO</div>
+          <div class="studio-track-content" id="audioTrack">
+            <span class="studio-muted">No audio</span>
+          </div>
+        </div>
+
+        <div class="studio-track">
+          <div class="studio-track-name">TEXT</div>
+          <div class="studio-track-content" id="textTrack">
+            <span class="studio-muted">No text</span>
+          </div>
+        </div>
+
+        <label class="studio-muted">
+          Timeline position:
+          <span id="studioPosition">0.0s</span>
+        </label>
+
+        <input id="studioPlayhead"
+          type="range"
+          min="0"
+          max="0"
+          value="0"
+          step="0.1"
+          disabled
+          style="width:100%;accent-color:#ff3030;">
+      </div>
+
+      <div class="studio-panel">
+        <h3>Media Library</h3>
+
+        <p class="studio-muted" style="margin:8px 0;">
+          Import your video and audio files.
+        </p>
+
+        <input id="studioVideoInput"
+          type="file"
+          accept="video/*"
+          style="max-width:100%;">
+
+        <div style="margin-top:12px;">
+          <input id="studioAudioInput"
+            type="file"
+            accept="audio/*"
+            style="max-width:100%;">
+        </div>
+
+        <p id="studioStatus" class="studio-muted"
+          style="margin-top:12px;">
+          Ready to edit.
+        </p>
+      </div>
+
     </div>
   `;
 
-  const input = document.getElementById("editorVideoInput");
-  const video = document.getElementById("editorVideoPreview");
-  const startSlider = document.getElementById("trimStart");
-  const endSlider = document.getElementById("trimEnd");
-  const playhead = document.getElementById("playhead");
-  const startLabel = document.getElementById("trimStartLabel");
-  const endLabel = document.getElementById("trimEndLabel");
-  const playheadLabel = document.getElementById("playheadLabel");
-  const timelineClip = document.getElementById("timelineClip");
-  const status = document.getElementById("editorStatus");
-  const undoButton = document.getElementById("undoEdit");
-  const redoButton = document.getElementById("redoEdit");
-  const deleteButton = document.getElementById("deleteClip");
+  const video = document.getElementById("studioVideo");
+  const videoInput = document.getElementById("studioVideoInput");
+  const audioInput = document.getElementById("studioAudioInput");
+  const preview = document.getElementById("studioPreview");
+  const placeholder = document.getElementById("studioPlaceholder");
+  const status = document.getElementById("studioStatus");
+  const panel = document.getElementById("studioToolPanel");
+  const playhead = document.getElementById("studioPlayhead");
 
-  let clip = null;
+  const videoTrack = document.getElementById("videoTrack");
+  const audioTrack = document.getElementById("audioTrack");
+  const textTrack = document.getElementById("textTrack");
+
+  const overlay = document.getElementById("studioTextOverlay");
+
   let videoUrl = null;
+  let audioUrl = null;
+  let audioElement = null;
 
-  let history = [];
+  let trimStart = 0;
+  let trimEnd = 0;
+  let textContent = "";
+  let playbackSpeed = 1;
+  let selectedFilter = "none";
+
+  let editHistory = [];
   let historyIndex = -1;
 
-  function saveHistory() {
-    history = history.slice(0, historyIndex + 1);
+  function formatTime(seconds) {
+    if (!Number.isFinite(seconds)) return "0:00";
 
-    history.push(clip ? { ...clip } : null);
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+
+    return minutes + ":" + String(secs).padStart(2, "0");
+  }
+
+  function saveEdit() {
+    const state = {
+      trimStart,
+      trimEnd,
+      textContent,
+      playbackSpeed,
+      selectedFilter
+    };
+
+    editHistory = editHistory.slice(0, historyIndex + 1);
+    editHistory.push(state);
     historyIndex++;
 
     updateHistoryButtons();
   }
 
   function updateHistoryButtons() {
-    undoButton.disabled = historyIndex <= 0;
-    redoButton.disabled = historyIndex >= history.length - 1;
+    document.getElementById("studioUndo").disabled =
+      historyIndex <= 0;
+
+    document.getElementById("studioRedo").disabled =
+      historyIndex >= editHistory.length - 1;
   }
 
-  function updateEditor() {
-    if (!clip) return;
+  function applyState(state) {
+    trimStart = state.trimStart;
+    trimEnd = state.trimEnd;
+    textContent = state.textContent;
+    playbackSpeed = state.playbackSpeed;
+    selectedFilter = state.selectedFilter;
 
-    startSlider.value = clip.start;
-    endSlider.value = clip.end;
+    video.playbackRate = playbackSpeed;
+    overlay.textContent = textContent;
 
-    startLabel.textContent = clip.start.toFixed(1);
-    endLabel.textContent = clip.end.toFixed(1);
+    video.style.filter =
+      selectedFilter === "none" ? "none" : selectedFilter;
 
-    playhead.max = clip.duration;
-    playhead.value = video.currentTime || clip.start;
-
-    playheadLabel.textContent =
-      Number(playhead.value).toFixed(1) + "s";
-
-    timelineClip.textContent =
-      "VIDEO CLIP | " +
-      clip.start.toFixed(1) + "s - " +
-      clip.end.toFixed(1) + "s";
-
-    timelineClip.style.border = "2px solid #ff3030";
-
-    startSlider.disabled = false;
-    endSlider.disabled = false;
-    playhead.disabled = false;
-    deleteButton.disabled = false;
-  }
-
-  function restoreHistory(index) {
-    historyIndex = index;
-    clip = history[index] ? { ...history[index] } : null;
-
-    if (clip) {
-      video.currentTime = Math.min(
-        clip.start,
-        video.duration
-      );
-      updateEditor();
-    } else {
-      timelineClip.textContent = "No clips added yet";
-      timelineClip.style.border = "2px dashed #666";
-
-      startSlider.disabled = true;
-      endSlider.disabled = true;
-      playhead.disabled = true;
-      deleteButton.disabled = true;
-    }
-
+    updateTracks();
     updateHistoryButtons();
   }
 
-  input.addEventListener("change", () => {
-    const file = input.files[0];
+  function updateTracks() {
+    if (videoUrl) {
+      videoTrack.innerHTML = `
+        <div class="studio-clip">
+          ${videoInput.files[0].name}
+        </div>
+      `;
+    }
+
+    if (audioUrl) {
+      audioTrack.innerHTML = `
+        <div class="studio-clip"
+          style="background:#225c42;border-color:#42c98a;">
+          Audio file
+        </div>
+      `;
+    }
+
+    if (textContent) {
+      textTrack.innerHTML = `
+        <div class="studio-clip"
+          style="background:#354c85;border-color:#7097ff;">
+          ${textContent.replace(/[&<>"']/g, char =>
+            ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[char]
+          )}
+        </div>
+      `;
+    } else {
+      textTrack.innerHTML =
+        '<span class="studio-muted">No text</span>';
+    }
+  }
+
+  videoInput.addEventListener("change", () => {
+    const file = videoInput.files[0];
 
     if (!file) return;
 
     if (!file.type.startsWith("video/")) {
-      status.textContent = "Please select a valid video.";
+      status.textContent = "Please choose a valid video.";
       return;
     }
 
     if (file.size > 100 * 1024 * 1024) {
-      status.textContent =
-        "Please select a video smaller than 100 MB.";
-      input.value = "";
+      status.textContent = "Please choose a video under 100 MB.";
+      videoInput.value = "";
       return;
     }
 
@@ -3452,124 +3780,397 @@ function showEditor() {
     videoUrl = URL.createObjectURL(file);
     video.src = videoUrl;
     video.style.display = "block";
+    placeholder.style.display = "none";
 
     status.textContent = "Loading video...";
   });
 
   video.addEventListener("loadedmetadata", () => {
-    if (!Number.isFinite(video.duration)) {
-      status.textContent = "Could not read video duration.";
-      return;
-    }
+    trimStart = 0;
+    trimEnd = video.duration;
 
-    clip = {
-      name: input.files[0].name,
-      duration: video.duration,
-      start: 0,
-      end: video.duration
-    };
-
-    startSlider.max = video.duration;
-    endSlider.max = video.duration;
     playhead.max = video.duration;
+    playhead.disabled = false;
 
-    saveHistory();
-    updateEditor();
+    document.getElementById("studioDuration").textContent =
+      formatTime(video.duration);
 
-    status.textContent =
-      "Video added to timeline. Your editing workspace is ready.";
-  });
+    document.getElementById("studioTime").textContent =
+      "0:00 / " + formatTime(video.duration);
 
-  startSlider.addEventListener("input", () => {
-    if (!clip) return;
+    updateTracks();
+    saveEdit();
 
-    clip.start = Number(startSlider.value);
-
-    if (clip.start >= clip.end) {
-      clip.start = Math.max(0, clip.end - 0.1);
-    }
-
-    if (video.currentTime < clip.start) {
-      video.currentTime = clip.start;
-    }
-
-    updateEditor();
-  });
-
-  endSlider.addEventListener("input", () => {
-    if (!clip) return;
-
-    clip.end = Number(endSlider.value);
-
-    if (clip.end <= clip.start) {
-      clip.end = Math.min(
-        clip.duration,
-        clip.start + 0.1
-      );
-    }
-
-    if (video.currentTime > clip.end) {
-      video.currentTime = clip.end;
-    }
-
-    updateEditor();
-  });
-
-  playhead.addEventListener("input", () => {
-    if (!clip) return;
-
-    video.currentTime = Number(playhead.value);
-    playheadLabel.textContent =
-      Number(playhead.value).toFixed(1) + "s";
+    status.textContent = "Video loaded successfully.";
   });
 
   video.addEventListener("timeupdate", () => {
-    if (!clip) return;
+    if (!videoUrl) return;
+
+    if (video.currentTime >= trimEnd) {
+      video.pause();
+    }
 
     playhead.value = video.currentTime;
-    playheadLabel.textContent =
+
+    document.getElementById("studioPosition").textContent =
       video.currentTime.toFixed(1) + "s";
 
-    if (video.currentTime >= clip.end) {
-      video.pause();
+    document.getElementById("studioTime").textContent =
+      formatTime(video.currentTime) + " / " +
+      formatTime(video.duration);
+  });
+
+  document.getElementById("studioPlay").addEventListener("click", () => {
+    if (!videoUrl) {
+      status.textContent = "Upload a video first.";
+      return;
+    }
+
+    if (video.currentTime >= trimEnd) {
+      video.currentTime = trimStart;
+    }
+
+    video.play().catch(() => {
+      status.textContent = "Could not play this video.";
+    });
+  });
+
+  document.getElementById("studioPause").addEventListener("click", () => {
+    video.pause();
+  });
+
+  playhead.addEventListener("input", () => {
+    video.currentTime = Number(playhead.value);
+  });
+
+  document.getElementById("studioRatio").addEventListener("change", event => {
+    const ratio = event.target.value;
+
+    preview.style.aspectRatio = ratio.replace(":", "/");
+
+    if (ratio === "9:16") {
+      preview.style.maxWidth = "230px";
+      preview.style.height = "400px";
+    } else if (ratio === "1:1") {
+      preview.style.maxWidth = "350px";
+      preview.style.height = "350px";
+    } else {
+      preview.style.maxWidth = "650px";
+      preview.style.height = "320px";
     }
   });
 
-  undoButton.addEventListener("click", () => {
+  audioInput.addEventListener("change", () => {
+    const file = audioInput.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("audio/")) {
+      status.textContent = "Please choose a valid audio file.";
+      return;
+    }
+
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
+
+    audioUrl = URL.createObjectURL(file);
+
+    if (audioElement) audioElement.pause();
+
+    audioElement = new Audio(audioUrl);
+    audioTrack.innerHTML = `
+      <div class="studio-clip"
+        style="background:#225c42;border-color:#42c98a;">
+        ${file.name}
+      </div>
+    `;
+
+    status.textContent =
+      "Audio imported. Audio preview is available separately.";
+
+  });
+
+  function openTool(tool) {
+    document.querySelectorAll(".studio-tool").forEach(button => {
+      button.classList.toggle(
+        "active",
+        button.dataset.tool === tool
+      );
+    });
+
+    if (tool === "media") {
+      panel.innerHTML = `
+        <h3>Import Media</h3>
+        <p class="studio-muted">
+          Add a video or audio file using the Media Library below.
+        </p>
+      `;
+    }
+
+    if (tool === "trim") {
+      panel.innerHTML = `
+        <h3>Trim Video</h3>
+        <p class="studio-muted">Start time</p>
+        <input id="toolTrimStart" type="range"
+          min="0" max="${video.duration || 0}"
+          step="0.1" value="${trimStart}"
+          ${!videoUrl ? "disabled" : ""}>
+        <p id="toolStartValue">${trimStart.toFixed(1)}s</p>
+
+        <p class="studio-muted">End time</p>
+        <input id="toolTrimEnd" type="range"
+          min="0" max="${video.duration || 0}"
+          step="0.1" value="${trimEnd}"
+          ${!videoUrl ? "disabled" : ""}>
+        <p id="toolEndValue">${trimEnd.toFixed(1)}s</p>
+
+        <button id="applyTrim">Apply Trim</button>
+      `;
+
+      const start = document.getElementById("toolTrimStart");
+      const end = document.getElementById("toolTrimEnd");
+
+      start.addEventListener("input", () => {
+        document.getElementById("toolStartValue").textContent =
+          Number(start.value).toFixed(1) + "s";
+      });
+
+      end.addEventListener("input", () => {
+        document.getElementById("toolEndValue").textContent =
+          Number(end.value).toFixed(1) + "s";
+      });
+
+      document.getElementById("applyTrim").addEventListener("click", () => {
+        if (!videoUrl) return;
+
+        const newStart = Number(start.value);
+        const newEnd = Number(end.value);
+
+        if (newEnd <= newStart) {
+          status.textContent = "End must be after start.";
+          return;
+        }
+
+        trimStart = newStart;
+        trimEnd = newEnd;
+
+        if (video.currentTime < trimStart ||
+            video.currentTime > trimEnd) {
+          video.currentTime = trimStart;
+        }
+
+        saveEdit();
+        status.textContent =
+          "Trim points applied to the preview.";
+      });
+    }
+
+    if (tool === "split") {
+      panel.innerHTML = `
+        <h3>Split Clip</h3>
+        <p class="studio-muted">
+          Split point: current playhead position.
+        </p>
+        <p id="splitPosition">
+          ${video.currentTime.toFixed(1)}s
+        </p>
+        <button id="markSplit" ${!videoUrl ? "disabled" : ""}>
+          Mark Split Point
+        </button>
+        <p class="studio-muted">
+          Actual clip separation will be added with the multi-clip timeline.
+        </p>
+      `;
+
+      document.getElementById("markSplit").addEventListener("click", () => {
+        status.textContent =
+          "Split point marked at " +
+          video.currentTime.toFixed(1) + " seconds.";
+      });
+    }
+
+    if (tool === "text") {
+      panel.innerHTML = `
+        <h3>Text and Titles</h3>
+        <div class="studio-row">
+          <input id="studioTextInput"
+            type="text"
+            placeholder="Enter your video text"
+            value="${textContent.replace(/&/g,"&amp;").replace(/"/g,"&quot;")}">
+          <button id="applyText">Add Text</button>
+        </div>
+        <button id="removeText" style="margin-top:10px;">
+          Remove Text
+        </button>
+      `;
+
+      document.getElementById("applyText").addEventListener("click", () => {
+        textContent =
+          document.getElementById("studioTextInput").value;
+
+        overlay.textContent = textContent;
+
+        updateTracks();
+        saveEdit();
+
+        status.textContent = "Preview text updated.";
+      });
+
+      document.getElementById("removeText").addEventListener("click", () => {
+        textContent = "";
+        overlay.textContent = "";
+
+        updateTracks();
+        saveEdit();
+
+        status.textContent = "Text removed.";
+      });
+    }
+
+    if (tool === "audio") {
+      panel.innerHTML = `
+        <h3>Audio Tools</h3>
+        <p class="studio-muted">
+          Import audio from the Media Library below.
+        </p>
+        <button id="playAudio" ${!audioElement ? "disabled" : ""}>
+          Play Audio
+        </button>
+        <button id="pauseAudio" ${!audioElement ? "disabled" : ""}>
+          Pause Audio
+        </button>
+      `;
+
+      document.getElementById("playAudio").addEventListener("click", () => {
+        if (audioElement) audioElement.play();
+      });
+
+      document.getElementById("pauseAudio").addEventListener("click", () => {
+        if (audioElement) audioElement.pause();
+      });
+    }
+
+    if (tool === "speed") {
+      panel.innerHTML = `
+        <h3>Playback Speed</h3>
+        <select id="studioSpeed"
+          style="background:#252525;color:white;padding:10px;">
+          <option value="0.5">0.5x</option>
+          <option value="0.75">0.75x</option>
+          <option value="1">1x Normal</option>
+          <option value="1.25">1.25x</option>
+          <option value="1.5">1.5x</option>
+          <option value="2">2x</option>
+        </select>
+        <button id="applySpeed">Apply Speed</button>
+      `;
+
+      document.getElementById("studioSpeed").value =
+        String(playbackSpeed);
+
+      document.getElementById("applySpeed").addEventListener("click", () => {
+        playbackSpeed =
+          Number(document.getElementById("studioSpeed").value);
+
+        video.playbackRate = playbackSpeed;
+
+        saveEdit();
+        status.textContent =
+          "Preview speed set to " + playbackSpeed + "x.";
+      });
+    }
+
+    if (tool === "crop") {
+      panel.innerHTML = `
+        <h3>Preview Format</h3>
+        <p class="studio-muted">
+          Choose the format from the selector above the preview.
+        </p>
+        <button id="ratioShort">Shorts 9:16</button>
+        <button id="ratioWide">YouTube 16:9</button>
+        <button id="ratioSquare">Square 1:1</button>
+      `;
+
+      document.getElementById("ratioShort").addEventListener("click", () => {
+        document.getElementById("studioRatio").value = "9:16";
+        document.getElementById("studioRatio").dispatchEvent(
+          new Event("change")
+        );
+      });
+
+      document.getElementById("ratioWide").addEventListener("click", () => {
+        document.getElementById("studioRatio").value = "16:9";
+        document.getElementById("studioRatio").dispatchEvent(
+          new Event("change")
+        );
+      });
+
+      document.getElementById("ratioSquare").addEventListener("click", () => {
+        document.getElementById("studioRatio").value = "1:1";
+        document.getElementById("studioRatio").dispatchEvent(
+          new Event("change")
+        );
+      });
+    }
+
+    if (tool === "filters") {
+      panel.innerHTML = `
+        <h3>Video Filters</h3>
+        <div class="studio-row">
+          <button data-filter="none">Normal</button>
+          <button data-filter="grayscale(1)">B&W</button>
+          <button data-filter="sepia(1)">Sepia</button>
+          <button data-filter="brightness(1.3)">Bright</button>
+          <button data-filter="contrast(1.5)">Contrast</button>
+        </div>
+        <p class="studio-muted" style="margin-top:10px;">
+          Filters currently affect the preview only.
+        </p>
+      `;
+
+      panel.querySelectorAll("[data-filter]").forEach(button => {
+        button.addEventListener("click", () => {
+          selectedFilter = button.dataset.filter;
+
+          video.style.filter =
+            selectedFilter === "none" ? "none" : selectedFilter;
+
+          saveEdit();
+          status.textContent = "Preview filter applied.";
+        });
+      });
+    }
+  }
+
+  document.querySelectorAll(".studio-tool").forEach(button => {
+    button.addEventListener("click", () => {
+      openTool(button.dataset.tool);
+    });
+  });
+
+  document.getElementById("studioUndo").addEventListener("click", () => {
     if (historyIndex > 0) {
-      restoreHistory(historyIndex - 1);
+      historyIndex--;
+      applyState(editHistory[historyIndex]);
       status.textContent = "Last edit undone.";
     }
   });
 
-  redoButton.addEventListener("click", () => {
-    if (historyIndex < history.length - 1) {
-      restoreHistory(historyIndex + 1);
+  document.getElementById("studioRedo").addEventListener("click", () => {
+    if (historyIndex < editHistory.length - 1) {
+      historyIndex++;
+      applyState(editHistory[historyIndex]);
       status.textContent = "Edit restored.";
     }
   });
 
-  deleteButton.addEventListener("click", () => {
-    if (!clip) return;
-
-    clip = null;
-    saveHistory();
-
-    timelineClip.textContent = "No clips added yet";
-    timelineClip.style.border = "2px dashed #666";
-
-    startSlider.disabled = true;
-    endSlider.disabled = true;
-    playhead.disabled = true;
-    deleteButton.disabled = true;
-
-    video.pause();
-
+  document.getElementById("studioExport").addEventListener("click", () => {
     status.textContent =
-      "Clip deleted. You can undo this action.";
+      "MP4 rendering is not connected yet. We will build the export engine separately.";
   });
-}
 
+  saveEdit();
+}
 
 function loadSettings() {
   const key = settingsStorageKey();

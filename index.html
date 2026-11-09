@@ -3232,6 +3232,7 @@ function showMakoraPlatformDemo() {
       text-align:center;
       font-family:Arial,sans-serif;
     ">
+      
       <h1>MAKORA AI</h1>
 
       <p style="color:#aaa;margin:12px 0 30px;">
@@ -3277,7 +3278,28 @@ function showMakoraPlatformDemo() {
   `;
 }
 
+function openPlatformDemo(platform) {
+  const chatMessages = document.getElementById("chatMessages");
 
+  chatMessages.innerHTML = `
+    <div style="max-width:700px;margin:30px auto;color:white;text-align:center;">
+      <button onclick="showMakoraPlatformDemo()"
+        style="float:left;background:#242424;color:white;border:1px solid #444;padding:10px;border-radius:8px;">
+        â Back
+      </button>
+
+      <div style="clear:both;padding-top:50px;">
+        <h1>${platform} Demo</h1>
+        <p style="color:#aaa;margin-top:15px;">
+          Welcome to the ${platform} demo experience.
+        </p>
+        <p style="color:#ff3030;margin-top:25px;">
+          Demo experience coming soon.
+        </p>
+      </div>
+    </div>
+  `;
+}
   
 
   

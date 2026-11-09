@@ -2819,7 +2819,7 @@ function renderMessages() {
     const paragraph = document.createElement("p");
     paragraph.className = "chat-answer";
     paragraph.textContent =
-      (message.role === "user" ? "You: " : "AI YOUTUBER: ") +
+      (message.role === "user" ? "You: " : "MAKORA AI: ") +
       message.content;
     chatMessages.appendChild(paragraph);
   });
@@ -3117,13 +3117,7 @@ function openPlatformDemo(platform) {
     return;
   }
 
-  chatMessages.innerHTML = `
-    <div class="chat-avatar">AI</div>
-    <p class="chat-answer">
-      ${tool} selected. This feature will be connected in a later step.
-    </p>
-  `;
-}
+  
 
   
 

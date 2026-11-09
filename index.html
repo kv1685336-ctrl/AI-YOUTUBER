@@ -3407,6 +3407,29 @@ function showAudioGenerator() {
 
   loadAudioVoices();
 }
+    loadAudioVoices();
+
+  const audioText = document.getElementById("audioText");
+  const audioRate = document.getElementById("audioRate");
+  const audioPitch = document.getElementById("audioPitch");
+  const characterCount = document.getElementById("audioCharacterCount");
+  const settingsInfo = document.getElementById("audioSettingsInfo");
+
+  function updateAudioSettings() {
+    settingsInfo.textContent =
+      `Speed: ${audioRate.value}× | Pitch: ${audioPitch.value}`;
+  }
+
+  audioText.addEventListener("input", () => {
+    characterCount.textContent =
+      `${audioText.value.length} characters`;
+  });
+
+  audioRate.addEventListener("input", updateAudioSettings);
+  audioPitch.addEventListener("input", updateAudioSettings);
+
+  updateAudioSettings();
+}
 
 function loadAudioVoices() {
   const voiceSelect = document.getElementById("audioVoice");
@@ -3481,10 +3504,19 @@ async function generateAudio() {
       document.getElementById("audioVoice").value;
 
     const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate =
+      
+      Number(document.getElementById("audioRate").value);
 
-    if (selectedVoice !== "") {
+    utterance.pitch =
+      Number(document.getElementById("audioPitch").value);
+
+    if (selectedVoice !== "" && voices[Number(selectedVoice)]) {
+      
+     
       utterance.voice = voices[Number(selectedVoice)];
-    }
+      utterance.lang = voices[Number(selectedVoice)].lang;
+   }
 
     utterance.onstart = () => {
       status.textContent =

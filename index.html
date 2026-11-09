@@ -3342,43 +3342,41 @@ function showAudioGenerator() {
       padding:15px;background:#151515;color:white;
       border:1px solid #444;border-radius:8px;font:inherit;">
     </textarea>
+
     <div style="margin:15px auto;max-width:650px;text-align:left;">
 
-  <label for="audioLanguage">Language</label>
-  <select id="audioLanguage"
-    style="display:block;width:100%;margin:8px 0 15px;padding:12px;">
-    <option value="all">All languages</option>
-    <option value="en">English</option>
-    <option value="hi">Hindi</option>
-    <option value="ta">Tamil</option>
-    <option value="te">Telugu</option>
-  </select>
+      <label for="audioLanguage">Language</label>
+      <select id="audioLanguage"
+        style="display:block;width:100%;margin:8px 0 15px;padding:12px;">
+        <option value="all">All languages</option>
+        <option value="en">English</option>
+        <option value="hi">Hindi</option>
+        <option value="ta">Tamil</option>
+        <option value="te">Telugu</option>
+      </select>
 
-  <label for="audioVoice">Voice</label>
-  <select id="audioVoice"
-    style="display:block;width:100%;margin:8px 0 15px;padding:12px;">
-    <option value="">Default voice</option>
-  </select>
+      <label for="audioVoice">Voice</label>
+      <select id="audioVoice"
+        style="display:block;width:100%;margin:8px 0 15px;padding:12px;">
+        <option value="">Default voice</option>
+      </select>
 
-  <label for="audioRate">Speaking speed</label>
-  <input id="audioRate" type="range"
-    min="0.5" max="2" step="0.1" value="1">
+      <label for="audioRate">Speaking speed</label>
+      <input id="audioRate" type="range"
+        min="0.5" max="2" step="0.1" value="1">
 
-  <label for="audioPitch">Voice pitch</label>
-  <input id="audioPitch" type="range"
-    min="0.5" max="2" step="0.1" value="1">
+      <label for="audioPitch">Voice pitch</label>
+      <input id="audioPitch" type="range"
+        min="0.5" max="2" step="0.1" value="1">
 
-  <p id="audioSettingsInfo" class="chat-answer">
-    Speed: 1× | Pitch: 1
-  </p>
+      <p id="audioSettingsInfo" class="chat-answer">
+        Speed: 1× | Pitch: 1
+      </p>
 
-  <p id="audioCharacterCount" class="chat-answer">
-    0 characters
-  </p>
-
-</div>
-
-  
+      <p id="audioCharacterCount" class="chat-answer">
+        0 characters
+      </p>
+    </div>
 
     <button class="primary" onclick="generateAudio()">
       Generate Audio
@@ -3406,8 +3404,6 @@ function showAudioGenerator() {
   `;
 
   loadAudioVoices();
-}
-    loadAudioVoices();
 
   const audioText = document.getElementById("audioText");
   const audioRate = document.getElementById("audioRate");

@@ -3039,6 +3039,29 @@ async function selectTool(tool, button) {
     showAudioGenerator();
     return;
   }
+  if (tool === "Video Generator") {
+    showVideoGenerator();
+    return;
+}
+}
+function showVideoGenerator() {
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <div class="tool-screen">
+      <h2>Video Generator</h2>
+      <p>Create videos with Makora AI.</p>
+      <textarea
+        id="videoPrompt"
+        placeholder="Describe the video you want to create..."
+      ></textarea>
+      <button onclick="alert('Video generation will be added next!')">
+        Generate Video
+      </button>
+    </div>
+  `;
+
+  showChatInput(false);
 }
 
 function showMakoraPlatformDemo() {

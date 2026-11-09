@@ -3500,13 +3500,25 @@ async function generateAudio() {
       document.getElementById("audioVoice").value;
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate =
-      
-      Number(document.getElementById("audioRate").value);
 
-    utterance.pitch =
-      Number(document.getElementById("audioPitch").value);
+const selectedLanguage =
+  document.getElementById("audioLanguage").value;
 
+const languageCodes = {
+  en: "en-IN",
+  hi: "hi-IN",
+  ta: "ta-IN",
+  te: "te-IN"
+};
+
+utterance.lang =
+  languageCodes[selectedLanguage] || navigator.language;
+
+utterance.rate =
+  Number(document.getElementById("audioRate").value);
+
+utterance.pitch =
+  Number(document.getElementById("audioPitch").value);
     if (selectedVoice !== "" && voices[Number(selectedVoice)]) {
       
      

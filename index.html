@@ -1723,7 +1723,7 @@ body.light-theme .menu-title {
 
       <button class="menu-item active"
         
-        onclick="selectTool('MAKORA)', this)">
+        onclick="selectTool('MAKORA', this)">
         <i data-lucide="bot"></i>
         <span>MAKORA</span>
         </button>
@@ -3032,13 +3032,14 @@ async function selectTool(tool, button) {
     return;
   }
   if (tool === "Editor") {
-    
-
     showEditor();
-
     return;
-
   }
+  if (tool === "Audio Generator") {
+    showAudioGenerator();
+    return;
+  }
+}
 
 function showMakoraPlatformDemo() {
   
@@ -3112,10 +3113,7 @@ function openPlatformDemo(platform) {
     </div>
   `;
 }
-  if (tool === "Audio Generator") {
-    showAudioGenerator();
-    return;
-  }
+  
   
 
   

@@ -3023,8 +3023,8 @@ async function selectTool(tool, button) {
   // Show the shared input only in the main AI YOUTUBER 
   if (tool === "MAKORA") {
   showMakoraPlatformDemo();
-} else {
-  document.querySelector(".chat-input-area").style.display = "none";
+  return;
+
 }
   if (tool === "Chat History") {
     await showChatHistory();
@@ -3040,6 +3040,7 @@ async function selectTool(tool, button) {
   }
 
 function showMakoraPlatformDemo() {
+  
   const chatMessages = document.getElementById("chatMessages");
 
   document.querySelector(".chat-input-area").style.display = "none";
@@ -3114,11 +3115,6 @@ function openPlatformDemo(platform) {
     showAudioGenerator();
     return;
   }
-  chatMessages.innerHTML = 
-    <div class="chat-logo"><img src="CCE9A38F-166C-49FF-B9EA-A6189CE86977.png" alt="makora logo"></div>
-    <p class="chat-answer">
-    
-    ${tool} selected. This feature will be connected in a later step.
   
 
   

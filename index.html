@@ -3410,23 +3410,48 @@ function showAudioGenerator() {
 
 function loadAudioVoices() {
   const voiceSelect = document.getElementById("audioVoice");
+  const languageSelect = document.getElementById("audioLanguage");
 
-  if (!voiceSelect || !("speechSynthesis" in window)) return;
+  if (!voiceSelect || !languageSelect ||
+      !("speechSynthesis" in window)) return;
 
   function populateVoices() {
     const voices = speechSynthesis.getVoices();
+    const selectedLanguage = languageSelect.value;
+    const previousVoice = voiceSelect.value;
+
+    const filteredVoices = selectedLanguage === "all"
+      ? voices
+      : voices.filter(voice =>
+          voice.lang.toLowerCase().startsWith(selectedLanguage)
+        );
 
     voiceSelect.innerHTML =
       '<option value="">Default voice</option>';
 
-    voices.forEach((voice, index) => {
+    filteredVoices.forEach(voice => {
+      const index = voices.indexOf(voice);
       const option = document.createElement("option");
+
       option.value = index;
-      option.textContent =
-        `${voice.name} (${voice.lang})`;
+      option.textContent = `${voice.name} (${voice.lang})`;
+
       voiceSelect.appendChild(option);
     });
+
+    if (filteredVoices.length === 0) {
+      voiceSelect.innerHTML =
+        '<option value="">No voices available for this language</option>';
+    } else if (
+      [...voiceSelect.options].some(option =>
+        option.value === previousVoice
+      )
+    ) {
+      voiceSelect.value = previousVoice;
+    }
   }
+
+  languageSelect.addEventListener("change", populateVoices);
 
   populateVoices();
   speechSynthesis.onvoiceschanged = populateVoices;

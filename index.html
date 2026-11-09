@@ -3020,10 +3020,12 @@ async function selectTool(tool, button) {
   settingsPanel.classList.add("hidden");
   chatMain.classList.remove("hidden");
 
-  // Show the shared input only in the main AI YOUTUBER chat.
-  document.querySelector(".chat-input-area").style.display =
-  tool === "AI YOUTUBER (AI)" ? "block" : "none";
-
+  // Show the shared input only in the main AI YOUTUBER 
+  if (tool === "AI YOUTUBER (AI)") {
+  showMakoraPlatformDemo();
+} else {
+  document.querySelector(".chat-input-area").style.display = "none";
+}
   if (tool === "Chat History") {
     await showChatHistory();
     return;
@@ -3038,7 +3040,78 @@ async function selectTool(tool, button) {
   }
 
 
+  function showMakoraPlatformDemo() {
+  const chatMessages = document.getElementById("chatMessages");
 
+  document.querySelector(".chat-input-area").style.display = "none";
+
+  chatMessages.innerHTML = `
+    <div style="
+      max-width:700px;
+      margin:40px auto;
+      color:white;
+      text-align:center;
+      font-family:Arial,sans-serif;
+    ">
+      <h1>MAKORA AI</h1>
+
+      <p style="color:#aaa;margin:12px 0 30px;">
+        Choose a platform to explore its demo.
+      </p>
+
+      <div style="
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:15px;
+      ">
+
+        <button onclick="openPlatformDemo('YouTube')"
+          style="padding:30px 10px;background:#242424;color:#ff3030;border:1px solid #444;border-radius:12px;">
+          ▶<br><br>YouTube
+        </button>
+
+        <button onclick="openPlatformDemo('Instagram')"
+          style="padding:30px 10px;background:#242424;color:#e879a5;border:1px solid #444;border-radius:12px;">
+          ◎<br><br>Instagram
+        </button>
+
+        <button onclick="openPlatformDemo('Facebook')"
+          style="padding:30px 10px;background:#242424;color:#5297ff;border:1px solid #444;border-radius:12px;">
+          f<br><br>Facebook
+        </button>
+
+        <button onclick="openPlatformDemo('X')"
+          style="padding:30px 10px;background:#242424;color:white;border:1px solid #444;border-radius:12px;">
+          𝕏<br><br>X
+        </button>
+
+      </div>
+    </div>
+  `;
+}
+
+function openPlatformDemo(platform) {
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <div style="max-width:700px;margin:30px auto;color:white;text-align:center;">
+      <button onclick="showMakoraPlatformDemo()"
+        style="float:left;background:#242424;color:white;border:1px solid #444;padding:10px;border-radius:8px;">
+        ← Back
+      </button>
+
+      <div style="clear:both;padding-top:50px;">
+        <h1>${platform} Demo</h1>
+        <p style="color:#aaa;margin-top:15px;">
+          Welcome to the ${platform} demo experience.
+        </p>
+        <p style="color:#ff3030;margin-top:25px;">
+          Demo experience coming soon.
+        </p>
+      </div>
+    </div>
+  `;
+}
   if (tool === "Audio Generator") {
     showAudioGenerator();
     return;

@@ -3214,7 +3214,12 @@ function showVideoGenerator() {
       <textarea
         id="videoPrompt"
         placeholder="Describe the video you want to create..."
-      ></textarea>
+        style="width:min(100%,650px);min-height:180px;
+        padding:15px;background:#151515;color:white;
+        border:1px solid #444;border-radius:8px;font:inherit;">
+    </textarea>
+        
+      </textarea>
       <button onclick="alert('Video generation will be added next!')">
         Generate Video
       </button>

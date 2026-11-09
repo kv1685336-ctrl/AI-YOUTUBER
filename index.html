@@ -3217,6 +3217,7 @@ function showVideoGenerator() {
   showChatInput(false);
 }
 
+
 function showMakoraPlatformDemo() {
   
   const chatMessages = document.getElementById("chatMessages");
@@ -3244,53 +3245,38 @@ function showMakoraPlatformDemo() {
       ">
 
         <button onclick="openPlatformDemo('YouTube')"
-          style="padding:30px 10px;background:#242424;color:#ff3030;border:1px solid #444;border-radius:12px;">
-          ▶<br><br>YouTube
+          style="padding:30px 10px;background:#242424;color:white;border:1px solid #444;border-radius:12px;">
+          <img src="https://cdn.simpleicons.org/youtube/FF0000"
+            width="38" height="38" alt="YouTube logo">
+          <br><br>YouTube
         </button>
 
         <button onclick="openPlatformDemo('Instagram')"
-          style="padding:30px 10px;background:#242424;color:#e879a5;border:1px solid #444;border-radius:12px;">
-          ◎<br><br>Instagram
+          style="padding:30px 10px;background:#242424;color:white;border:1px solid #444;border-radius:12px;">
+          <img src="https://cdn.simpleicons.org/instagram/E4405F"
+            width="38" height="38" alt="Instagram logo">
+          <br><br>Instagram
         </button>
 
         <button onclick="openPlatformDemo('Facebook')"
-          style="padding:30px 10px;background:#242424;color:#5297ff;border:1px solid #444;border-radius:12px;">
-          f<br><br>Facebook
+          style="padding:30px 10px;background:#242424;color:white;border:1px solid #444;border-radius:12px;">
+          <img src="https://cdn.simpleicons.org/facebook/0866FF"
+            width="38" height="38" alt="Facebook logo">
+          <br><br>Facebook
         </button>
 
         <button onclick="openPlatformDemo('X')"
           style="padding:30px 10px;background:#242424;color:white;border:1px solid #444;border-radius:12px;">
-          𝕏<br><br>X
+          <img src="https://cdn.simpleicons.org/x/FFFFFF"
+            width="38" height="38" alt="X logo">
+          <br><br>X
         </button>
 
       </div>
     </div>
   `;
 }
-function openPlatformDemo(platform) {
-  const chatMessages = document.getElementById("chatMessages");
 
-  chatMessages.innerHTML = `
-    <div style="max-width:700px;margin:30px auto;color:white;text-align:center;">
-      <button onclick="showMakoraPlatformDemo()"
-        style="float:left;background:#242424;color:white;border:1px solid #444;padding:10px;border-radius:8px;">
-        ← Back
-      </button>
-
-      <div style="clear:both;padding-top:50px;">
-        <h1>${platform} Demo</h1>
-        <p style="color:#aaa;margin-top:15px;">
-          Welcome to the ${platform} demo experience.
-        </p>
-        <p style="color:#ff3030;margin-top:25px;">
-          Demo experience coming soon.
-        </p>
-      </div>
-    </div>
-  `;
-}
-  
-  
 
   
 

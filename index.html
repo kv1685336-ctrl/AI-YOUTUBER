@@ -1474,6 +1474,13 @@ body.light-theme .menu-title {
   height: 250px;
   object-fit: contain;
 }
+.theme-text {
+  color: white;
+}
+
+body.light-mode .theme-text {
+  color: black;
+}
   
   
 
@@ -3233,7 +3240,7 @@ function showMakoraPlatformDemo() {
       font-family:Arial,sans-serif;
     ">
       
-      <h1>MAKORA AI</h1>
+      <h1 class="theme-text">MAKORA AI</h1>
 
       <p style="color:#aaa;margin:12px 0 30px;">
         Choose a platform to explore its demo.
@@ -3289,7 +3296,7 @@ function openPlatformDemo(platform) {
       </button>
 
       <div style="clear:both;padding-top:50px;">
-        <h1>${platform} Demo</h1>
+        <h1 class="theme-text">${platform} Demo</h1>
         <p style="color:#aaa;margin-top:15px;">
           Welcome to the ${platform} demo experience.
         </p>

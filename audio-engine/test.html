@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Makora Piper Test</title>
+</head>
+<body style="background:#080808;color:white;font-family:Arial;padding:20px">
+
+  <h2>Makora Audio Engine Test</h2>
+  <p id="status">Checking Piper...</p>
+  <pre id="voices"></pre>
+
+  <script type="module">
+    const status = document.getElementById("status");
+    const output = document.getElementById("voices");
+
+    try {
+      const PiperTTS = await import(
+        "https://esm.sh/@mintplex-labs/piper-tts-web@1.0.5"
+      );
+
+      const voices = await PiperTTS.voices();
+
+      status.textContent = "Piper loaded successfully!";
+      output.textContent = JSON.stringify(voices, null, 2);
+
+    } catch (error) {
+      status.textContent = "Piper failed to load.";
+      output.textContent = error.message;
+    }
+  </script>
+
+</body>
+</html>

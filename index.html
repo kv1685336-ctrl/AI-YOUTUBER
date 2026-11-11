@@ -2019,10 +2019,31 @@ body.light-theme .theme-text {
         <h2 data-i18n="usagePlan">
           Usage &amp; Plan
         </h2>
+        
+        <div class="credit-wallet">
 
-        <p data-i18n="planNotice">
-          Your plan and usage information will appear here when subscriptions are connected.
-        </p>
+        <h3>Makora Credits</h3>
+
+        <p>Your universal AI credit balance</p>
+
+        <h2 id="creditBalance">Loading...</h2>
+
+        <button type="button" onclick="loadCreditWallet()">
+         Refresh Balance
+        </button>
+
+        <h3 style="margin-top:24px;">Transaction History</h3>
+
+        <div id="creditTransactions">
+        Loading transactions...
+        </div>
+
+        <p id="creditWalletStatus"></p>
+
+        </div>
+
+
+        
 
       </div>
 
@@ -2202,6 +2223,98 @@ body.light-theme .theme-text {
 <script>
 const SUPABASE_URL = "https://xxzcbjsbiaveclxmoqpu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_2GXwDmXYiO6GBapwH3la1A_yukRPEmF";
+
+const MAKORA_WORKER_URL =
+  "https://black-boat-3f22ai-youtuber-api.kapil20122504.workers.dev";
+
+async function loadCreditWallet() {
+  const balanceElement = document.getElementById("creditBalance");
+  const historyElement = document.getElementById("creditTransactions");
+  const statusElement = document.getElementById("creditWalletStatus");
+
+  balanceElement.textContent = "Loading...";
+  historyElement.textContent = "Loading transactions...";
+  statusElement.textContent = "";
+
+  try {
+    const { data: { session }, error } =
+      await supabaseClient.auth.getSession();
+
+    if (error || !session) {
+      throw new Error("Please log in again.");
+    }
+
+    const headers = {
+      "Authorization": `Bearer ${session.access_token}`
+    };
+
+    const [walletResponse, transactionsResponse] =
+      await Promise.all([
+        fetch(`${MAKORA_WORKER_URL}/wallet`, {
+          method: "GET",
+          headers,
+          cache: "no-store"
+        }),
+        fetch(`${MAKORA_WORKER_URL}/transactions`, {
+          method: "GET",
+          headers,
+          cache: "no-store"
+        })
+      ]);
+
+    const wallet = await walletResponse.json();
+    const history = await transactionsResponse.json();
+
+    if (!walletResponse.ok) {
+      throw new Error(wallet.error || "Could not load wallet.");
+    }
+
+    if (!transactionsResponse.ok) {
+      throw new Error(
+        history.error || "Could not load transaction history."
+      );
+    }
+
+    balanceElement.textContent =
+      Number(wallet.balance).toLocaleString() + " credits";
+
+    historyElement.innerHTML = "";
+
+    if (!history.transactions?.length) {
+      historyElement.textContent = "No transactions yet.";
+      return;
+    }
+
+    history.transactions.forEach(transaction => {
+      const row = document.createElement("div");
+      row.style.padding = "12px 0";
+      row.style.borderBottom = "1px solid #444";
+
+      const description = document.createElement("div");
+      description.textContent =
+        transaction.description || transaction.transaction_type;
+
+      const amount = document.createElement("strong");
+      const value = Number(transaction.amount);
+
+      amount.textContent =
+        (value > 0 ? "+" : "") + value.toLocaleString() + " credits";
+
+      const date = document.createElement("small");
+      date.textContent =
+        new Date(transaction.created_at).toLocaleString();
+
+      row.append(description, amount, date);
+      historyElement.appendChild(row);
+    });
+
+  } catch (error) {
+    balanceElement.textContent = "Unavailable";
+    historyElement.textContent = "Could not load transactions.";
+    statusElement.textContent = error.message;
+  }
+}
+
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
@@ -3174,6 +3287,7 @@ async function selectTool(tool, button) {
     const { data, error } = await supabaseClient.auth.getUser();
     document.getElementById("settingsEmail").textContent =
       error ? "Could not load account" : (data.user?.email || "Not available");
+    await loadCreditWallet();
     return;
   }
 

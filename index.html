@@ -2226,6 +2226,12 @@ body.light-theme .theme-text {
 <script>
 const SUPABASE_URL = "https://xxzcbjsbiaveclxmoqpu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_2GXwDmXYiO6GBapwH3la1A_yukRPEmF";
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
 
 const MAKORA_WORKER_URL =
   "https://black-boat-3f22ai-youtuber-api.kapil20122504.workers.dev";
@@ -2318,11 +2324,6 @@ async function loadCreditWallet() {
   }
 }
 
-
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
 
 
 const interfaceTranslations = {

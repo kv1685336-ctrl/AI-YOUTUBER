@@ -4918,6 +4918,7 @@ function showEditor() {
     if (tool === "audio") {
       
       const clip = getClip(selectedClipId);
+      
 
       if (!clip) {
         
@@ -4929,54 +4930,56 @@ function showEditor() {
         return;
         }
 
-        if (clip.volume === undefined) clip.volume = 1;
+      if (clip.volume === undefined) clip.volume = 1;
 
-  panel.innerHTML = `
-    <h3>Audio Controls</h3>
+        panel.innerHTML = `
+        <h3>Audio Controls</h3>
 
-    <p class="studio-muted" style="margin:12px 0;">
-      Adjust the original audio volume of this clip.
-    </p>
+        <p class="studio-muted" style="margin:12px 0;">
+        Adjust the original audio volume of this clip.
+        </p>
 
-    <label>
-      Volume: 
-      <span id="studioVolumeValue">
-        ${Math.round(clip.volume * 100)}%
-      </span>
-    </label>
+        <label>
+        Volume: 
+        <span id="studioVolumeValue">
+          ${Math.round(clip.volume * 100)}%
+        </span>
+        </label>
 
-    <input id="studioVolume"
-      type="range"
-      min="0"
-      max="1"
-      step="0.01"
-      value="${clip.volume}">
+       <input id="studioVolume"
+         type="range"
+         min="0"
+         max="1"
+         step="0.01"
+         value="${clip.volume}">
 
-    <button id="studioMute" style="margin-top:12px;">
-      ${clip.volume === 0 ? "Restore Volume" : "Mute"}
-    </button>
+       <button id="studioMute" style="margin-top:12px;">
+         ${clip.volume === 0 ? "Restore Volume" : "Mute"}
+       </button>
 
-    <button id="studioApplyVolume" style="margin-top:12px;">
-      Save Volume
-    </button>
-  `;
+       <button id="studioApplyVolume" style="margin-top:12px;">
+         Save Volume
+       </button>
+       `;
 
-  const volume = document.getElementById("studioVolume");
-  const volumeValue = document.getElementById("studioVolumeValue");
+    const volume = document.getElementById("studioVolume");
+    const volumeValue = document.getElementById("studioVolumeValue");
 
-  volume.addEventListener("input", () => {
-    video.volume = Number(volume.value);
-    volumeValue.textContent =
-      Math.round(Number(volume.value) * 100) + "%";
+    volume.addEventListener("input", () => {
+      
+      video.volume = Number(volume.value);
+      volumeValue.textContent =
+        Math.round(Number(volume.value) * 100) + "%";
+    });
+
+   document.getElementById("studioMute").addEventListener("click", () => {
+     volume.value = Number(volume.value) === 0 ? 1 : 0;
+     volume.dispatchEvent(new Event("input"));
   });
 
-  document.getElementById("studioMute").addEventListener("click", () => {
-    volume.value = Number(volume.value) === 0 ? 1 : 0;
-    volume.dispatchEvent(new Event("input"));
-  });
-
-  document.getElementById("studioApplyVolume")
-    .addEventListener("click", () => {
+   document.getElementById("studioApplyVolume")
+     .addEventListener("click", () => {
+       
       clip.volume = Number(volume.value);
       applyClipEffects(clip);
       saveEdit();

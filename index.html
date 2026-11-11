@@ -4306,7 +4306,11 @@ function showEditor() {
 
   // Playback speed
   video.playbackRate = Number(clip.speed) || 1;
-}
+  video.volume = Math.max(
+  0,
+  Math.min(1, Number(clip.volume ?? 1))
+);
+  }
 
   function loadClip(id, sourceTime, autoplay = false) {
     const clip = getClip(id);
@@ -4911,18 +4915,79 @@ function showEditor() {
         "Playback speed set to " + clip.speed + "×.";
     });
 }
+    if (tool === "audio") {
+      
+      const clip = getClip(selectedClipId);
+
+      if (!clip) {
+        
+        panel.innerHTML = `
+        
+        <h3>Audio Controls</h3>
+        <p class="studio-muted">Select a video clip first.</p>
+       `;
+        return;
+        }
+
+        if (clip.volume === undefined) clip.volume = 1;
+
+  panel.innerHTML = `
+    <h3>Audio Controls</h3>
+
+    <p class="studio-muted" style="margin:12px 0;">
+      Adjust the original audio volume of this clip.
+    </p>
+
+    <label>
+      Volume: 
+      <span id="studioVolumeValue">
+        ${Math.round(clip.volume * 100)}%
+      </span>
+    </label>
+
+    <input id="studioVolume"
+      type="range"
+      min="0"
+      max="1"
+      step="0.01"
+      value="${clip.volume}">
+
+    <button id="studioMute" style="margin-top:12px;">
+      ${clip.volume === 0 ? "Restore Volume" : "Mute"}
+    </button>
+
+    <button id="studioApplyVolume" style="margin-top:12px;">
+      Save Volume
+    </button>
+  `;
+
+  const volume = document.getElementById("studioVolume");
+  const volumeValue = document.getElementById("studioVolumeValue");
+
+  volume.addEventListener("input", () => {
+    video.volume = Number(volume.value);
+    volumeValue.textContent =
+      Math.round(Number(volume.value) * 100) + "%";
+  });
+
+  document.getElementById("studioMute").addEventListener("click", () => {
+    volume.value = Number(volume.value) === 0 ? 1 : 0;
+    volume.dispatchEvent(new Event("input"));
+  });
+
+  document.getElementById("studioApplyVolume")
+    .addEventListener("click", () => {
+      clip.volume = Number(volume.value);
+      applyClipEffects(clip);
+      saveEdit();
+      status.textContent = "Clip volume saved.";
+    });
+}
+    
+    
+    
     
 
-    if (tool === "audio") {
-      panel.innerHTML = `
-        <h3>Audio Editing</h3>
-        <p class="studio-muted" style="margin-top:10px;">
-          Synchronized music and voiceover tracks are our next
-          development stage. Audio is not connected yet.
-        </p>
-      `;
-    }
-  }
 
   document.querySelectorAll("[data-tool]").forEach(button => {
     button.addEventListener("click", () => {

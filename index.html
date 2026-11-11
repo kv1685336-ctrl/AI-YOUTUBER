@@ -3577,10 +3577,23 @@ async function sendMessage() {
   renderMessages();
 
   try {
+    g
+    
+    const { data: { session } } =
+      g
+      await supabaseClient.auth.getSession();
+
+    if (!session) {
+      
+      alert("Please log in again.");
+    return;
+   }
+
     const response = await fetch("https://black-boat-3f22ai-youtuber-api.kapil20122504.workers.dev/", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session.access_token}`
       },
       body: JSON.stringify({ message })
     });

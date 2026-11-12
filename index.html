@@ -5005,8 +5005,10 @@ function showEditor() {
         player.muted = false;
         player.volume = Number(volume.value);
         
-      volumeValue.textContent =
-        Math.round(Number(volume.value) * 100) + "%";
+        volumeValue.textContent =
+          Math.round(Number(volume.value) * 100) + "%";
+      }
+    
     });
 
    document.getElementById("studioMute").addEventListener("click", () => {

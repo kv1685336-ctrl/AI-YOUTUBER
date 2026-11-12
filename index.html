@@ -4131,6 +4131,10 @@ function showEditor() {
   const status = document.getElementById("studioStatus");
   const panel = document.getElementById("studioToolPanel");
   const placeholder = document.getElementById("studioPlaceholder");
+  video.addEventListener("volumechange", () => {
+  console.log("Video volume:", video.volume);
+  console.log("Video muted:", video.muted);
+});
 
   // Each imported file is stored once.
   const sources = {};

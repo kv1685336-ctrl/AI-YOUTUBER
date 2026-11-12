@@ -5004,11 +5004,7 @@ function showEditor() {
       if (player) {
         player.muted = false;
         player.volume = Number(volume.value);
-        status.textContent =
-          
-          "Slider: " + volume.value +
-          " | Player: " + player.volume +
-          " | Muted: " + player.muted;
+        
       volumeValue.textContent =
         Math.round(Number(volume.value) * 100) + "%";
     });

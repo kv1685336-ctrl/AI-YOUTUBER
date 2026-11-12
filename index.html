@@ -4974,7 +4974,12 @@ function showEditor() {
 
     volume.addEventListener("input", () => {
       
-      video.volume = Number(volume.value);
+      const player = document.getElementById("studioVideo");
+
+      if (player) {
+        player.muted = false;
+        player.volume = Number(volume.value);
+       }
       volumeValue.textContent =
         Math.round(Number(volume.value) * 100) + "%";
     });

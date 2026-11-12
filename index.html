@@ -4088,6 +4088,13 @@ function showEditor() {
             <span class="studio-muted">No clips</span>
           </div>
         </div>
+        <div class="studio-track">
+        
+          <div class="studio-track-name">AUDIO</div>
+          <div class="studio-track-content" id="audioTrack">
+            <span class="studio-muted">No audio</span>
+          </div>
+       </div>
 
         <p class="studio-muted">
           Timeline position:
@@ -4104,25 +4111,44 @@ function showEditor() {
 
         <h3>Media Library</h3>
 
-        <p class="studio-muted" style="margin:10px 0;">
-          Select multiple video files.
-        </p>
+<p class="studio-muted" style="margin:10px 0;">
 
-        <input id="studioVideoInput"
-          type="file" accept="video/*" multiple
-          style="max-width:100%;">
+  Select multiple video files.
 
-        <div id="studioMediaList" style="margin-top:12px;"></div>
+</p>
 
-        <p id="studioStatus" class="studio-muted"
-          style="margin-top:12px;">
-          Ready to edit.
-        </p>
+<input id="studioVideoInput"
 
-      </div>
+  type="file" accept="video/*" multiple
 
-    </div>
-  `;
+  style="max-width:100%;">
+
+<p class="studio-muted" style="margin:14px 0 10px;">
+
+  Import audio files.
+
+</p>
+
+<input id="studioAudioInput"
+
+  type="file" accept="audio/*" multiple
+
+  style="max-width:100%;">
+
+<div id="studioMediaList" style="margin-top:12px;"></div>
+
+<p id="studioStatus" class="studio-muted"
+
+  style="margin-top:12px;">
+
+  Ready to edit.
+
+</p>
+
+</div>
+
+</div>
+`;
 
   const video = document.getElementById("studioVideo");
   const videoInput = document.getElementById("studioVideoInput");

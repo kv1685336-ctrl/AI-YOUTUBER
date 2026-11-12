@@ -4362,6 +4362,27 @@ function showEditor() {
       video.dataset.sourceId = clip.sourceId;
       video.src = source.url;
       video.load();
+    
+
+
+      video.onloadedmetadata = () => {
+        if (currentClipId !== id) return;
+        
+
+        applyClipEffects(clip);
+
+        if (pendingLoad && pendingLoad.id === id) {
+          video.currentTime = pendingLoad.time;
+
+          if (pendingLoad.autoplay) {
+            video.play().catch(() => {
+              status.textContent = "Could not play this video.";
+        });
+       }
+
+          pendingLoad = null;
+  }
+};
     }
 
     updateTimeline();

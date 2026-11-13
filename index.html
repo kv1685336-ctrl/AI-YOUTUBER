@@ -4131,7 +4131,7 @@ function showEditor() {
 
 <input id="studioAudioInput"
 
-  type="file" accept="audio/mpeg,audio/wav,audio/mp4,audio/aac,audio/ogg,audio/flac" multiple
+  type="file" accept="audio/*" multiple
 
   style="max-width:100%;">
 
@@ -4153,6 +4153,10 @@ function showEditor() {
   const video = document.getElementById("studioVideo");
   const videoInput = document.getElementById("studioVideoInput");
   const videoTrack = document.getElementById("videoTrack");
+  const audioInput = document.getElementById("studioAudioInput");
+  const audioTrack = document.getElementById("audioTrack");
+
+
   const playhead = document.getElementById("studioPlayhead");
   const status = document.getElementById("studioStatus");
   const panel = document.getElementById("studioToolPanel");
@@ -4164,6 +4168,8 @@ function showEditor() {
 
   // Each imported file is stored once.
   const sources = {};
+  // Store imported audio files.
+  let audioSources = [];
 
   // Each timeline segment refers to an imported source.
   let clips = [];
@@ -4563,6 +4569,79 @@ function showEditor() {
     status.textContent =
       imported + " video(s) imported successfully.";
   });
+  // Import multiple audio files and read their durations.
+audioInput.addEventListener("change", async () => {
+  const files = Array.from(audioInput.files || []);
+
+  if (!files.length) return;
+
+  let imported = 0;
+
+  for (const file of files) {
+    if (file.type && !file.type.startsWith("audio/")) {
+      status.textContent = "Skipped an invalid audio file.";
+      continue;
+    }
+
+    status.textContent = "Reading " + file.name + "...";
+
+    const url = URL.createObjectURL(file);
+
+    const duration = await new Promise(resolve => {
+      const probe = new Audio();
+
+      probe.preload = "metadata";
+      probe.onloadedmetadata = () => resolve(probe.duration);
+      probe.onerror = () => resolve(0);
+      probe.src = url;
+      probe.load();
+    });
+
+    if (!Number.isFinite(duration) || duration <= 0) {
+      URL.revokeObjectURL(url);
+      status.textContent = "Could not read " + file.name;
+      continue;
+    }
+
+    audioSources.push({
+      name: file.name,
+      url,
+      duration
+    });
+
+    imported++;
+  }
+
+  audioInput.value = "";
+
+  // Display imported audio files in the AUDIO track.
+  audioTrack.innerHTML = "";
+
+  if (audioSources.length === 0) {
+    audioTrack.textContent = "No audio";
+  } else {
+    audioSources.forEach(audio => {
+      const item = document.createElement("div");
+
+      const minutes = Math.floor(audio.duration / 60);
+      const seconds = Math.floor(audio.duration % 60);
+
+      item.textContent =
+        "🎵 " + audio.name + " (" +
+        minutes + ":" + String(seconds).padStart(2, "0") + ")";
+
+      item.style.padding = "8px";
+      item.style.margin = "4px";
+      item.style.background = "#252525";
+      item.style.borderRadius = "6px";
+
+      audioTrack.appendChild(item);
+    });
+  }
+
+  status.textContent =
+    imported + " audio file(s) imported successfully.";
+});
 
   // Playback controls.
   document.getElementById("studioPlay").addEventListener("click", () => {

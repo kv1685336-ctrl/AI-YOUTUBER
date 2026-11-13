@@ -4170,6 +4170,9 @@ function showEditor() {
   const sources = {};
   // Store imported audio files.
   let audioSources = [];
+  let audioPlayer = new Audio();
+  
+  audioPlayer.preload = "auto";
 
   // Each timeline segment refers to an imported source.
   let clips = [];
@@ -4608,6 +4611,10 @@ audioInput.addEventListener("change", async () => {
       url,
       duration
     });
+    if (audioSources.length === 1) {
+      audioPlayer.src = audioSources[0].url;
+      audioPlayer.load();
+   }
 
     imported++;
   }
@@ -4641,6 +4648,18 @@ audioInput.addEventListener("change", async () => {
 
   status.textContent =
     imported + " audio file(s) imported successfully.";
+});
+  // Keep audio playback synchronised with video.
+video.addEventListener("play", () => {
+  if (audioPlayer.src && !audioPlayer.ended) {
+    audioPlayer.play().catch(() => {
+      status.textContent = "Could not play the audio.";
+    });
+  }
+});
+
+video.addEventListener("pause", () => {
+  audioPlayer.pause();
 });
 
   // Playback controls.

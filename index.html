@@ -2254,6 +2254,30 @@ body.light-theme [id^="settingsPage-"] select {
       <div><strong>Email address</strong><p>Your registered email address.</p></div>
       <p id="settingsEmail">Loading...</p>
     </div>
+    <div class="settings-row">
+  <div>
+    <strong>Change email address</strong>
+    <p>Enter your new email address.</p>
+  </div>
+  <input
+    id="newEmailAddress"
+    type="email"
+    maxlength="254"
+    autocomplete="email"
+    placeholder="New email address"
+  >
+</div>
+
+<button
+  class="primary"
+  type="button"
+  id="changeEmailButton"
+  onclick="requestEmailChange()"
+>
+  Send Confirmation
+</button>
+
+<p id="emailChangeStatus" role="status"></p>
 
     <div class="settings-row">
       <div><strong>Email verification</strong><p>Your account verification status.</p></div>
@@ -3694,7 +3718,64 @@ async function saveProfileDisplayName() {
 }
 
 
+async function requestEmailChange() {
+  const input = document.getElementById("newEmailAddress");
+  const status = document.getElementById("emailChangeStatus");
+  const button = document.getElementById("changeEmailButton");
 
+  const newEmail = input.value.trim().toLowerCase();
+
+  if (!newEmail) {
+    status.textContent = "Please enter your new email address.";
+    return;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+    status.textContent = "Please enter a valid email address.";
+    return;
+  }
+
+  const currentEmail =
+    document.getElementById("settingsEmail").textContent
+      .trim()
+      .toLowerCase();
+
+  if (newEmail === currentEmail) {
+    status.textContent = "This is already your current email address.";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Sending...";
+  status.textContent = "";
+
+  try {
+    const { data, error } =
+      await supabaseClient.auth.updateUser({
+        email: newEmail
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    const pendingEmail = data.user?.new_email;
+
+    status.textContent = pendingEmail
+      ? "Confirmation requested for " + pendingEmail +
+        ". Check your email inboxes to complete the change."
+      : "Confirmation requested. Check your email inboxes to complete the change.";
+
+    input.value = "";
+
+  } catch (error) {
+    status.textContent = "Could not request email change: " + error.message;
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Send Confirmation";
+  }
+}
 function showSettingsHome() {
   document.getElementById("settingsHome").classList.remove("hidden");
 

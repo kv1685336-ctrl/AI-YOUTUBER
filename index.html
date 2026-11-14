@@ -2214,29 +2214,59 @@ body.light-theme [id^="settingsPage-"] select {
     <button class="secondary" onclick="logout()">Log out</button>
   </div>
 
-  <!-- PROFILE & ACCOUNT -->
-  <div id="settingsPage-profile" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
-    <h1>Profile & Account</h1>
-    <div class="settings-section">
-      <div class="settings-row">
-        <div><strong>Display name</strong><p>Your account name.</p></div>
-        <p id="settingsDisplayName">Loading...</p>
+  
+  
+<!-- PROFILE & ACCOUNT -->
+<div id="settingsPage-profile" class="hidden">
+  <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+  <h1>Profile & Account</h1>
+
+  <div class="settings-section">
+
+    <div class="settings-row">
+      <div>
+        <strong>Current display name</strong>
+        <p>Your account name.</p>
       </div>
-      <div class="settings-row">
-        <div><strong>Email address</strong><p>Your registered email address.</p></div>
-        <p id="settingsEmail">Loading...</p>
-      </div>
-      <div class="settings-row">
-        <div><strong>Email verification</strong><p>Your account verification status.</p></div>
-        <p id="settingsVerification">Loading...</p>
-      </div>
-      <div class="settings-row">
-        <div><strong>Account created</strong><p>When you joined Makora.</p></div>
-        <p id="settingsCreatedAt">Loading...</p>
-      </div>
+      <p id="settingsDisplayName">Loading...</p>
     </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Change display name</strong>
+        <p>Choose the name Makora should display.</p>
+      </div>
+      <input
+        id="newDisplayName"
+        type="text"
+        maxlength="40"
+        placeholder="Enter your display name"
+      >
+    </div>
+
+    <button class="primary" type="button" onclick="saveProfileDisplayName()">
+      Save Changes
+    </button>
+
+    <p id="profileSaveStatus" role="status"></p>
+
+    <div class="settings-row">
+      <div><strong>Email address</strong><p>Your registered email address.</p></div>
+      <p id="settingsEmail">Loading...</p>
+    </div>
+
+    <div class="settings-row">
+      <div><strong>Email verification</strong><p>Your account verification status.</p></div>
+      <p id="settingsVerification">Loading...</p>
+    </div>
+
+    <div class="settings-row">
+      <div><strong>Account created</strong><p>When you joined Makora.</p></div>
+      <p id="settingsCreatedAt">Loading...</p>
+    </div>
+
   </div>
+</div>
 
   <!-- GENERAL PREFERENCES -->
   <div id="settingsPage-general" class="hidden">
@@ -3610,6 +3640,60 @@ async function deleteChat(chatId) {
 function showChatInput(show) {
   document.querySelector(".chat-input-area").classList.toggle("hidden", !show);
 }
+
+
+async function saveProfileDisplayName() {
+  const input = document.getElementById("newDisplayName");
+  const status = document.getElementById("profileSaveStatus");
+  const saveButton = document.querySelector(
+    '#settingsPage-profile button.primary'
+  );
+
+  const newName = input.value.trim();
+
+  if (!newName) {
+    status.textContent = "Please enter a display name.";
+    return;
+  }
+
+  if (newName.length > 40) {
+    status.textContent = "Name must be 40 characters or fewer.";
+    return;
+  }
+
+  saveButton.disabled = true;
+  saveButton.textContent = "Saving...";
+  status.textContent = "";
+
+  try {
+    const { data, error } =
+      await supabaseClient.auth.updateUser({
+        data: {
+          full_name: newName
+        }
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    document.getElementById("settingsDisplayName").textContent =
+      data.user.user_metadata.full_name || newName;
+
+    input.value = "";
+
+    status.textContent = "Display name updated successfully.";
+
+  } catch (error) {
+    status.textContent = "Could not save: " + error.message;
+
+  } finally {
+    saveButton.disabled = false;
+    saveButton.textContent = "Save Changes";
+  }
+}
+
+
 
 function showSettingsHome() {
   document.getElementById("settingsHome").classList.remove("hidden");

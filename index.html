@@ -1862,32 +1862,50 @@ body.light-theme .theme-text {
       <p class="settings-intro">
         Manage your account, social media preferences and Makora experience.
       </p>
-
-      
-
-      <!-- PROFILE -->
+    <!-- PROFILE & ACCOUNT -->
 
       <div class="settings-section">
 
-        <h2 data-i18n="profile">Profile</h2>
+        <h2>Profile & Account</h2>
 
         <div class="settings-row">
-
           <div>
-
-            <strong data-i18n="emailAddress">
-              Email address
-            </strong>
-
-            <p id="settingsEmail" data-i18n="loadingAccount">
-              Loading account...
-            </p>
-
+            <strong>Display name</strong>
+            <p>Your account name.</p>
           </div>
+          <p id="settingsDisplayName">Loading...</p>
+         </div>
 
+  
+        <div class="settings-row">
+          <div>
+            <strong>Email address</strong>
+            <p>Your registered email address.</p>
+        </div>
+          <p id="settingsEmail">Loading...</p>
+        </div>
+
+        <div class="settings-row">
+          <div>
+            <strong>Email verification</strong>
+            <p>Your account verification status.</p>
+          </div>
+          <p id="settingsVerification">Loading...</p>
+        </div>
+
+        <div class="settings-row">
+          <div>
+            <strong>Account created</strong>
+            <p>When you joined Makora.</p>
+          </div>
+          <p id="settingsCreatedAt">Loading...</p>
         </div>
 
       </div>
+
+      
+
+      
 
       <!-- PREFERENCES -->
 
@@ -3301,9 +3319,46 @@ async function selectTool(tool, button) {
     settingsPanel.classList.remove("hidden");
 
     const { data, error } = await supabaseClient.auth.getUser();
-    document.getElementById("settingsEmail").textContent =
-      error ? "Could not load account" : (data.user?.email || "Not available");
-    await loadCreditWallet();
+
+if (error || !data.user) {
+
+  document.getElementById("settingsDisplayName").textContent =
+    "Could not load account";
+
+  document.getElementById("settingsEmail").textContent =
+    "Could not load account";
+
+  document.getElementById("settingsVerification").textContent =
+    "Unavailable";
+
+  document.getElementById("settingsCreatedAt").textContent =
+    "Unavailable";
+
+} else {
+
+  const user = data.user;
+
+  const displayName =
+    user.user_metadata?.full_name ||
+    user.user_metadata?.name ||
+    "Not set";
+
+  document.getElementById("settingsDisplayName").textContent =
+    displayName;
+
+  document.getElementById("settingsEmail").textContent =
+    user.email || "Not available";
+
+  document.getElementById("settingsVerification").textContent =
+    user.email_confirmed_at ? "Verified" : "Not verified";
+
+  document.getElementById("settingsCreatedAt").textContent =
+    user.created_at
+      ? new Date(user.created_at).toLocaleDateString()
+      : "Not available";
+}
+
+await loadCreditWallet();
     return;
   }
   

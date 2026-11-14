@@ -2420,14 +2420,81 @@ body.light-theme [id^="settingsPage-"] select {
   </div>
 
   <!-- SECURITY -->
-  <div id="settingsPage-security" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
-    <h1>Security</h1>
-    <div class="settings-section">
-      <p>Your account currently uses Supabase authentication.</p>
-      <p>Additional security controls, such as session management, will be added when implemented.</p>
+  
+<!-- SECURITY -->
+<div id="settingsPage-security" class="hidden">
+  <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+  <h1>Security</h1>
+
+  <div class="settings-section">
+
+    <h3>Change Password</h3>
+    <p>Update the password used to access your Makora account.</p>
+
+    <div class="settings-row">
+      <label for="currentPassword">Current password</label>
+      <input
+        id="currentPassword"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Enter current password"
+      >
     </div>
+
+    <div class="settings-row">
+      <label for="newPassword">New password</label>
+      <input
+        id="newPassword"
+        type="password"
+        autocomplete="new-password"
+        minlength="8"
+        placeholder="Enter new password"
+      >
+    </div>
+
+    <div class="settings-row">
+      <label for="confirmNewPassword">Confirm new password</label>
+      <input
+        id="confirmNewPassword"
+        type="password"
+        autocomplete="new-password"
+        placeholder="Confirm new password"
+      >
+    </div>
+
+    <button
+      class="primary"
+      id="changePasswordButton"
+      type="button"
+      onclick="changeMakoraPassword()"
+    >
+      Update Password
+    </button>
+
+    <p id="passwordChangeStatus" role="status"></p>
+
+    <hr>
+
+    <h3>Active Sessions</h3>
+    <p>
+      Sign out of other devices where your Makora account is currently signed in.
+      This device will remain signed in.
+    </p>
+
+    <button
+      class="secondary"
+      id="signOutOtherSessionsButton"
+      type="button"
+      onclick="signOutOtherSessions()"
+    >
+      Sign Out Other Sessions
+    </button>
+
+    <p id="sessionSecurityStatus" role="status"></p>
+
   </div>
+</div>
+
 
   <!-- HELP & SUPPORT -->
   <div id="settingsPage-help" class="hidden">
@@ -3776,6 +3843,132 @@ async function requestEmailChange() {
     button.textContent = "Send Confirmation";
   }
 }
+
+async function changeMakoraPassword() {
+  const currentPassword =
+    document.getElementById("currentPassword").value;
+
+  const newPassword =
+    document.getElementById("newPassword").value;
+
+  const confirmPassword =
+    document.getElementById("confirmNewPassword").value;
+
+  const status =
+    document.getElementById("passwordChangeStatus");
+
+  const button =
+    document.getElementById("changePasswordButton");
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    status.textContent = "Please fill in all password fields.";
+    return;
+  }
+
+  if (newPassword.length < 8) {
+    status.textContent = "New password must contain at least 8 characters.";
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    status.textContent = "New passwords do not match.";
+    return;
+  }
+
+  if (currentPassword === newPassword) {
+    status.textContent = "Choose a different password.";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Updating...";
+  status.textContent = "";
+
+  try {
+    const { data: userData, error: userError } =
+      await supabaseClient.auth.getUser();
+
+    if (userError || !userData.user?.email) {
+      throw userError || new Error("Could not verify your account.");
+    }
+
+    // Verify the current password first.
+    const { error: loginError } =
+      await supabaseClient.auth.signInWithPassword({
+        email: userData.user.email,
+        password: currentPassword
+      });
+
+    if (loginError) {
+      throw new Error("Your current password is incorrect.");
+    }
+
+    // Update the password on the existing account.
+    const { error: updateError } =
+      await supabaseClient.auth.updateUser({
+        password: newPassword
+      });
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    document.getElementById("currentPassword").value = "";
+    document.getElementById("newPassword").value = "";
+    document.getElementById("confirmNewPassword").value = "";
+
+    status.textContent = "Password updated successfully.";
+
+  } catch (error) {
+    status.textContent = "Could not update password: " + error.message;
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Update Password";
+  }
+}
+
+
+async function signOutOtherSessions() {
+  const status =
+    document.getElementById("sessionSecurityStatus");
+
+  const button =
+    document.getElementById("signOutOtherSessionsButton");
+
+  const confirmed = confirm(
+    "Sign out your Makora account from all other devices?"
+  );
+
+  if (!confirmed) return;
+
+  button.disabled = true;
+  button.textContent = "Signing out...";
+  status.textContent = "";
+
+  try {
+    const { error } =
+      await supabaseClient.auth.signOut({
+        scope: "others"
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    status.textContent =
+      "Other sessions have been signed out.";
+
+  } catch (error) {
+    status.textContent =
+      "Could not sign out other sessions: " + error.message;
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Sign Out Other Sessions";
+  }
+}
+
 function showSettingsHome() {
   document.getElementById("settingsHome").classList.remove("hidden");
 

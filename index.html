@@ -2991,6 +2991,7 @@ function applyInterfaceLanguage(language) {
 let currentChatId = null;
 let currentMessages = [];
 let pageBeforeLegal = "welcome";
+let activeWorkspaceUserId = null;
 const pages = ["welcome", "welcomeSettings", "signup", "login", "workspace", "legal"];
 
 function showPage(page) {
@@ -3084,9 +3085,53 @@ async function(event) {
 
   showDashboard(data.user);
 });
-
 function showDashboard(user) {
+  if (!user) return;
+
+  // Prevent duplicate loading for the same account.
+  if (activeWorkspaceUserId === user.id) {
+    return;
+  }
+
+  // Register the new account.
+  activeWorkspaceUserId = user.id;
   settingsUserId = user.id;
+
+  // Reset previous account's chat state.
+  currentChatId = null;
+  currentMessages = [];
+
+  // Clear old profile information.
+  document.getElementById("settingsDisplayName").textContent = "Loading...";
+  document.getElementById("settingsEmail").textContent = "Loading...";
+  document.getElementById("settingsVerification").textContent = "Loading...";
+  document.getElementById("settingsCreatedAt").textContent = "Loading...";
+
+  // Reset workspace panels.
+  document.getElementById("settingsPanel").classList.add("hidden");
+
+  const chatMain = document.querySelector(".chat-main");
+  chatMain.classList.remove("hidden");
+
+  document.querySelector(".chat-input-area").style.display = "flex";
+  showChatInput(true);
+
+  // Reset chat interface.
+  renderMessages();
+
+  // Reset selected menu item.
+  document.querySelectorAll(".menu-item").forEach(item => {
+    item.classList.remove("active");
+  });
+
+  const chatButton = [...document.querySelectorAll(".menu-item")]
+    .find(item => item.textContent.trim() === "Chat");
+
+  if (chatButton) {
+    chatButton.classList.add("active");
+  }
+
+  // Load the new account's preferences.
   loadSettings();
 
   document.getElementById("navLogin").classList.add("hidden");
@@ -3094,6 +3139,7 @@ function showDashboard(user) {
 
   showPage("workspace");
 }
+
 function toggleMenu() {
   document.getElementById("sideMenu").classList.toggle("hidden");
 }
@@ -3838,6 +3884,36 @@ async function logout() {
     return;
   }
 
+  // Clear account identity.
+  activeWorkspaceUserId = null;
+  settingsUserId = null;
+
+  // Clear previous account's chat state.
+  currentChatId = null;
+  currentMessages = [];
+
+  // Clear profile information.
+  document.getElementById("settingsDisplayName").textContent = "Not logged in";
+  document.getElementById("settingsEmail").textContent = "Not logged in";
+  document.getElementById("settingsVerification").textContent = "Unavailable";
+  document.getElementById("settingsCreatedAt").textContent = "Unavailable";
+
+  // Clear wallet display.
+  document.getElementById("creditBalance").textContent = "—";
+  document.getElementById("creditTransactions").textContent = "";
+  document.getElementById("creditWalletStatus").textContent = "";
+
+  // Reset workspace panels.
+  document.getElementById("settingsPanel").classList.add("hidden");
+  document.querySelector(".chat-main").classList.remove("hidden");
+
+  renderMessages();
+
+  document.querySelectorAll(".menu-item").forEach(item => {
+    item.classList.remove("active");
+  });
+
+  // Return to welcome page.
   document.getElementById("navLogout").classList.add("hidden");
   document.getElementById("navLogin").classList.remove("hidden");
 
@@ -5525,6 +5601,15 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
   if (event === "SIGNED_IN" && session) {
     showDashboard(session.user);
   }
+  if (event === "SIGNED_OUT") {
+
+    activeWorkspaceUserId = null;
+
+    settingsUserId = null;
+
+    currentChatId = null;
+
+    currentMessages = [];
 });
 
 checkSession();

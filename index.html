@@ -1487,6 +1487,244 @@ body.light-theme .theme-text {
 
 }
 
+/* ================================
+   MAKORA SETTINGS UI
+================================ */
+
+.settings-panel {
+  background: #0b0b0f;
+  color: #f5f5f7;
+  padding: 30px;
+}
+
+.settings-panel h1 {
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 750;
+  letter-spacing: -1px;
+  margin-bottom: 10px;
+}
+
+.settings-intro {
+  color: #92929f;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* Settings category groups */
+
+#settingsHome .settings-section {
+  max-width: 850px;
+  padding: 20px;
+  margin-bottom: 18px;
+  background: #14141a;
+  border: 1px solid #292933;
+  border-radius: 16px;
+}
+
+#settingsHome .settings-section h2 {
+  color: #a6a6b2;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 12px;
+}
+
+/* Category buttons */
+
+#settingsHome .settings-section button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 55px;
+  margin: 0;
+  padding: 15px 16px;
+  color: #eeeeF2;
+  background: transparent;
+  border: none;
+  border-top: 1px solid #292933;
+  border-radius: 0;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+#settingsHome .settings-section button:hover {
+  background: #202027;
+  color: #ff5969;
+}
+
+#settingsHome .settings-section button:active {
+  background: #29202a;
+}
+
+/* Logout */
+
+#settingsHome > button {
+  margin-top: 12px;
+  border: 1px solid #70333a;
+  color: #ff6977;
+  background: #241418;
+  border-radius: 11px;
+  padding: 13px 20px;
+}
+
+/* Individual settings pages */
+
+[id^="settingsPage-"] {
+  max-width: 850px;
+  animation: settingsFade 0.2s ease;
+}
+
+[id^="settingsPage-"] > .secondary {
+  margin-bottom: 25px;
+  padding: 11px 15px;
+  color: #c4c4ce;
+  background: #191920;
+  border: 1px solid #30303a;
+  border-radius: 10px;
+}
+
+[id^="settingsPage-"] > .secondary:hover {
+  border-color: #ff5969;
+  color: #ff6977;
+}
+
+[id^="settingsPage-"] .settings-section {
+  background: #14141a;
+  border: 1px solid #292933;
+  border-radius: 16px;
+  padding: 22px;
+}
+
+[id^="settingsPage-"] p {
+  color: #a1a1ad;
+  line-height: 1.6;
+}
+
+[id^="settingsPage-"] strong {
+  color: #f2f2f5;
+}
+
+[id^="settingsPage-"] .settings-row {
+  border-top-color: #292933;
+}
+
+[id^="settingsPage-"] select {
+  background: #1c1c24;
+  color: #f5f5f7;
+  border: 1px solid #383844;
+  border-radius: 10px;
+  padding: 11px 13px;
+}
+
+/* Wallet */
+
+#settingsPage-credits .credit-wallet {
+  width: 100%;
+}
+
+#settingsPage-credits #creditBalance {
+  color: #ff6877;
+  font-size: 32px;
+  margin: 18px 0;
+}
+
+#settingsPage-credits button {
+  border-radius: 10px;
+  padding: 11px 16px;
+}
+
+/* Animation */
+
+@keyframes settingsFade {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 650px) {
+  .settings-panel {
+    padding: 22px 14px;
+  }
+
+  #settingsHome .settings-section {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  #settingsHome .settings-section button {
+    min-height: 58px;
+    padding: 14px 10px;
+    font-size: 13px;
+  }
+
+  [id^="settingsPage-"] .settings-section {
+    padding: 17px;
+  }
+
+  [id^="settingsPage-"] .settings-row {
+    gap: 10px;
+  }
+
+  [id^="settingsPage-"] select {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Light theme */
+
+body.light-theme .settings-panel {
+  background: #f5f5f8;
+  color: #17171d;
+}
+
+body.light-theme #settingsHome .settings-section,
+body.light-theme [id^="settingsPage-"] .settings-section {
+  background: #ffffff;
+  border-color: #e2e2e8;
+}
+
+body.light-theme #settingsHome .settings-section h2 {
+  color: #777783;
+}
+
+body.light-theme #settingsHome .settings-section button {
+  color: #25252d;
+  border-top-color: #eeeeF2;
+}
+
+body.light-theme #settingsHome .settings-section button:hover {
+  background: #fff1f2;
+  color: #d9364a;
+}
+
+body.light-theme [id^="settingsPage-"] strong,
+body.light-theme [id^="settingsPage-"] h1 {
+  color: #17171d;
+}
+
+body.light-theme [id^="settingsPage-"] p {
+  color: #666672;
+}
+
+body.light-theme [id^="settingsPage-"] select {
+  background: #ffffff;
+  color: #17171d;
+  border-color: #ddddE5;
+}
+
+
 </style>
 </head>
 <body>

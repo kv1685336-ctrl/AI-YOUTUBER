@@ -4615,18 +4615,7 @@ audioInput.addEventListener("change", async () => {
       audioPlayer.src = audioSources[0].url;
       audioPlayer.load();
    }
-      audioPlayer.oncanplay = () => {
-
-        status.textContent = "Audio loaded and ready to play.";
-
-  };
-
-      audioPlayer.onerror = () => {
-        
-
-        status.textContent = "Audio loading failed.";
-      };
-  }
+      
     imported++;
   }
 

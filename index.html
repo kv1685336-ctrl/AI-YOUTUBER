@@ -1738,6 +1738,11 @@ body.light-theme .theme-text {
         <i data-lucide="bot"></i>
         <span>MAKORA</span>
         </button>
+      <button class="menu-item"
+        onclick="selectTool('Chat', this)">
+        <i data-lucide="message-circle"></i>
+        <span>Chat</span>
+      </button>
 
       <button class="menu-item"
         onclick="selectTool('Editor', this)">
@@ -3301,6 +3306,13 @@ async function selectTool(tool, button) {
     
     showMakoraPlatformDemo();
     return;
+
+}
+  if (tool === "Chat") {
+
+  showChatInput(true);
+
+  return;
 
 }
   if (tool === "Chat History") {

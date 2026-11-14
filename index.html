@@ -4651,11 +4651,15 @@ audioInput.addEventListener("change", async () => {
 });
   // Keep audio playback synchronised with video.
 video.addEventListener("play", () => {
-  if (audioPlayer.src && !audioPlayer.ended) {
-    audioPlayer.play().catch(() => {
-      status.textContent = "Could not play the audio.";
-    });
+  if (!audioPlayer.src) return;
+
+  if (audioPlayer.ended) {
+    audioPlayer.currentTime = 0;
   }
+
+  audioPlayer.play().catch(() => {
+    status.textContent = "Could not play the audio.";
+  });
 });
 
 video.addEventListener("pause", () => {

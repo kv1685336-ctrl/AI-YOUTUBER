@@ -1854,288 +1854,257 @@ body.light-theme .theme-text {
 
     </section>
 
-    <!-- SETTINGS PANEL -->
 
-    <section id="settingsPanel" class="settings-panel hidden">
-
-      <h1 data-i18n="settings">Settings</h1>
-      <p class="settings-intro">
-        Manage your account, social media preferences and Makora experience.
-      </p>
-    <!-- PROFILE & ACCOUNT -->
-
-      <div class="settings-section">
-
-        <h2>Profile & Account</h2>
-
-        <div class="settings-row">
-          <div>
-            <strong>Display name</strong>
-            <p>Your account name.</p>
-          </div>
-          <p id="settingsDisplayName">Loading...</p>
-         </div>
-
-  
-        <div class="settings-row">
-          <div>
-            <strong>Email address</strong>
-            <p>Your registered email address.</p>
-        </div>
-          <p id="settingsEmail">Loading...</p>
-        </div>
-
-        <div class="settings-row">
-          <div>
-            <strong>Email verification</strong>
-            <p>Your account verification status.</p>
-          </div>
-          <p id="settingsVerification">Loading...</p>
-        </div>
-
-        <div class="settings-row">
-          <div>
-            <strong>Account created</strong>
-            <p>When you joined Makora.</p>
-          </div>
-          <p id="settingsCreatedAt">Loading...</p>
-        </div>
-
-      </div>
-
-      
-
-      
-
-      <!-- PREFERENCES -->
-
-      <div class="settings-section">
-
-        <h2 data-i18n="preferences">Preferences</h2>
-
-        <div class="settings-row">
-
-          <div>
-
-            <strong data-i18n="defaultLanguage">
-              Default language
-            </strong>
-
-            <p data-i18n="chooseLanguage">
-              Choose your preferred language.
-            </p>
-
-          </div>
-
-          <select id="settingsLanguage">
-            <option>English</option>
-            <option>Tamil</option>
-            <option>Hindi</option>
-            <option>Telugu</option>
-          </select>
-
-        </div>
-
-        <div class="settings-row">
-
-          <div>
-
-            <strong data-i18n="theme">Theme</strong>
-
-            <p data-i18n="chooseTheme">
-              Choose how the app looks.
-            </p>
-
-          </div>
-
-          <select id="settingsTheme">
-
-            <option value="dark" data-i18n="dark">
-              Dark
-            </option>
-
-            <option value="light" data-i18n="light">
-              Light
-            </option>
-
-          </select>
-
-        </div>
-
-      </div>
-      
-      <!-- SOCIAL MEDIA CONTENT PREFERENCES -->
-
-      <div class="settings-section">
-
-        <h2>Social Media Content Preferences</h2>
-
-        <p>Set your default preferences for content created by Makora.</p>
-
-      
-
-        <div class="settings-row">
-
-          <div>
-            <strong>Default Content Language</strong>
-
-            <p>The language Makora should use when creating content.</p>
-
-            
-
-          </div>
-
-          <select id="settingsVideoLanguage">
-            <option>English</option>
-            <option>Tamil</option>
-            <option>Hindi</option>
-          </select>
-
-        </div>
-
-        <div class="settings-row">
-
-          <div>
-
-            <strong data-i18n="contentStyle">
-              Content style
-            </strong>
-
-            <p data-i18n="preferredContentStyle">
-              Preferred style for generated content.
-            </p>
-
-          </div>
-
-          <select id="settingsStyle">
-            <option>
-              Professional
-
-            <option>
-              Informative
-            </option>
-
-            <option>
-              Educational
-            </option>
-
-            <option>
-              Entertaining
-            </option>
-
-            
-            
-
-            <option>Funny</option>
-
-            <option>Inspirational</option>
-
-            <option>Minimalist</option>
-
-            <option>Creative</option>
-
-            <option>Makora's Choice</option>
-
-           
-
-          </select>
-
-        </div>
-
-      </div>
-
-      <!-- USAGE AND PLAN -->
-
-      <div class="settings-section">
-
-        <h2 data-i18n="usagePlan">
-          Usage &amp; Plan
-        </h2>
-        
-        <div class="credit-wallet">
-
-        <h3>Makora Credits</h3>
-
-        <p>Your universal AI credit balance</p>
-
-        <h2 id="creditBalance">Loading...</h2>
-
-        <button type="button" onclick="loadCreditWallet()">
-         Refresh Balance
-        </button>
-       
-
-        <h3 style="margin-top:24px;">Transaction History</h3>
-
-        <div id="creditTransactions">
-        Loading transactions...
-        </div>
-
-        <p id="creditWalletStatus"></p>
-
-        </div>
-
-
-        
-
-      </div>
-
-      <!-- PRIVACY -->
-
-      <div class="settings-section">
-
-        <h2 data-i18n="privacyData">
-          Privacy &amp; Data
-        </h2>
-
-        <p data-i18n="privacyNotice">
-          Chat history, data export, and account deletion controls will be added when those features are connected.
-        </p>
-
-      </div>
-
-      <!-- HELP -->
-
-      <div class="settings-section">
-
-        <h2 data-i18n="helpSupport">
-          Help &amp; Support
-        </h2>
-
-        <p data-i18n="supportNotice">
-          Support options will be available when the app is ready for users.
-        </p>
-
-      </div>
-
-      <!-- LEGAL -->
-
-      <div class="settings-section">
-
-        <h2 data-i18n="legal">Legal</h2>
-
-        <button onclick="openLegal()"
-          data-i18n="legalPrivacy">
-          Legal &amp; Privacy
-        </button>
-
-      </div>
-
-      <button class="secondary"
-        onclick="logout()"
-        data-i18n="logout">
-        Log out
+<!-- SETTINGS PANEL -->
+<section id="settingsPanel" class="settings-panel hidden">
+
+  <!-- SETTINGS HOME -->
+  <div id="settingsHome">
+    <h1>Settings</h1>
+    <p class="settings-intro">
+      Manage your Makora account, preferences and social media experience.
+    </p>
+
+    <div class="settings-section">
+      <h2>Account</h2>
+      <button class="secondary" onclick="openSettingsSection('profile')">
+        Profile & Account →
       </button>
+      <button class="secondary" onclick="openSettingsSection('security')">
+        Security →
+      </button>
+    </div>
 
-      <p class="settings-note" data-i18n="prototypeNotice">
-        This is a prototype. Preference controls are not saved yet.
-      </p>
+    <div class="settings-section">
+      <h2>Preferences</h2>
+      <button class="secondary" onclick="openSettingsSection('general')">
+        General Preferences →
+      </button>
+      <button class="secondary" onclick="openSettingsSection('ai')">
+        AI Preferences →
+      </button>
+      <button class="secondary" onclick="openSettingsSection('notifications')">
+        Notifications →
+      </button>
+    </div>
 
-    </section>
+    <div class="settings-section">
+      <h2>Social Media</h2>
+      <button class="secondary" onclick="openSettingsSection('social')">
+        Social Media Accounts →
+      </button>
+    </div>
 
+    <div class="settings-section">
+      <h2>Payments & Usage</h2>
+      <button class="secondary" onclick="openSettingsSection('credits')">
+        Makora Credits & Wallet →
+      </button>
+      <button class="secondary" onclick="openSettingsSection('billing')">
+        Subscription & Billing →
+      </button>
+    </div>
+
+    <div class="settings-section">
+      <h2>More</h2>
+      <button class="secondary" onclick="openSettingsSection('privacy')">
+        Privacy & Data →
+      </button>
+      <button class="secondary" onclick="openSettingsSection('help')">
+        Help & Support →
+      </button>
+      <button class="secondary" onclick="openSettingsSection('about')">
+        About Makora →
+      </button>
+    </div>
+
+    <button class="secondary" onclick="logout()">Log out</button>
   </div>
 
-</main>
+  <!-- PROFILE & ACCOUNT -->
+  <div id="settingsPage-profile" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Profile & Account</h1>
+    <div class="settings-section">
+      <div class="settings-row">
+        <div><strong>Display name</strong><p>Your account name.</p></div>
+        <p id="settingsDisplayName">Loading...</p>
+      </div>
+      <div class="settings-row">
+        <div><strong>Email address</strong><p>Your registered email address.</p></div>
+        <p id="settingsEmail">Loading...</p>
+      </div>
+      <div class="settings-row">
+        <div><strong>Email verification</strong><p>Your account verification status.</p></div>
+        <p id="settingsVerification">Loading...</p>
+      </div>
+      <div class="settings-row">
+        <div><strong>Account created</strong><p>When you joined Makora.</p></div>
+        <p id="settingsCreatedAt">Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GENERAL PREFERENCES -->
+  <div id="settingsPage-general" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>General Preferences</h1>
+    <div class="settings-section">
+      <div class="settings-row">
+        <div>
+          <strong>Interface language</strong>
+          <p>Choose your preferred app language.</p>
+        </div>
+        <select id="settingsLanguage">
+          <option>English</option>
+          <option>Tamil</option>
+          <option>Hindi</option>
+          <option>Telugu</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <div>
+          <strong>Theme</strong>
+          <p>Choose how Makora looks.</p>
+        </div>
+        <select id="settingsTheme">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI PREFERENCES -->
+  <div id="settingsPage-ai" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>AI Preferences</h1>
+    <p>Set default preferences for content created with Makora.</p>
+    <div class="settings-section">
+      <div class="settings-row">
+        <div>
+          <strong>Default content language</strong>
+          <p>The language Makora should use when creating content.</p>
+        </div>
+        <select id="settingsVideoLanguage">
+          <option>English</option>
+          <option>Tamil</option>
+          <option>Hindi</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <div>
+          <strong>Content style</strong>
+          <p>Your preferred style for generated content.</p>
+        </div>
+        <select id="settingsStyle">
+          <option>Professional</option>
+          <option>Informative</option>
+          <option>Educational</option>
+          <option>Entertaining</option>
+          <option>Funny</option>
+          <option>Inspirational</option>
+          <option>Minimalist</option>
+          <option>Creative</option>
+          <option>Makora's Choice</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL MEDIA ACCOUNTS -->
+  <div id="settingsPage-social" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Social Media Accounts</h1>
+    <div class="settings-section">
+      <p>Connect the social media accounts you want to manage with Makora.</p>
+      <p><strong>Instagram:</strong> Not connected</p>
+      <p><strong>Facebook:</strong> Not connected</p>
+      <p><strong>YouTube:</strong> Not connected</p>
+      <p>Account connections will be available after the official platform integrations are implemented.</p>
+    </div>
+  </div>
+
+  <!-- MAKORA CREDITS -->
+  <div id="settingsPage-credits" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Makora Credits & Wallet</h1>
+    <div class="settings-section">
+      <div class="credit-wallet">
+        <h3>Makora Credits</h3>
+        <p>Your universal AI credit balance.</p>
+        <h2 id="creditBalance">Loading...</h2>
+        <button type="button" onclick="loadCreditWallet()">Refresh Balance</button>
+        <h3 style="margin-top:24px;">Transaction History</h3>
+        <div id="creditTransactions">Loading transactions...</div>
+        <p id="creditWalletStatus"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBSCRIPTION & BILLING -->
+  <div id="settingsPage-billing" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Subscription & Billing</h1>
+    <div class="settings-section">
+      <p>Subscription plans, payment history and billing management are not connected yet.</p>
+      <p>This section will show your plan and billing information when the payment system is implemented.</p>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div id="settingsPage-notifications" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Notifications</h1>
+    <div class="settings-section">
+      <p>Notification preferences are not available yet.</p>
+      <p>Notification controls will be added when Makora's notification system is implemented.</p>
+    </div>
+  </div>
+
+  <!-- PRIVACY & DATA -->
+  <div id="settingsPage-privacy" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Privacy & Data</h1>
+    <div class="settings-section">
+      <p>Chat history, data export and account deletion controls are not available in the app yet.</p>
+      <p>These controls must be implemented before public launch.</p>
+    </div>
+  </div>
+
+  <!-- SECURITY -->
+  <div id="settingsPage-security" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Security</h1>
+    <div class="settings-section">
+      <p>Your account currently uses Supabase authentication.</p>
+      <p>Additional security controls, such as session management, will be added when implemented.</p>
+    </div>
+  </div>
+
+  <!-- HELP & SUPPORT -->
+  <div id="settingsPage-help" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Help & Support</h1>
+    <div class="settings-section">
+      <p>Help articles and support options will be added before public launch.</p>
+    </div>
+  </div>
+
+  <!-- ABOUT MAKORA -->
+  <div id="settingsPage-about" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>About Makora</h1>
+    <div class="settings-section">
+      <p><strong>Makora</strong></p>
+      <p>AI Social Media Manager</p>
+      <p>Manage your social media workflow with AI-assisted tools.</p>
+      <button onclick="openLegal()">Legal & Privacy</button>
+      <p class="settings-note">Makora is currently under development. Some features may not be available.</p>
+    </div>
+  </div>
+
+</section>
 
 <!-- FOOTER -->
 
@@ -3348,6 +3317,52 @@ async function deleteChat(chatId) {
 function showChatInput(show) {
   document.querySelector(".chat-input-area").classList.toggle("hidden", !show);
 }
+
+function showSettingsHome() {
+  document.getElementById("settingsHome").classList.remove("hidden");
+
+  document.querySelectorAll('[id^="settingsPage-"]').forEach(page => {
+    page.classList.add("hidden");
+  });
+}
+
+function openSettingsSection(section) {
+  const allowedSections = [
+    "profile",
+    "general",
+    "ai",
+    "social",
+    "credits",
+    "billing",
+    "notifications",
+    "privacy",
+    "security",
+    "help",
+    "about"
+  ];
+
+  if (!allowedSections.includes(section)) {
+    console.error("Unknown Settings section:", section);
+    return;
+  }
+
+  document.getElementById("settingsHome").classList.add("hidden");
+
+  document.querySelectorAll('[id^="settingsPage-"]').forEach(page => {
+    page.classList.add("hidden");
+  });
+
+  const selectedPage = document.getElementById("settingsPage-" + section);
+
+  if (selectedPage) {
+    selectedPage.classList.remove("hidden");
+  }
+
+  if (section === "credits") {
+    loadCreditWallet();
+  }
+}
+
 async function selectTool(tool, button) {
   document.querySelectorAll(".menu-item").forEach(item => {
     item.classList.remove("active");
@@ -3363,6 +3378,7 @@ async function selectTool(tool, button) {
     showChatInput(false);
     chatMain.classList.add("hidden");
     settingsPanel.classList.remove("hidden");
+    showSettingsHome();
 
     const { data, error } = await supabaseClient.auth.getUser();
 

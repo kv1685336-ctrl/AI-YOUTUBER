@@ -5610,6 +5610,16 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
     currentChatId = null;
 
     currentMessages = [];
+    document.getElementById("settingsPanel").classList.add("hidden");
+
+    document.querySelector(".chat-main").classList.remove("hidden");
+
+    document.getElementById("navLogout").classList.add("hidden");
+
+    document.getElementById("navLogin").classList.remove("hidden");
+
+    showPage("welcome");
+  }
 });
 
 checkSession();

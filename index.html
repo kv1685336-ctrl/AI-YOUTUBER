@@ -1724,6 +1724,38 @@ body.light-theme [id^="settingsPage-"] select {
   border-color: #ddddE5;
 }
 
+/* Settings submenu Lucide icons */
+
+#settingsHome .settings-section button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+#settingsHome .settings-section button > i:first-child {
+  width: 20px;
+  height: 20px;
+  color: #ff5969;
+  flex-shrink: 0;
+}
+
+#settingsHome .settings-section button span {
+  flex: 1;
+  text-align: left;
+}
+
+#settingsHome .settings-section button > i:last-child {
+  width: 16px;
+  height: 16px;
+  color: #777783;
+  flex-shrink: 0;
+}
+
+#settingsHome .settings-section button:hover > i:first-child {
+  color: #ff8792;
+}
+
+
 
 </style>
 </head>
@@ -2106,53 +2138,76 @@ body.light-theme [id^="settingsPage-"] select {
     <div class="settings-section">
       <h2>Account</h2>
       <button class="secondary" onclick="openSettingsSection('profile')">
-        Profile & Account →
+        <i data-lucide="user-round"></i>
+        <span>Profile & Account →</span>
+        <i data-lucide="chevron-right"></i>
       </button>
       <button class="secondary" onclick="openSettingsSection('security')">
-        Security →
+        <i data-lucide="shield-check"></i>
+        <span>Security →</span>
+        <i data-lucide="chevron-right"></i>
       </button>
     </div>
 
     <div class="settings-section">
       <h2>Preferences</h2>
-      <button class="secondary" onclick="openSettingsSection('general')">
-        General Preferences →
+      <button class="secondary" onclick="openSettingsSection('general')"> 
+        <i data-lucide="sliders-horizontal"></i>
+        <span>General Preferences →</span>
+        <i data-lucide="chevron-right"></i>
       </button>
       <button class="secondary" onclick="openSettingsSection('ai')">
-        AI Preferences →
+        <i data-lucide="sparkles"></i>
+        <span>AI Preferences →</span>
+        <i data-lucide="chevron-right"></i>
       </button>
       <button class="secondary" onclick="openSettingsSection('notifications')">
-        Notifications →
+        <i data-lucide="bell"></i>
+        <span>Notifications →</span>
+        <i data-lucide="chevron-right"></i>
       </button>
     </div>
 
     <div class="settings-section">
       <h2>Social Media</h2>
       <button class="secondary" onclick="openSettingsSection('social')">
-        Social Media Accounts →
+        <i data-lucide="share-2"></i>
+        <span>Social Media Accounts →</span>
+        <i data-lucide="chevron-right"></i>
       </button>
     </div>
 
     <div class="settings-section">
       <h2>Payments & Usage</h2>
       <button class="secondary" onclick="openSettingsSection('credits')">
-        Makora Credits & Wallet →
+        <i data-lucide="coins"></i>
+        <span>Makora Credits & Wallet →</span>
+        <i data-lucide="chevron-right"></i>
+        
       </button>
       <button class="secondary" onclick="openSettingsSection('billing')">
-        Subscription & Billing →
+        <i data-lucide="credit-card"></i>
+        <span>Subscription & Billing →</span>
+        <i data-lucide="chevron-right"></i>
       </button>
     </div>
 
     <div class="settings-section">
       <h2>More</h2>
       <button class="secondary" onclick="openSettingsSection('privacy')">
-        Privacy & Data →
+        <i data-lucide="lock-keyhole"></i>
+        <span>Privacy & Data →</span>
+        <i data-lucide="chevron-right"></i>
       </button>
       <button class="secondary" onclick="openSettingsSection('help')">
-        Help & Support →
+        <i data-lucide="life-buoy"></i>
+        <span>Help & Support →</span>
+        <i data-lucide="chevron-right"></i>
       </button>
       <button class="secondary" onclick="openSettingsSection('about')">
-        About Makora →
+        <i data-lucide="info"></i>
+        <span>About Makora →</span>
+        <i data-lucide="chevron-right"></i>
       </button>
     </div>
 

@@ -3309,10 +3309,16 @@ async function selectTool(tool, button) {
 
 }
   if (tool === "Chat") {
+    document.querySelector(".chat-input-area").style.display = "block";
+    
 
-  showChatInput(true);
+    showChatInput(true);
+    renderMessages();
 
-  return;
+  
+
+
+    return;
 
 }
   if (tool === "Chat History") {

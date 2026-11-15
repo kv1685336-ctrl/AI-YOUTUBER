@@ -6649,7 +6649,7 @@ window.cancelDeleteAccount = function () {
 };
 
 window.deleteMakoraAccount = async function () {
-  alert("Test button is working!");
+  
 
     const confirmationText =
         document.getElementById("deleteAccountText").value.trim();
@@ -6708,6 +6708,48 @@ window.deleteMakoraAccount = async function () {
         await supabaseClient.auth.signOut();
 
         window.location.reload();
+
+    } catch (error) {
+        alert("ERROR:\n" + error.message);
+    }
+};
+window.testDeleteAccountPasswordCheck = async function () {
+    alert("Step 1: Test function started.");
+
+    const passwordInput =
+        document.getElementById("deleteAccountPassword");
+
+    if (!passwordInput || !passwordInput.value) {
+        alert("Please enter your current password.");
+        return;
+    }
+
+    alert("Step 2: Password found. Connecting to Supabase...");
+
+    try {
+        const { data, error } =
+            await supabaseClient.functions.invoke("smart-action", {
+                body: {
+                    password: passwordInput.value,
+                    dry_run: true
+                }
+            });
+
+        if (error) {
+            let details = error.message;
+
+            if (error.context) {
+                try {
+                    details += "\n" +
+                        await error.context.clone().text();
+                } catch (e) {}
+            }
+
+            alert("TEST FAILED:\n" + details);
+            return;
+        }
+
+        alert("TEST RESULT:\n" + JSON.stringify(data));
 
     } catch (error) {
         alert("ERROR:\n" + error.message);

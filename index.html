@@ -4798,6 +4798,7 @@ function startVoice() {
 }  
 
 async function logout() {
+  clearSensitiveAccountFields();
   const { error } = await supabaseClient.auth.signOut();
 
   if (error) {
@@ -6775,6 +6776,28 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+function clearSensitiveAccountFields() {
+    const passwordField =
+        document.getElementById("deleteAccountPassword");
+
+    const confirmationField =
+        document.getElementById("deleteAccountText");
+
+    if (passwordField) {
+        passwordField.value = "";
+    }
+
+    if (confirmationField) {
+        confirmationField.value = "";
+    }
+
+    const confirmation =
+        document.getElementById("deleteAccountConfirmation");
+
+    if (confirmation) {
+        confirmation.classList.add("hidden");
+    }
+}
 
 </script>
 

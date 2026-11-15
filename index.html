@@ -2576,6 +2576,66 @@ body.light-theme [id^="settingsPage-"] select {
     <p id="sessionSecurityStatus" role="status"></p>
 
   </div>
+  <div class="settings-section">
+  <h3>Delete Account</h3>
+
+  <p>
+    Permanently delete your Makora account.
+    This action cannot be undone.
+  </p>
+
+  <button
+    type="button"
+    class="secondary"
+    onclick="showDeleteAccountConfirmation()">
+    Delete My Account
+  </button>
+
+  <div id="deleteAccountConfirmation" class="hidden">
+
+    <p>
+      Are you sure? Your account and associated data
+      may be permanently deleted.
+    </p>
+
+    <label for="deleteAccountText">
+      Type DELETE to confirm
+    </label>
+
+    <input
+      id="deleteAccountText"
+      type="text"
+      placeholder="Type DELETE">
+
+    <label for="deleteAccountPassword">
+      Enter your current password
+    </label>
+
+    <input
+      id="deleteAccountPassword"
+      type="password"
+      placeholder="Current password"
+      autocomplete="current-password">
+
+    <button
+      type="button"
+      class="secondary"
+      onclick="cancelDeleteAccount()">
+      Cancel
+    </button>
+
+    <button
+      type="button"
+      class="primary"
+      onclick="deleteMakoraAccount()">
+      Permanently Delete Account
+    </button>
+
+    <p id="deleteAccountStatus" role="status"></p>
+
+  </div>
+</div>
+  
 </div>
 
 

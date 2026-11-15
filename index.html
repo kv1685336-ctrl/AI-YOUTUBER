@@ -6644,6 +6644,72 @@ window.cancelDeleteAccount = function () {
     document.getElementById("deleteAccountText").value = "";
     document.getElementById("deleteAccountPassword").value = "";
 };
+
+window.deleteMakoraAccount = async function () {
+
+    const confirmationText =
+        document.getElementById("deleteAccountText").value.trim();
+
+    const password =
+        document.getElementById("deleteAccountPassword").value;
+
+    if (confirmationText !== "DELETE") {
+        alert('Please type DELETE exactly to confirm.');
+        return;
+    }
+
+    if (!password) {
+        alert("Please enter your current password.");
+        return;
+    }
+
+    const confirmed = confirm(
+        "Are you absolutely sure you want to permanently delete your Makora account?"
+    );
+
+    if (!confirmed) return;
+
+    alert("Verifying your password...");
+
+    try {
+        const { data, error } =
+            await supabaseClient.functions.invoke("smart-action", {
+                body: {
+                    password: password,
+                    confirm_delete: true
+                }
+            });
+
+        if (error) {
+            let details = error.message;
+
+            if (error.context) {
+                try {
+                    details += "\n" +
+                        await error.context.clone().text();
+                } catch (e) {}
+            }
+
+            alert("ACCOUNT DELETION FAILED:\n" + details);
+            return;
+        }
+
+        if (!data || data.success !== true || data.deleted !== true) {
+            alert("Deletion was not confirmed by the server.");
+            return;
+        }
+
+        alert("Makora account deletion completed.");
+
+        await supabaseClient.auth.signOut();
+
+        window.location.reload();
+
+    } catch (error) {
+        alert("ERROR:\n" + error.message);
+    }
+};
+
 </script>
 
 </body>

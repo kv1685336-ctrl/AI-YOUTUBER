@@ -24,6 +24,38 @@ body {
   align-items: center;
   padding: 22px 7%;
 }
+/* TOP HEADER PROFILE BUTTON */
+
+.header-profile-button {
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #ff3030;
+  background: #25252b;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.header-profile-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.header-profile-button span {
+  font-size: 22px;
+}
+
+.header-profile-button.hidden {
+  display: none !important;
+}
 
 .logo { font-size: 22px; font-weight: bold; }
 .logo span, .red { color: #ff3030; }
@@ -1874,11 +1906,27 @@ body.light-theme [id^="settingsPage-"] select {
       onclick="showPage('login')" data-i18n="login">
       Log in
     </button>
+    <button
+  type="button"
+  id="headerProfileButton"
+  class="header-profile-button hidden"
+  onclick="openHeaderProfile()"
+  aria-label="Open profile"
+>
+  <img
+    id="headerProfilePicture"
+    src=""
+    alt="Profile"
+    style="display:none;"
+  >
+  <span id="headerProfileFallback">👤</span>
+</button>
 
     <button id="navLogout" class="login-btn hidden"
       onclick="logout()" data-i18n="logout">
       Log out
     </button>
+    
   </div>
 </header>
 
@@ -3891,6 +3939,15 @@ function showDashboard(user) {
   document.getElementById("settingsEmail").textContent = "Loading...";
   document.getElementById("settingsVerification").textContent = "Loading...";
   document.getElementById("settingsCreatedAt").textContent = "Loading...";
+  const headerImage =
+  document.getElementById("headerProfilePicture");
+
+const headerFallback =
+  document.getElementById("headerProfileFallback");
+
+headerImage.style.display = "none";
+headerImage.src = "";
+headerFallback.style.display = "block";
 
   // Reset workspace panels.
   document.getElementById("settingsPanel").classList.add("hidden");
@@ -3921,6 +3978,10 @@ function showDashboard(user) {
 
   document.getElementById("navLogin").classList.add("hidden");
   document.getElementById("navLogout").classList.remove("hidden");
+  document.getElementById("headerProfileButton")
+  .classList.remove("hidden");
+
+loadMakoraProfilePicture(user);
 
   showPage("workspace");
 }
@@ -4234,6 +4295,15 @@ async function loadMakoraProfilePicture(user) {
     image.src = data.signedUrl;
     image.style.display = "block";
     defaultAvatar.style.display = "none";
+    const headerImage =
+  document.getElementById("headerProfilePicture");
+
+const headerFallback =
+  document.getElementById("headerProfileFallback");
+
+headerImage.src = data.signedUrl;
+headerImage.style.display = "block";
+headerFallback.style.display = "none";
 
   } catch (error) {
     console.error("Profile picture loading failed:", error);
@@ -4609,6 +4679,22 @@ function openSettingsSection(section) {
   if (section === "credits") {
     loadCreditWallet();
   }
+}
+async function openHeaderProfile() {
+  const settingsButton = [
+    ...document.querySelectorAll(".menu-item")
+  ].find(button =>
+    button.textContent.trim().includes("Settings")
+  );
+
+  if (!settingsButton) {
+    console.error("Settings menu button not found.");
+    return;
+  }
+
+  await selectTool("Settings", settingsButton);
+
+  openSettingsSection("profile");
 }
 
 async function selectTool(tool, button) {

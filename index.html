@@ -6730,7 +6730,8 @@ window.testDeleteAccountPasswordCheck = async function () {
         const { data, error } =
             await supabaseClient.functions.invoke("smart-action", {
                 body: {
-                    password: passwordInput.value
+                    password: passwordInput.value,
+                    dry_run: true
                     
                 }
             });

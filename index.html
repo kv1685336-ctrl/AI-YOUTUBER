@@ -6623,33 +6623,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-async function testDeleteAccountPasswordCheck() {
+window.testDeleteAccountPasswordCheck = async function () {
   const status = document.getElementById("deleteAccountStatus");
+
+  if (!status) {
+    alert("Delete account status element not found!");
+    return;
+  }
 
   status.textContent = "Testing password verification...";
 
   try {
+    if (!window.supabaseClient) {
+      status.textContent = "ERROR: Supabase client not found.";
+      return;
+    }
+
     const { data, error } =
-      await supabaseClient.functions.invoke("smart-action", {
+      await window.supabaseClient.functions.invoke("smart-action", {
         body: {
           password: "Makora-incorrect-password-test"
         }
       });
 
     if (error) {
-      status.textContent =
-        "Password test response: " + error.message;
+      status.textContent = "Password test response: " + error.message;
       return;
     }
 
-    status.textContent =
-      "Unexpected response: " + JSON.stringify(data);
+    status.textContent = "Response: " + JSON.stringify(data);
 
   } catch (error) {
     status.textContent = "Test error: " + error.message;
   }
-}
-
+};
 </script>
 
 </body>

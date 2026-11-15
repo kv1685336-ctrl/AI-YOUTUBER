@@ -2636,6 +2636,14 @@ body.light-theme [id^="settingsPage-"] select {
   </div>
 </div>
   
+<button
+  type="button"
+  class="secondary"
+  onclick="testDeleteAccountPasswordCheck()">
+  Test Password Verification
+</button>
+
+  
 </div>
 
 
@@ -6614,6 +6622,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
+async function testDeleteAccountPasswordCheck() {
+  const status = document.getElementById("deleteAccountStatus");
+
+  status.textContent = "Testing password verification...";
+
+  try {
+    const { data, error } =
+      await supabaseClient.functions.invoke("smart-action", {
+        body: {
+          password: "Makora-incorrect-password-test"
+        }
+      });
+
+    if (error) {
+      status.textContent =
+        "Password test response: " + error.message;
+      return;
+    }
+
+    status.textContent =
+      "Unexpected response: " + JSON.stringify(data);
+
+  } catch (error) {
+    status.textContent = "Test error: " + error.message;
+  }
+}
+
 </script>
 
 </body>

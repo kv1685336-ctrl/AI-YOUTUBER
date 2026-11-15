@@ -2636,10 +2636,13 @@ body.light-theme [id^="settingsPage-"] select {
   </div>
 </div>
   <button
-  type="button"
+    type="button"
+    class="secondary"
+    id="testPasswordButton">
+    
   
-  onclick="window.testDeleteAccountPasswordCheck()">
-  Test Password Verification
+  
+    Test Password Verification
 </button>
   
 
@@ -6710,6 +6713,25 @@ window.deleteMakoraAccount = async function () {
         alert("ERROR:\n" + error.message);
     }
 };
+document.addEventListener("DOMContentLoaded", function () {
+    const testButton =
+        document.getElementById("testPasswordButton");
+
+    if (!testButton) {
+        console.error("Test button not found!");
+        return;
+    }
+
+    testButton.addEventListener("click", function () {
+        alert("Test button is working!");
+
+        if (typeof window.testDeleteAccountPasswordCheck === "function") {
+            window.testDeleteAccountPasswordCheck();
+        } else {
+            alert("Password test function was not found!");
+        }
+    });
+});
 
 </script>
 

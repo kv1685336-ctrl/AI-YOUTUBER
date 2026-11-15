@@ -1785,6 +1785,78 @@ body.light-theme [id^="settingsPage-"] select {
 .password-toggle-btn:hover {
   opacity: 0.75;
 }
+/* MAKORA PROFILE HEADER */
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 22px;
+    margin: 18px 0;
+    border-radius: 16px;
+    background: var(--card-bg, #151515);
+}
+
+.profile-avatar-container {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-avatar-default {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #303030;
+    font-size: 38px;
+}
+
+.profile-header-info {
+    min-width: 0;
+}
+
+.profile-header-info h2 {
+    margin: 0 0 6px;
+    overflow-wrap: anywhere;
+}
+
+.profile-header-info p {
+    margin: 5px 0;
+    color: #999;
+}
+
+.profile-picture-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.profile-picture-actions label {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+@media (max-width: 480px) {
+    .profile-header {
+        gap: 14px;
+        padding: 15px;
+    }
+
+    .profile-avatar-container,
+    .profile-avatar {
+        width: 76px;
+        height: 76px;
+    }
+}
 </style>
 </head>
 <body>
@@ -2320,7 +2392,62 @@ body.light-theme [id^="settingsPage-"] select {
   <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
   <h1>Profile & Account</h1>
 
-  <div class="settings-section">
+<!-- PROFILE HEADER -->
+<div class="profile-header">
+
+  <div class="profile-avatar-container">
+
+    <img
+      id="makoraProfilePicture"
+      class="profile-avatar"
+      src=""
+      alt="Profile picture"
+      style="display:none;"
+    >
+
+    <div
+      id="makoraDefaultAvatar"
+      class="profile-avatar profile-avatar-default">
+      <span>👤</span>
+    </div>
+
+  </div>
+
+  <div class="profile-header-info">
+
+    <h2 id="profileHeaderName">Loading...</h2>
+
+    <p>Makora Creator</p>
+
+    <div class="profile-picture-actions">
+
+      <label for="profilePictureInput" class="secondary">
+        Change Photo
+      </label>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="removeMakoraProfilePicture()">
+        Remove
+      </button>
+
+    </div>
+
+    <input
+      type="file"
+      id="profilePictureInput"
+      accept="image/png,image/jpeg,image/webp"
+      hidden
+    >
+
+    <p id="profilePictureStatus" role="status"></p>
+
+  </div>
+
+</div>
+
+<div class="settings-section">
 
     <div class="settings-row">
       <div>

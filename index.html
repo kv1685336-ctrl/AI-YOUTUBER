@@ -6621,46 +6621,28 @@ document.addEventListener("DOMContentLoaded", () => {
     window.lucide.createIcons();
   }
 });
-window.testDeleteAccountPasswordCheck = async function () {
+window.showDeleteAccountConfirmation = function () {
+    const confirmation =
+        document.getElementById("deleteAccountConfirmation");
 
-    const passwordInput =
-        document.getElementById("deleteAccountPassword");
-
-    if (!passwordInput || !passwordInput.value) {
-        alert("Please enter your current password in the Delete Account password field.");
+    if (!confirmation) {
+        alert("Confirmation section not found!");
         return;
     }
 
-    alert("Starting safe verification test...");
+    confirmation.classList.remove("hidden");
 
-    try {
-        const { data, error } =
-            await supabaseClient.functions.invoke("smart-action", {
-                body: {
-                    password: passwordInput.value,
-                    dry_run: true
-                }
-            });
+    alert("Delete Account confirmation opened!");
+};
 
-        if (error) {
-            let details = error.message;
+window.cancelDeleteAccount = function () {
+    const confirmation =
+        document.getElementById("deleteAccountConfirmation");
 
-            if (error.context) {
-                try {
-                    details += "\n" +
-                        await error.context.clone().text();
-                } catch (e) {}
-            }
+    confirmation.classList.add("hidden");
 
-            alert("TEST FAILED:\n" + details);
-            return;
-        }
-
-        alert("TEST RESULT:\n" + JSON.stringify(data));
-
-    } catch (error) {
-        alert("ERROR:\n" + error.message);
-    }
+    document.getElementById("deleteAccountText").value = "";
+    document.getElementById("deleteAccountPassword").value = "";
 };
 </script>
 

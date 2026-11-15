@@ -3886,6 +3886,7 @@ function showDashboard(user) {
   currentMessages = [];
 
   // Clear old profile information.
+  showDefaultMakoraAvatar();
   document.getElementById("settingsDisplayName").textContent = "Loading...";
   document.getElementById("settingsEmail").textContent = "Loading...";
   document.getElementById("settingsVerification").textContent = "Loading...";
@@ -4202,6 +4203,184 @@ async function saveProfileDisplayName() {
   }
 }
 
+// ==========================================
+// MAKORA PROFILE PICTURE
+// ==========================================
+
+function showDefaultMakoraAvatar() {
+  document.getElementById("makoraProfilePicture").style.display = "none";
+  document.getElementById("makoraProfilePicture").src = "";
+  document.getElementById("makoraDefaultAvatar").style.display = "flex";
+}
+
+// Load the saved profile picture
+async function loadMakoraProfilePicture(user) {
+  const image = document.getElementById("makoraProfilePicture");
+  const defaultAvatar = document.getElementById("makoraDefaultAvatar");
+
+  showDefaultMakoraAvatar();
+
+  const path = user?.user_metadata?.avatar_path;
+
+  if (!path) return;
+
+  try {
+    const { data, error } = await supabaseClient.storage
+      .from("profile-avatars")
+      .createSignedUrl(path, 3600);
+
+    if (error) throw error;
+
+    image.src = data.signedUrl;
+    image.style.display = "block";
+    defaultAvatar.style.display = "none";
+
+  } catch (error) {
+    console.error("Profile picture loading failed:", error);
+    showDefaultMakoraAvatar();
+  }
+}
+
+// Upload a new profile picture
+async function uploadMakoraProfilePicture(file) {
+  const status = document.getElementById("profilePictureStatus");
+  const input = document.getElementById("profilePictureInput");
+
+  if (!file) return;
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    status.textContent = "Please select a JPG, PNG or WEBP image.";
+    input.value = "";
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    status.textContent = "Image must be smaller than 2 MB.";
+    input.value = "";
+    return;
+  }
+
+  input.disabled = true;
+  status.textContent = "Uploading your photo...";
+
+  try {
+    const { data: userData, error: userError } =
+      await supabaseClient.auth.getUser();
+
+    if (userError || !userData.user) {
+      throw new Error("Please log in again.");
+    }
+
+    const user = userData.user;
+    const path = `${user.id}/avatar`;
+
+    const { error: uploadError } = await supabaseClient.storage
+      .from("profile-avatars")
+      .upload(path, file, {
+        upsert: true,
+        contentType: file.type,
+        cacheControl: "3600"
+      });
+
+    if (uploadError) throw uploadError;
+
+    // Save only the storage path, not the expiring signed URL
+    const { error: metadataError } =
+      await supabaseClient.auth.updateUser({
+        data: {
+          avatar_path: path
+        }
+      });
+
+    if (metadataError) throw metadataError;
+
+    await loadMakoraProfilePicture({
+      ...user,
+      user_metadata: {
+        ...user.user_metadata,
+        avatar_path: path
+      }
+    });
+
+    status.textContent = "Profile picture updated successfully.";
+
+  } catch (error) {
+    console.error("Profile picture upload failed:", error);
+    status.textContent = "Upload failed: " + error.message;
+
+  } finally {
+    input.disabled = false;
+    input.value = "";
+  }
+}
+
+// Remove the saved profile picture
+async function removeMakoraProfilePicture() {
+  const status = document.getElementById("profilePictureStatus");
+  const removeButton = document.querySelector(
+    ".profile-picture-actions button"
+  );
+
+  removeButton.disabled = true;
+  status.textContent = "Removing profile picture...";
+
+  try {
+    const { data: userData, error: userError } =
+      await supabaseClient.auth.getUser();
+
+    if (userError || !userData.user) {
+      throw new Error("Please log in again.");
+    }
+
+    const user = userData.user;
+    const path = user.user_metadata?.avatar_path;
+
+    if (!path) {
+      showDefaultMakoraAvatar();
+      status.textContent = "No profile picture to remove.";
+      return;
+    }
+
+    const { error: removeError } = await supabaseClient.storage
+      .from("profile-avatars")
+      .remove([path]);
+
+    if (removeError) throw removeError;
+
+    const { error: metadataError } =
+      await supabaseClient.auth.updateUser({
+        data: {
+          avatar_path: null
+        }
+      });
+
+    if (metadataError) throw metadataError;
+
+    showDefaultMakoraAvatar();
+    status.textContent = "Profile picture removed successfully.";
+
+  } catch (error) {
+    console.error("Profile picture removal failed:", error);
+    status.textContent = "Could not remove photo: " + error.message;
+
+  } finally {
+    removeButton.disabled = false;
+  }
+}
+
+// Listen for photo selection
+document.getElementById("profilePictureInput")
+  .addEventListener("change", function() {
+    const file = this.files[0];
+    if (file) uploadMakoraProfilePicture(file);
+  });
+
 
 async function requestEmailChange() {
   const input = document.getElementById("newEmailAddress");
@@ -4468,6 +4647,7 @@ if (error || !data.user) {
 } else {
 
   const user = data.user;
+  await loadMakoraProfilePicture(user);
 
   const displayName =
     user.user_metadata?.full_name ||

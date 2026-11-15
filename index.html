@@ -6620,12 +6620,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (window.lucide) {
     window.lucide.createIcons();
   }
-
 });
-
 window.testDeleteAccountPasswordCheck = function () {
-    alert("Makora test function is running!");
+    if (typeof supabaseClient === "undefined") {
+        alert("Supabase client is NOT accessible.");
+        return;
+    }
+
+    alert("Supabase client is accessible!");
 };
+    
 </script>
 
 </body>

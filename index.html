@@ -1974,6 +1974,19 @@ body.light-theme [id^="settingsPage-"] select {
         placeholder="Enter your password"
         data-i18n-placeholder="enterPassword"
         required>
+      
+
+
+
+      <label style="display:flex; align-items:center; gap:8px; margin-top:10px;">
+
+        <input type="checkbox"
+
+         onchange="togglePassword('loginPassword', this)">
+
+       Show password
+
+    </label>
 
       <button class="primary full" type="submit"
         data-i18n="login">
@@ -3693,6 +3706,15 @@ function showDashboard(user) {
   document.getElementById("navLogout").classList.remove("hidden");
 
   showPage("workspace");
+}
+function togglePassword(inputId, checkbox) {
+  const passwordInput = document.getElementById(inputId);
+
+  if (!passwordInput) return;
+
+  passwordInput.type = checkbox.checked
+    ? "text"
+    : "password";
 }
 
 function toggleMenu() {

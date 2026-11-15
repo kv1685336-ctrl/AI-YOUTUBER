@@ -1930,7 +1930,23 @@ body.light-theme [id^="settingsPage-"] select {
 
     </form>
 
+    
     <div id="signupMessage" class="message"></div>
+
+    <div id="signupResendArea" class="hidden">
+
+    <button
+        id="signupResendVerificationButton"
+        class="primary full"
+        type="button"
+        onclick="resendSignupVerificationEmail()">
+        Resend Verification Email
+    </button>
+
+    <div id="signupResendVerificationStatus"
+         class="message"></div>
+
+</div>
 
     <div class="switch">
 
@@ -2366,12 +2382,7 @@ body.light-theme [id^="settingsPage-"] select {
       <div><strong>Email verification</strong><p>Your account verification status.</p></div>
       <p id="settingsVerification">Loading...</p>
     </div>
-    <button
-      id="resendVerificationButton"
-      onclick="resendMakoraVerificationEmail()">
-      Resend Verification Email
-    </button>
-   
+    
 
     <div class="settings-row">
       <div><strong>Account created</strong><p>When you joined Makora.</p></div>
@@ -3582,39 +3593,51 @@ function showMessage(id, message) {
   document.getElementById(id).textContent = message;
 }
 
-document.getElementById("signupForm").addEventListener("submit",
-async function(event) {
-  event.preventDefault();
+document.getElementById("signupForm").addEventListener(
+    "submit",
+    async function(event) {
 
-  const email = document.getElementById("signupEmail").value.trim();
-  const password = document.getElementById("signupPassword").value;
+        event.preventDefault();
 
-  showMessage("signupMessage", "Creating your account...");
+        const email = document.getElementById("signupEmail").value.trim();
+        const password = document.getElementById("signupPassword").value;
 
-  const { data, error } = await supabaseClient.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: window.location.origin + window.location.pathname
+        showMessage("signupMessage", "Creating your account...");
+
+        document.getElementById("signupResendArea")
+            .classList.add("hidden");
+
+        localStorage.setItem("pendingSignupEmail", email);
+
+        const { data, error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: {
+                emailRedirectTo: window.location.origin + window.location.pathname
+            }
+        });
+
+        if (error) {
+            showMessage("signupMessage", error.message);
+            localStorage.removeItem("pendingSignupEmail");
+            return;
+        }
+
+        if (data.session) {
+            localStorage.removeItem("pendingSignupEmail");
+            showMessage("signupMessage", "Account created!");
+            showDashboard(data.user);
+        } else {
+            showMessage(
+                "signupMessage",
+                "Account created. Please check your email and verify your account before logging in."
+            );
+
+            document.getElementById("signupResendArea")
+                .classList.remove("hidden");
+        }
     }
-  });
-
-  if (error) {
-    showMessage("signupMessage", error.message);
-    return;
-  }
-
-  if (data.session) {
-    showMessage("signupMessage", "Account created!");
-    showDashboard(data.user);
-  } else {
-    showMessage(
-      "signupMessage",
-      "Account created. Please check your email and verify your account before logging in."
-    );
-  }
-});
-
+);
 document.getElementById("loginForm").addEventListener("submit",
 async function(event) {
   event.preventDefault();
@@ -6804,46 +6827,52 @@ function clearSensitiveAccountFields() {
         confirmation.classList.add("hidden");
     }
 }
-window.resendMakoraVerificationEmail = async function () {
+
+window.resendSignupVerificationEmail = async function() {
+
     const button = document.getElementById(
-        "resendVerificationButton"
+        "signupResendVerificationButton"
     );
 
-    const { data: { user }, error: userError } =
-        await supabaseClient.auth.getUser();
+    const status = document.getElementById(
+        "signupResendVerificationStatus"
+    );
 
-    if (userError || !user) {
-        alert("Please log in again.");
-        return;
-    }
+    const email = localStorage.getItem("pendingSignupEmail");
 
-    if (user.email_confirmed_at) {
-        alert("Your email is already verified.");
+    if (!email) {
+        status.textContent = "Please sign up again.";
         return;
     }
 
     button.disabled = true;
     button.textContent = "Sending...";
+    status.textContent = "";
 
     try {
+
         const { error } = await supabaseClient.auth.resend({
             type: "signup",
-            email: user.email
+            email: email
         });
 
         if (error) throw error;
 
-        alert("Verification email sent. Please check your inbox.");
+        status.textContent =
+            "Verification email sent. Please check your inbox.";
 
     } catch (error) {
-        alert("Could not send verification email: " + error.message);
+
+        status.textContent =
+            "Could not send email: " + error.message;
 
     } finally {
+
         button.disabled = false;
         button.textContent = "Resend Verification Email";
+
     }
 };
-
 </script>
 
 </body>

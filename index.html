@@ -1756,7 +1756,35 @@ body.light-theme [id^="settingsPage-"] select {
 }
 
 
+/* SHOW / HIDE PASSWORD */
 
+.password-field-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.password-field-wrapper input {
+  width: 100%;
+  padding-right: 65px !important;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #ff3030;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px;
+}
+
+.password-toggle-btn:hover {
+  opacity: 0.75;
+}
 </style>
 </head>
 <body>
@@ -6436,7 +6464,59 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
     showPage("welcome");
   }
 });
+// SHOW / HIDE PASSWORD FOR ALL PASSWORD FIELDS
 
+function addShowPasswordButtons() {
+
+  const passwordInputs = document.querySelectorAll(
+    'input[type="password"]'
+  );
+
+  passwordInputs.forEach(input => {
+
+    // Prevent duplicate buttons
+    if (input.parentElement.classList.contains(
+      "password-field-wrapper"
+    )) {
+      return;
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "password-field-wrapper";
+
+    input.parentNode.insertBefore(wrapper, input);
+
+    wrapper.appendChild(input);
+
+    const toggleButton = document.createElement("button");
+
+    toggleButton.type = "button";
+    toggleButton.className = "password-toggle-btn";
+    toggleButton.textContent = "Show";
+    toggleButton.setAttribute("aria-label", "Show password");
+
+    toggleButton.addEventListener("click", () => {
+
+      const isHidden = input.type === "password";
+
+      input.type = isHidden ? "text" : "password";
+
+      toggleButton.textContent = isHidden ? "Hide" : "Show";
+
+      toggleButton.setAttribute(
+        "aria-label",
+        isHidden ? "Hide password" : "Show password"
+      );
+
+    });
+
+    wrapper.appendChild(toggleButton);
+
+  });
+
+}
+
+addShowPasswordButtons();
 checkSession();
 
 function openLegal() {

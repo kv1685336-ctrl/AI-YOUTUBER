@@ -6622,22 +6622,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 window.testDeleteAccountPasswordCheck = async function () {
-    alert("Starting test...");
+
+    alert("Starting password verification test...");
 
     try {
-        const result = await supabaseClient.functions.invoke(
-            "smart-action",
-            {
+        const { data, error } =
+            await supabaseClient.functions.invoke("smart-action", {
                 body: {
                     password: "Makora-incorrect-password-test"
                 }
-            }
-        );
+            });
 
-        alert(JSON.stringify(result));
+        if (error) {
+
+            let message = error.message;
+
+            if (error.context) {
+                try {
+                    message += "\n\nServer response:\n" +
+                        await error.context.clone().text();
+                } catch (e) {
+                    message += "\nCould not read response body.";
+                }
+            }
+
+            alert("FUNCTION ERROR:\n\n" + message);
+            return;
+        }
+
+        alert("SERVER RESPONSE:\n\n" + JSON.stringify(data));
 
     } catch (error) {
-        alert("Error: " + error.message);
+        alert("JAVASCRIPT ERROR:\n\n" + error.message);
     }
 };
 </script>

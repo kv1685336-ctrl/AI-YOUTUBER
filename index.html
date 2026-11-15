@@ -6623,36 +6623,27 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 window.testDeleteAccountPasswordCheck = async function () {
 
-    alert("STEP 1: Function started");
-
     const status = document.getElementById("deleteAccountStatus");
 
-    if (!status) {
-        alert("STEP 2: Status element missing");
-        return;
-    }
-
-    status.textContent = "Function started successfully";
-
-    alert("STEP 3: About to call Supabase");
+    status.textContent = "Waiting for server response...";
 
     try {
-        const result = await supabaseClient.functions.invoke(
-            "smart-action",
-            {
+        const { data, error } =
+            await supabaseClient.functions.invoke("smart-action", {
                 body: {
                     password: "Makora-incorrect-password-test"
                 }
-            }
-        );
+            });
 
-        alert("STEP 4: Supabase responded");
+        console.log("DATA:", data);
+        console.log("ERROR:", error);
 
-        status.textContent = JSON.stringify(result);
+        status.textContent =
+            "DATA: " + JSON.stringify(data) +
+            " | ERROR: " + (error ? error.message : "None");
 
-    } catch (error) {
-        alert("STEP 5: Error: " + error.message);
-        status.textContent = error.message;
+    } catch (err) {
+        status.textContent = "ERROR: " + err.message;
     }
 };
 </script>

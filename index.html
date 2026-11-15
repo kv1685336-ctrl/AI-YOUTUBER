@@ -2366,6 +2366,12 @@ body.light-theme [id^="settingsPage-"] select {
       <div><strong>Email verification</strong><p>Your account verification status.</p></div>
       <p id="settingsVerification">Loading...</p>
     </div>
+    <button
+      id="resendVerificationButton"
+      onclick="resendMakoraVerificationEmail()">
+      Resend Verification Email
+    </button>
+   
 
     <div class="settings-row">
       <div><strong>Account created</strong><p>When you joined Makora.</p></div>
@@ -6798,6 +6804,45 @@ function clearSensitiveAccountFields() {
         confirmation.classList.add("hidden");
     }
 }
+window.resendMakoraVerificationEmail = async function () {
+    const button = document.getElementById(
+        "resendVerificationButton"
+    );
+
+    const { data: { user }, error: userError } =
+        await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+        alert("Please log in again.");
+        return;
+    }
+
+    if (user.email_confirmed_at) {
+        alert("Your email is already verified.");
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Sending...";
+
+    try {
+        const { error } = await supabaseClient.auth.resend({
+            type: "signup",
+            email: user.email
+        });
+
+        if (error) throw error;
+
+        alert("Verification email sent. Please check your inbox.");
+
+    } catch (error) {
+        alert("Could not send verification email: " + error.message);
+
+    } finally {
+        button.disabled = false;
+        button.textContent = "Resend Verification Email";
+    }
+};
 
 </script>
 

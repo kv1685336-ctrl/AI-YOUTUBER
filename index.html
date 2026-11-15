@@ -4178,8 +4178,16 @@ async function saveProfileDisplayName() {
       throw error;
     }
 
-    document.getElementById("settingsDisplayName").textContent =
+    const savedName =
       data.user.user_metadata.full_name || newName;
+
+    // Update existing display name
+    document.getElementById("settingsDisplayName").textContent =
+      savedName;
+
+    // Update profile header name
+    document.getElementById("profileHeaderName").textContent =
+      savedName;
 
     input.value = "";
 
@@ -4467,6 +4475,8 @@ if (error || !data.user) {
     "Not set";
 
   document.getElementById("settingsDisplayName").textContent =
+    displayName;
+  document.getElementById("profileHeaderName").textContent =
     displayName;
 
   document.getElementById("settingsEmail").textContent =

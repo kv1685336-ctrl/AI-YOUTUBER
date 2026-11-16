@@ -2706,6 +2706,93 @@ body.light-theme [id^="settingsPage-"] select {
   }
 }
 
+/* GENERAL PREFERENCES */
+
+.general-preferences-page {
+  padding-bottom: 30px;
+}
+
+.general-preferences-page .settings-description {
+  color: #999;
+  margin-bottom: 22px;
+  line-height: 1.6;
+}
+
+.general-preferences-page .settings-section {
+  margin-top: 22px;
+  padding: 20px;
+  background: #111;
+  border: 1px solid #292929;
+  border-radius: 14px;
+}
+
+.general-preferences-page .settings-section h2 {
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+
+.general-preferences-page .settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 16px 0;
+  border-bottom: 1px solid #292929;
+}
+
+.general-preferences-page .settings-row:last-child {
+  border-bottom: none;
+}
+
+.general-preferences-page .settings-row strong {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.general-preferences-page .settings-row p {
+  color: #999;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.general-preferences-page .settings-row select {
+  max-width: 180px;
+  min-width: 125px;
+  padding: 10px;
+  color: #fff;
+  background: #1b1b1b;
+  border: 1px solid #383838;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.settings-coming-soon {
+  color: #ff5555;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .general-preferences-page .settings-section {
+    padding: 15px;
+  }
+
+  .general-preferences-page .settings-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .general-preferences-page .settings-row select {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+
 
 
 
@@ -3395,35 +3482,185 @@ body.light-theme [id^="settingsPage-"] select {
   </div>
 </div>
 
-  <!-- GENERAL PREFERENCES -->
-  <div id="settingsPage-general" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
-    <h1>General Preferences</h1>
-    <div class="settings-section">
-      <div class="settings-row">
-        <div>
-          <strong>Interface language</strong>
-          <p>Choose your preferred app language.</p>
-        </div>
-        <select id="settingsLanguage">
-          <option>English</option>
-          <option>Tamil</option>
-          <option>Hindi</option>
-          <option>Telugu</option>
-        </select>
+  
+<!-- GENERAL PREFERENCES -->
+<div id="settingsPage-general" class="hidden general-preferences-page">
+
+  <button class="secondary" onclick="showSettingsHome()">
+    ← Back to Settings
+  </button>
+
+  <h1>General Preferences</h1>
+  <p class="settings-description">
+    Customize your Makora app experience.
+  </p>
+
+  <!-- LANGUAGE -->
+  <div class="settings-section">
+    <h2>Language & Region</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Interface Language</strong>
+        <p>Choose your preferred app language.</p>
       </div>
-      <div class="settings-row">
-        <div>
-          <strong>Theme</strong>
-          <p>Choose how Makora looks.</p>
-        </div>
-        <select id="settingsTheme">
-          <option value="dark">Dark</option>
-          <option value="light">Light</option>
-        </select>
+      <select id="settingsLanguage">
+        <option>English</option>
+        <option>Tamil</option>
+        <option>Hindi</option>
+        <option>Telugu</option>
+        <option>Malayalam</option>
+        <option>Kannada</option>
+        <option>Spanish</option>
+        <option>French</option>
+        <option>German</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Country or Region</strong>
+        <p>Set your preferred regional settings.</p>
       </div>
+      <select id="settingsCountry">
+        <option value="IN" selected>India</option>
+        <option value="US">United States</option>
+        <option value="GB">United Kingdom</option>
+        <option value="CA">Canada</option>
+        <option value="AU">Australia</option>
+        <option value="SG">Singapore</option>
+        <option value="OTHER">Other</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Time Format</strong>
+        <p>Choose how times are displayed.</p>
+      </div>
+      <select id="settingsTimeFormat">
+        <option value="12">12-hour format</option>
+        <option value="24">24-hour format</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Date Format</strong>
+        <p>Choose how dates are displayed.</p>
+      </div>
+      <select id="settingsDateFormat">
+        <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+        <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+      </select>
     </div>
   </div>
+
+  <!-- APPEARANCE -->
+  <div class="settings-section">
+    <h2>Appearance</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Theme</strong>
+        <p>Choose how Makora looks.</p>
+      </div>
+      <select id="settingsTheme">
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+        <option value="system">System Default</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Reduce Animations</strong>
+        <p>Reduce interface animations and transitions.</p>
+      </div>
+      <label class="notification-switch">
+        <input type="checkbox" id="settingsReduceAnimations">
+        <span class="notification-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- CHAT PREFERENCES -->
+  <div class="settings-section">
+    <h2>Chat Preferences</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Enter to Send</strong>
+        <p>Press Enter to send messages in Makora chat.</p>
+      </div>
+      <label class="notification-switch">
+        <input type="checkbox" id="settingsEnterToSend" checked>
+        <span class="notification-slider"></span>
+      </label>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Show Message Timestamps</strong>
+        <p>Display timestamps beside chat messages.</p>
+      </div>
+      <label class="notification-switch">
+        <input type="checkbox" id="settingsMessageTimestamps" checked>
+        <span class="notification-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- DEFAULT SOCIAL PLATFORM -->
+  <div class="settings-section">
+    <h2>Social Media Preferences</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Default Social Platform</strong>
+        <p>Choose the platform Makora should prioritize.</p>
+      </div>
+      <select id="settingsDefaultPlatform">
+        <option value="instagram">Instagram</option>
+        <option value="youtube">YouTube</option>
+        <option value="facebook">Facebook</option>
+        <option value="automatic">Let Makora Decide</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- DATA & STORAGE -->
+  <div class="settings-section">
+    <h2>Data & Storage</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Automatic Media Downloads</strong>
+        <p>Allow Makora to automatically download generated media when supported.</p>
+      </div>
+      <label class="notification-switch">
+        <input type="checkbox" id="settingsAutoDownload">
+        <span class="notification-slider"></span>
+      </label>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Storage Information</strong>
+        <p>Storage usage details will be available in a future update.</p>
+      </div>
+      <span class="settings-coming-soon">Coming Soon</span>
+    </div>
+  </div>
+
+  <p class="notification-footer">
+    Some preferences require future implementation before they
+    can affect the app.
+  </p>
+
+</div>
+
 
   
 <!-- AI PREFERENCES -->

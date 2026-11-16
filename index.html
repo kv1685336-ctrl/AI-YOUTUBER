@@ -3943,6 +3943,52 @@ function showDefaultMakoraAvatar() {
     headerFallback.style.display = "block";
   }
 }
+
+async function loadMakoraProfilePicture(user) {
+  const image = document.getElementById("makoraProfilePicture");
+  const fallback = document.getElementById("makoraDefaultAvatar");
+
+  const headerImage = document.getElementById("headerProfilePicture");
+  const headerFallback = document.getElementById("headerProfileFallback");
+
+  if (!user) {
+    showDefaultMakoraAvatar();
+    return;
+  }
+
+  const avatarPath = user.user_metadata?.avatar_path;
+
+  if (!avatarPath) {
+    showDefaultMakoraAvatar();
+    return;
+  }
+
+  try {
+    const { data, error } = await supabaseClient.storage
+      .from("profile-avatars")
+      .createSignedUrl(avatarPath, 3600);
+
+    if (error) throw error;
+
+    image.src = data.signedUrl;
+    image.style.display = "block";
+    fallback.style.display = "none";
+
+    if (headerImage) {
+      headerImage.src = data.signedUrl;
+      headerImage.style.display = "block";
+    }
+
+    if (headerFallback) {
+      headerFallback.style.display = "none";
+    }
+
+  } catch (error) {
+    console.error("Profile picture loading failed:", error);
+    showDefaultMakoraAvatar();
+  }
+}
+
 async function uploadMakoraProfilePicture(file) {
   const status = document.getElementById("profilePictureStatus");
   const input = document.getElementById("profilePictureInput");
@@ -4603,7 +4649,16 @@ function showSettingsHome() {
     page.classList.add("hidden");
   });
 }
+function openSettingsFromProfile() {
+  const settingsButton = [...document.querySelectorAll(".menu-item")]
+    .find(button =>
+      button.textContent.trim().toLowerCase().includes("settings")
+    );
 
+  if (settingsButton) {
+    selectTool("Settings", settingsButton);
+  }
+}
 function openSettingsSection(section) {
   const allowedSections = [
     "profile",

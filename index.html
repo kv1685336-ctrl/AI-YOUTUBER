@@ -1989,6 +1989,92 @@ body.light-theme [id^="settingsPage-"] select {
   white-space: nowrap;
 }
 
+/* HELP & SUPPORT */
+
+.help-card {
+  background: #111;
+  border: 1px solid #292929;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 18px 0;
+}
+
+.help-card h3 {
+  margin: 0 0 10px;
+  color: #fff;
+}
+
+.help-card > p {
+  color: #aaa;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.help-item {
+  border-top: 1px solid #292929;
+  padding: 14px 0;
+}
+
+.help-item summary {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.help-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.help-item summary::after {
+  content: "+";
+  color: #ff3030;
+  font-size: 19px;
+}
+
+.help-item[open] summary::after {
+  content: "−";
+}
+
+.help-item p {
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 12px 0 0;
+}
+
+.help-support-notice {
+  background: #191919;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 12px;
+}
+
+.help-support-notice strong {
+  color: #ff5555;
+  font-size: 14px;
+}
+
+.help-support-notice p {
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.help-footer {
+  text-align: center;
+  color: #777;
+  font-size: 12px;
+  padding: 20px 10px;
+}
+
+
 </style>
 </head>
 <body>
@@ -3152,14 +3238,146 @@ body.light-theme [id^="settingsPage-"] select {
 </div>
 
 
-  <!-- HELP & SUPPORT -->
-  <div id="settingsPage-help" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
-    <h1>Help & Support</h1>
-    <div class="settings-section">
-      <p>Help articles and support options will be added before public launch.</p>
+  
+<!-- HELP & SUPPORT -->
+<div id="settingsPage-help" class="hidden">
+  <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+
+  <h1>Help & Support</h1>
+
+  <p class="settings-description">
+    Find answers, solve common problems, and learn how to use Makora.
+  </p>
+
+  <!-- GETTING STARTED -->
+  <div class="help-card">
+    <h3>Getting Started</h3>
+    <p>New to Makora? Start here to understand the main features.</p>
+
+    <details class="help-item">
+      <summary>What is Makora?</summary>
+      <p>
+        Makora is an AI-powered social media management platform
+        designed to help creators manage their social media activities,
+        create content, and understand their performance.
+      </p>
+    </details>
+
+    <details class="help-item">
+      <summary>What can I do with Makora?</summary>
+      <p>
+        Depending on the features available in your plan, you may be able
+        to create content, generate captions, plan posts, manage social
+        media activities, and analyze performance.
+      </p>
+    </details>
+
+    <details class="help-item">
+      <summary>How do I connect my social media accounts?</summary>
+      <p>
+        Open Settings → Social Media Accounts. Follow the connection
+        instructions when official platform integrations become available.
+      </p>
+    </details>
+  </div>
+
+  <!-- ACCOUNT HELP -->
+  <div class="help-card">
+    <h3>Account & Login</h3>
+
+    <details class="help-item">
+      <summary>I cannot log in. What should I do?</summary>
+      <p>
+        Check your email address and password, make sure your internet
+        connection is working, and try again. If the problem continues,
+        contact support.
+      </p>
+    </details>
+
+    <details class="help-item">
+      <summary>How do I change my profile picture?</summary>
+      <p>
+        Open Settings → Profile and use the profile picture option
+        to upload a new image.
+      </p>
+    </details>
+
+    <details class="help-item">
+      <summary>How do I manage my subscription?</summary>
+      <p>
+        Subscription management options will be available in the
+        appropriate account or billing section.
+      </p>
+    </details>
+  </div>
+
+  <!-- TROUBLESHOOTING -->
+  <div class="help-card">
+    <h3>Troubleshooting</h3>
+
+    <details class="help-item">
+      <summary>Makora is not responding</summary>
+      <p>
+        Check your internet connection and try refreshing the page.
+        If the issue continues, contact support.
+      </p>
+    </details>
+
+    <details class="help-item">
+      <summary>A feature is not working</summary>
+      <p>
+        Refresh Makora and try again. Some features may not be available
+        yet or may require an active subscription or connected account.
+      </p>
+    </details>
+
+    <details class="help-item">
+      <summary>My social media account is not connecting</summary>
+      <p>
+        Make sure the platform integration is available and that you
+        have the required account permissions. Contact support if
+        the problem continues.
+      </p>
+    </details>
+  </div>
+
+  <!-- CONTACT SUPPORT -->
+  <div class="help-card">
+    <h3>Contact Support</h3>
+    <p>
+      Need additional help? Contact the Makora support team.
+    </p>
+
+    <div class="help-support-notice">
+      <strong>Support contact coming soon</strong>
+      <p>
+        Official support contact details will be published before
+        public launch.
+      </p>
     </div>
   </div>
+
+  <!-- FEEDBACK -->
+  <div class="help-card">
+    <h3>Feedback & Suggestions</h3>
+    <p>
+      Your feedback can help improve Makora.
+    </p>
+
+    <div class="help-support-notice">
+      <strong>Feedback submission coming soon</strong>
+      <p>
+        Bug reports, feature requests, and feedback submission
+        will be available after the feedback system is implemented.
+      </p>
+    </div>
+  </div>
+
+  <p class="help-footer">
+    Makora Help Center · We're working to make your experience better.
+  </p>
+</div>
+
 
   <!-- ABOUT MAKORA -->
   <div id="settingsPage-about" class="hidden">

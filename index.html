@@ -2626,6 +2626,87 @@ body.light-theme [id^="settingsPage-"] select {
   }
 }
 
+/* AI PREFERENCES */
+
+.ai-preferences-page {
+  padding-bottom: 30px;
+}
+
+.ai-preferences-page .settings-description {
+  color: #999;
+  margin-bottom: 22px;
+  line-height: 1.6;
+}
+
+.ai-preferences-page .settings-section {
+  margin-top: 22px;
+  padding: 20px;
+  background: #111;
+  border: 1px solid #292929;
+  border-radius: 14px;
+}
+
+.ai-preferences-page .settings-section h2 {
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+
+.ai-preferences-page .settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 16px 0;
+  border-bottom: 1px solid #292929;
+}
+
+.ai-preferences-page .settings-row:last-child {
+  border-bottom: none;
+}
+
+.ai-preferences-page .settings-row strong {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.ai-preferences-page .settings-row p {
+  color: #999;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.ai-preferences-page .settings-row select {
+  max-width: 180px;
+  min-width: 125px;
+  padding: 10px;
+  color: #fff;
+  background: #1b1b1b;
+  border: 1px solid #383838;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+@media (max-width: 480px) {
+  .ai-preferences-page .settings-section {
+    padding: 15px;
+  }
+
+  .ai-preferences-page .settings-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .ai-preferences-page .settings-row select {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+
 
 
 </style>
@@ -3344,44 +3425,206 @@ body.light-theme [id^="settingsPage-"] select {
     </div>
   </div>
 
-  <!-- AI PREFERENCES -->
-  <div id="settingsPage-ai" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
-    <h1>AI Preferences</h1>
-    <p>Set default preferences for content created with Makora.</p>
-    <div class="settings-section">
-      <div class="settings-row">
-        <div>
-          <strong>Default content language</strong>
-          <p>The language Makora should use when creating content.</p>
-        </div>
-        <select id="settingsVideoLanguage">
-          <option>English</option>
-          <option>Tamil</option>
-          <option>Hindi</option>
-        </select>
+  
+<!-- AI PREFERENCES -->
+<div id="settingsPage-ai" class="hidden ai-preferences-page">
+
+  <button class="secondary" onclick="showSettingsHome()">
+    ← Back to Settings
+  </button>
+
+  <h1>AI Preferences</h1>
+  <p class="settings-description">
+    Customize how Makora understands your brand and creates content.
+  </p>
+
+  <!-- CONTENT CREATION -->
+  <div class="settings-section">
+    <h2>Content Creation</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Default Content Language</strong>
+        <p>The language Makora should use when creating content.</p>
       </div>
-      <div class="settings-row">
-        <div>
-          <strong>Content style</strong>
-          <p>Your preferred style for generated content.</p>
-        </div>
-        <select id="settingsStyle">
-          <option>Professional</option>
-          <option>Informative</option>
-          <option>Educational</option>
-          <option>Entertaining</option>
-          <option>Funny</option>
-          <option>Inspirational</option>
-          <option>Minimalist</option>
-          <option>Creative</option>
-          <option>Makora's Choice</option>
-        </select>
+      <select id="settingsVideoLanguage">
+        <option>English</option>
+        <option>Tamil</option>
+        <option>Hindi</option>
+        <option>Spanish</option>
+        <option>French</option>
+        <option>German</option>
+        <option>Portuguese</option>
+        <option>Japanese</option>
+        <option>Arabic</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Content Style</strong>
+        <p>Your preferred style for generated content.</p>
       </div>
+      <select id="settingsStyle">
+        <option>Professional</option>
+        <option>Informative</option>
+        <option>Educational</option>
+        <option>Entertaining</option>
+        <option>Funny</option>
+        <option>Inspirational</option>
+        <option>Minimalist</option>
+        <option>Creative</option>
+        <option>Storytelling</option>
+        <option>Makora's Choice</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Content Length</strong>
+        <p>Choose the usual length of generated captions and text.</p>
+      </div>
+      <select id="settingsContentLength">
+        <option>Short</option>
+        <option selected>Medium</option>
+        <option>Detailed</option>
+        <option>Adapt to Platform</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Creativity Level</strong>
+        <p>How creative should Makora be with content ideas?</p>
+      </div>
+      <select id="settingsCreativity">
+        <option>Balanced</option>
+        <option>Highly Creative</option>
+        <option>Conservative</option>
+      </select>
     </div>
   </div>
 
-  
+  <!-- BRAND VOICE -->
+  <div class="settings-section">
+    <h2>Brand Voice</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Communication Tone</strong>
+        <p>How your brand should sound to its audience.</p>
+      </div>
+      <select id="settingsBrandTone">
+        <option>Friendly</option>
+        <option>Professional</option>
+        <option>Casual</option>
+        <option>Confident</option>
+        <option>Humorous</option>
+        <option>Motivational</option>
+        <option>Formal</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Emoji Usage</strong>
+        <p>How often Makora should include emojis.</p>
+      </div>
+      <select id="settingsEmojiUsage">
+        <option>Never</option>
+        <option>Minimal</option>
+        <option selected>Moderate</option>
+        <option>Frequent</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Hashtag Preference</strong>
+        <p>How Makora should use hashtags in content.</p>
+      </div>
+      <select id="settingsHashtags">
+        <option>Don't use hashtags</option>
+        <option>Use a few relevant hashtags</option>
+        <option>Use more relevant hashtags</option>
+        <option>Let Makora decide</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- AUDIENCE -->
+  <div class="settings-section">
+    <h2>Audience Preferences</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Target Audience</strong>
+        <p>Who should Makora primarily create content for?</p>
+      </div>
+      <select id="settingsTargetAudience">
+        <option>General Audience</option>
+        <option>Students</option>
+        <option>Business Owners</option>
+        <option>Professionals</option>
+        <option>Creators</option>
+        <option>Customers</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Call to Action</strong>
+        <p>How should Makora encourage audience interaction?</p>
+      </div>
+      <select id="settingsCTA">
+        <option>Use when relevant</option>
+        <option>Frequently</option>
+        <option>Occasionally</option>
+        <option>Never</option>
+        <option>Let Makora decide</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- AI CONTROL -->
+  <div class="settings-section">
+    <h2>AI Control</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Content Review</strong>
+        <p>Choose whether Makora should ask for approval before publishing.</p>
+      </div>
+      <select id="settingsContentApproval">
+        <option>Always ask for approval</option>
+        <option>Ask before each new campaign</option>
+        <option>Follow my approved publishing rules</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Trend Usage</strong>
+        <p>Should Makora consider relevant social media trends?</p>
+      </div>
+      <select id="settingsTrendUsage">
+        <option>Use relevant trends</option>
+        <option>Use trends occasionally</option>
+        <option>Avoid trends</option>
+        <option>Let Makora decide</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="notification-footer">
+    These preferences will guide Makora's AI once preference saving
+    and AI personalization are implemented.
+  </div>
+
+</div>
+
 <!-- SOCIAL MEDIA ACCOUNTS -->
 <div id="settingsPage-social" class="hidden">
 

@@ -1,0 +1,7017 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI YOUTUBER</title> 
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/lucide@latest" defer></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #080808;
+  color: white;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 7%;
+}
+
+.logo { font-size: 22px; font-weight: bold; }
+.logo span, .red { color: #ff3030; }
+
+button {
+  cursor: pointer;
+  padding: 14px 22px;
+  border-radius: 7px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.primary {
+  background: #ff3030;
+  color: white;
+  border: none;
+}
+
+.secondary {
+  background: transparent;
+  color: white;
+  border: 1px solid #555;
+}
+
+.login-btn {
+  background: transparent;
+  color: white;
+  border: 1px solid #ff3030;
+}
+
+main {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 25px;
+}
+
+.hero {
+  text-align: center;
+  max-width: 750px;
+  margin: 80px auto;
+}
+
+
+
+.
+h1 {
+  font-size: clamp(36px, 7vw, 60px);
+  line-height: 1.15;
+}
+.hero p { margin: 22px 0 30px; }
+
+.tagline {
+  color: #ff4545;
+  letter-spacing: 3px;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: #151515;
+  border: 1px solid #303030;
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.card h2 {
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  margin: 9px 0 16px;
+  border-radius: 7px;
+  border: 1px solid #444;
+  background: #080808;
+  color: white;
+  font-size: 15px;
+}
+
+label {
+  color: #ccc;
+  font-size: 13px;
+}
+
+.full { width: 100%; margin-top: 10px; }
+
+.switch {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.link {
+  color: #ff4545;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.message {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+
+.small {
+  color: #777;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 30px;
+}
+/* Main chat workspace */
+#workspace {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  border-bottom: 1px solid #292929;
+}
+
+.chat-header h2 {
+  font-size: 19px;
+  flex: 1;
+}
+
+.icon-btn {
+  background: #171717;
+  color: white;
+  border: 1px solid #333;
+  padding: 10px 13px;
+}
+
+.chat-layout {
+  display: flex;
+  min-height: calc(100vh - 75px);
+}
+
+.side-menu {
+  width: 260px;
+  background: #111;
+  border-right: 1px solid #292929;
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-item {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: #ddd;
+  border: 1px solid transparent;
+  padding: 13px;
+}
+
+.menu-item:hover {
+  background: #202020;
+}
+
+.menu-item.active {
+  background: #251111;
+  border-color: #572020;
+  color: white;
+}
+
+.menu-spacer {
+  flex: 1;
+}
+
+.chat-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 75px);
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 30px 20px;
+  overflow-y: auto;
+  text-align: center;
+}
+
+
+.chat-answer {
+  max-width: 650px;
+  margin: 20px auto;
+  color: #ddd;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.chat-input-area {
+  padding: 16px;
+  border-top: 1px solid #292929;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 8px;
+  max-width: 850px;
+  margin: auto;
+}
+
+.chat-input-row input {
+  margin: 0;
+  min-width: 0;
+}
+
+.chat-input-row button {
+  padding: 12px 15px;
+}
+
+@media (max-width: 650px) {
+  .side-menu {
+    width: 220px;
+  }
+
+  .chat-header {
+    padding: 14px;
+  }
+
+  .chat-input-area {
+    padding: 10px;
+  }
+
+  .chat-input-row {
+    gap: 5px;
+  }
+
+  .chat-input-row button {
+    padding: 12px 10px;
+  }
+}
+.hidden { display: none !important; }
+
+@media(max-width: 500px) {
+  main { margin: 25px auto; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+}
+.settings-panel {
+  flex: 1;
+  min-width: 0;
+  padding: 28px;
+  overflow-y: auto;
+}
+
+.settings-panel h1 {
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.settings-intro {
+  margin-bottom: 25px;
+}
+
+.settings-section {
+  max-width: 750px;
+  margin-bottom: 18px;
+  padding: 22px;
+  background: #151515;
+  border: 1px solid #303030;
+  border-radius: 12px;
+}
+
+.settings-section h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 0;
+  border-top: 1px solid #303030;
+}
+
+.settings-row p {
+  font-size: 14px;
+}
+
+.settings-row select {
+  background: #080808;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 7px;
+  padding: 10px;
+  max-width: 170px;
+}
+
+.settings-note {
+  color: #777;
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+@media (max-width: 650px) {
+  .settings-panel {
+    padding: 18px 12px;
+  }
+
+  .settings-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+  .chat-input-area.hidden {
+  display: none !important;
+}
+  body.light-theme {
+  background: #f4f4f4;
+  color: #171717;
+}
+
+body.light-theme .navbar,
+body.light-theme .chat-header,
+body.light-theme .chat-input-area {
+  background: #fff;
+  border-color: #ddd;
+}
+
+body.light-theme .side-menu,
+body.light-theme .card,
+body.light-theme .settings-section {
+  background: #fff;
+  border-color: #ddd;
+}
+
+body.light-theme .menu-item {
+  color: #222;
+}
+
+body.light-theme .menu-item:hover {
+  background: #eee;
+}
+
+body.light-theme .menu-item.active {
+  background: #ffe8e8;
+  border-color: #ffbaba;
+}
+
+body.light-theme input,
+body.light-theme .settings-row select {
+  background: #fff;
+  color: #171717;
+  border-color: #bbb;
+}
+
+body.light-theme .chat-answer,
+body.light-theme label,
+body.light-theme .settings-row p {
+  color: #444;
+}
+body.light-theme .hero h1,
+body.light-theme .logo,
+body.light-theme .chat-header h2,
+body.light-theme .settings-panel h1,
+body.light-theme .settings-section h2,
+body.light-theme .settings-section strong,
+body.light-theme .card h2 {
+  color: #171717;
+}
+
+body.light-theme .hero p,
+body.light-theme .settings-intro,
+body.light-theme .settings-note,
+body.light-theme .small {
+  color: #555;
+}
+
+body.light-theme .secondary,
+body.light-theme .icon-btn {
+  color: #222;
+  border-color: #bbb;
+}
+
+body.light-theme .chat-avatar {
+  color: white;
+}  
+body.light-theme .login-btn {
+  color: #222;
+  border-color: #ff3030;
+}
+/* Hamburger button: transparent background, theme-based lines */
+.chat-header .icon-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  padding: 8px;
+}
+
+body.light-theme .chat-header .icon-btn {
+  color: black;
+}  
+/* Transparent icon buttons in the chat */
+.chat-input-row .icon-btn,
+#muteButton {
+  background: transparent;
+  border: none;
+  color: white;
+}
+
+/* Black icons in light mode */
+body.light-theme .chat-input-row .icon-btn,
+body.light-theme #muteButton {
+  color: black;
+}
+.welcome-setting-select {
+  display: block;
+  width: 100%;
+  margin: 8px 0 18px;
+  padding: 12px;
+  border-radius: 7px;
+  border: 1px solid #444;
+  background: #080808;
+  color: white;
+  font-size: 15px;
+}
+
+body.light-theme .welcome-setting-select {
+  background: white;
+  color: #171717;
+  border-color: #bbb;
+}
+#welcomeSettings .settings-note {
+  text-align: center;
+}
+/* ===== AI YOUTUBER — CREATOR STUDIO DESIGN ===== */
+
+:root {
+  --bg: #09090c;
+  --panel: #111116;
+  --panel-soft: #17171e;
+  --border: #292932;
+  --text: #f7f7fa;
+  --muted: #a2a2ae;
+  --red: #ff3b4e;
+  --red-dark: #b91f32;
+  --radius: 16px;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 50% -20%, #351018 0%, transparent 45%),
+    var(--bg);
+  color: var(--text);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+button {
+  border-radius: 11px;
+  transition: transform .16s ease, background .16s ease, border-color .16s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.primary {
+  background: linear-gradient(135deg, #ff4b5e, #d91e35);
+  box-shadow: 0 6px 20px #ff304022;
+}
+
+.primary:hover {
+  background: linear-gradient(135deg, #ff6575, #e52b42);
+}
+
+.secondary,
+.login-btn {
+  background: #15151b;
+  border: 1px solid #353540;
+  color: var(--text);
+}
+
+.secondary:hover,
+.login-btn:hover {
+  border-color: #7a3540;
+  background: #20151a;
+}
+
+.navbar {
+  padding: 20px clamp(18px, 5vw, 70px);
+  border-bottom: 1px solid #ffffff0b;
+}
+
+.logo {
+  letter-spacing: .04em;
+}
+
+.hero {
+  padding: 25px 22px 70px;
+  margin: 45px auto;
+}
+
+
+
+.tagline {
+  color: #ff6675;
+  font-weight: 700;
+}
+
+.hero p {
+  max-width: 590px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card,
+.settings-section {
+  background: linear-gradient(145deg, #17171e, #101014);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 18px 55px #00000024;
+}
+
+input,
+.settings-row select,
+.welcome-setting-select,
+textarea {
+  background: #0b0b10;
+  border: 1px solid #30303a;
+  border-radius: 11px;
+  color: var(--text);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #b83a4a;
+}
+
+#workspace {
+  min-height: 100vh;
+  background: #0b0b0f;
+}
+
+.chat-header {
+  min-height: 72px;
+  padding: 14px 24px;
+  background: #0e0e13;
+  border-bottom: 1px solid var(--border);
+}
+
+.chat-header h2 {
+  font-size: 16px;
+  letter-spacing: .06em;
+}
+
+.chat-layout {
+  min-height: calc(100vh - 72px);
+}
+
+.side-menu {
+  width: 250px;
+  padding: 20px 14px;
+  background: #0e0e13;
+  border-right: 1px solid var(--border);
+}
+
+.menu-item {
+  padding: 13px 14px;
+  border-radius: 10px;
+  color: #bdbdc8;
+  font-weight: 500;
+}
+
+.menu-item:hover {
+  background: #1b1b23;
+}
+
+.menu-item.active {
+  color: #fff;
+  background: linear-gradient(90deg, #35151d, #1b1217);
+  border-color: #6b2935;
+  box-shadow: inset 3px 0 var(--red);
+}
+
+.chat-main {
+  background:
+    radial-gradient(ellipse at 50% 0%, #24101655, transparent 55%),
+    #0b0b0f;
+}
+
+.chat-messages {
+  padding: 32px clamp(16px, 4vw, 48px);
+}
+
+
+
+.chat-answer {
+  color: #dedee6;
+}
+
+.chat-input-area {
+  background: #0e0e13;
+  border-top: 1px solid var(--border);
+  padding: 18px 20px 22px;
+}
+
+.chat-input-row {
+  padding: 8px;
+  border: 1px solid #30303a;
+  border-radius: 16px;
+  background: #15151b;
+  box-shadow: 0 12px 35px #00000025;
+}
+
+.chat-input-row input {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.chat-input-row input:focus {
+  outline: none;
+}
+
+.chat-input-row .icon-btn {
+  color: #c5c5ce;
+  border-radius: 10px;
+}
+
+.chat-input-row .primary {
+  min-width: 46px;
+  border-radius: 11px;
+}
+
+.settings-panel {
+  background: #0b0b0f;
+}
+
+.settings-panel h1 {
+  font-size: clamp(26px, 4vw, 34px);
+  letter-spacing: -0.04em;
+}
+
+.settings-section {
+  padding: 22px;
+}
+
+.settings-section h2 {
+  color: #f5f5f8;
+}
+
+.settings-row {
+  border-top-color: #292932;
+}
+
+.site-footer {
+  padding: 25px;
+  text-align: center;
+  color: #777782;
+  border-top: 1px solid #ffffff0b;
+}
+
+.site-footer a {
+  color: #ff6877;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .chat-layout {
+    position: relative;
+  }
+
+  .side-menu {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(270px, 82vw);
+    box-shadow: 18px 0 45px #00000070;
+  }
+
+  .chat-header {
+    padding: 12px 14px;
+  }
+
+  .chat-header h2 {
+    font-size: 14px;
+  }
+
+  .chat-header .secondary {
+    padding: 11px 13px;
+  }
+
+  .chat-messages {
+    padding: 20px 14px;
+  }
+
+  .chat-input-area {
+    padding: 12px;
+  }
+
+  .chat-input-row {
+    gap: 4px;
+  }
+
+  .chat-input-row button {
+    padding: 11px 12px;
+  }
+
+  .settings-panel {
+    padding: 20px 14px;
+  }
+
+  .settings-section {
+    padding: 17px;
+  }
+}
+
+body.light-theme {
+  --bg: #f4f4f7;
+  --panel: #ffffff;
+  --panel-soft: #f1f1f5;
+  --border: #dedee5;
+  --text: #181820;
+  --muted: #666673;
+  background: #f4f4f7;
+}
+
+body.light-theme #workspace,
+body.light-theme .chat-main,
+body.light-theme .settings-panel {
+  background: #f4f4f7;
+}
+
+body.light-theme .chat-header,
+body.light-theme .side-menu,
+body.light-theme .chat-input-area {
+  background: #fff;
+  border-color: var(--border);
+}
+
+body.light-theme .chat-input-row {
+  background: #fff;
+  border-color: var(--border);
+}
+
+body.light-theme .chat-answer {
+  color: #34343d;
+}
+
+body.light-theme .settings-section,
+body.light-theme .card {
+  background: #fff;
+  border-color: var(--border);
+}
+
+body.light-theme .settings-section h2,
+body.light-theme .chat-header h2 {
+  color: #181820;
+}
+
+body.light-theme .menu-item {
+  color: #44444e;
+}
+
+body.light-theme .menu-item.active {
+  color: #19191f;
+  background: #ffe9ec;
+  border-color: #ffc1c8;
+}
+
+body.light-theme input,
+body.light-theme textarea,
+body.light-theme .settings-row select {
+  background: #fff;
+  color: #181820;
+  border-color: #d5d5de;
+}
+/* Light mode: keep buttons readable */
+body.light-theme .logout-btn,
+body.light-theme .new-chat-btn,
+body.light-theme .stop-audio-btn,
+body.light-theme .chat-action-btn,
+body.light-theme .menu-item,
+body.light-theme .settings-btn,
+body.light-theme .back-btn,
+body.light-theme .login-btn,
+body.light-theme .get-started-btn {
+  background: #ffffff !important;
+  color: #171717 !important;
+  border-color: #d5d5d5 !important;
+}
+
+/* Keep primary actions distinct */
+body.light-theme .login-btn,
+body.light-theme .get-started-btn,
+body.light-theme .new-chat-btn {
+  background: #b91c1c !important;
+  color: #ffffff !important;
+  border-color: #b91c1c !important;
+}
+
+/* Icons and nested text should follow the button text color */
+body.light-theme button,
+body.light-theme button *,
+body.light-theme .menu-item *,
+body.light-theme .settings-btn * {
+  color: inherit !important;
+}
+/* Fix button contrast in light mode */
+body.light-theme button.secondary,
+body.light-theme button.icon-btn,
+body.light-theme button.menu-item,
+body.light-theme button.login-btn {
+  background: #ffffff !important;
+  color: #181820 !important;
+  border: 1px solid #d5d5de !important;
+}
+
+/* Hover and selected menu buttons */
+body.light-theme button.secondary:hover,
+body.light-theme button.icon-btn:hover,
+body.light-theme button.menu-item:hover {
+  background: #f0f0f5 !important;
+}
+
+body.light-theme button.menu-item.active {
+  background: #ffe9ec !important;
+  color: #181820 !important;
+  border-color: #ffc1c8 !important;
+}
+
+/* Keep main actions red with readable white text */
+body.light-theme button.primary {
+  background: #c91f35 !important;
+  color: #ffffff !important;
+  border-color: #c91f35 !important;
+}
+
+/* Ensure text inside buttons follows the button color */
+body.light-theme button.secondary *,
+body.light-theme button.icon-btn *,
+body.light-theme button.menu-item *,
+body.light-theme button.login-btn *,
+body.light-theme button.primary * {
+  color: inherit !important;
+}
+
+/* =====================================
+   AI YOUTUBER — COMPLETE UI REDESIGN
+   ===================================== */
+
+:root {
+  --bg: #09090c;
+  --surface: #111116;
+  --surface-2: #191920;
+  --surface-3: #22222b;
+  --border: #292932;
+  --text: #f7f7fa;
+  --muted: #a1a1ad;
+  --accent: #ff354d;
+  --accent-soft: #35141b;
+  --shadow: 0 18px 50px rgba(0,0,0,.22);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  letter-spacing: -.02em;
+  transition: background .25s, color .25s;
+}
+
+button {
+  border-radius: 12px;
+  transition: .2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.12);
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+.primary {
+  background: var(--accent);
+  color: white;
+  border: none;
+  box-shadow: 0 6px 22px #ff354d25;
+}
+
+.secondary,
+.login-btn {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.navbar {
+  padding: 20px clamp(18px, 5vw, 75px);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.logo {
+  font-size: 21px;
+  letter-spacing: .04em;
+}
+
+.hero {
+  max-width: 850px;
+  padding: 35px 22px 85px;
+  margin: 45px auto;
+}
+
+.avatar {
+  width: 135px;
+  height: 135px;
+  margin-bottom: 35px;
+  border: 2px solid #ff7b89;
+  box-shadow: 0 0 65px #ff354d40;
+}
+
+.tagline {
+  color: var(--accent);
+  font-weight: 800;
+  letter-spacing: 4px;
+}
+
+.hero h1 {
+  font-size: clamp(40px, 7vw, 70px);
+  letter-spacing: -.055em;
+}
+
+.hero p {
+  max-width: 570px;
+  font-size: 17px;
+  margin: 25px auto 35px;
+}
+
+.hero .buttons button {
+  min-width: 145px;
+  padding: 16px 24px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: var(--shadow);
+}
+
+.card h2 {
+  font-size: 25px;
+  letter-spacing: -.04em;
+}
+
+input,
+textarea,
+select {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.full {
+  min-height: 48px;
+}
+
+/* WORKSPACE */
+
+#workspace {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.chat-header {
+  height: 72px;
+  padding: 12px 25px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.chat-header h2 {
+  font-size: 16px;
+  letter-spacing: .07em;
+}
+
+.chat-header .icon-btn {
+  color: var(--text);
+  background: transparent;
+  border: none;
+  font-size: 23px;
+}
+
+.chat-layout {
+  min-height: calc(100vh - 72px);
+}
+
+.side-menu {
+  width: 255px;
+  padding: 22px 14px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+.menu-item {
+  padding: 14px;
+  margin-bottom: 4px;
+  color: var(--muted);
+  border-radius: 11px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.menu-item:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.menu-item.active {
+  background: var(--accent-soft);
+  border-color: #71303b;
+  color: white;
+  box-shadow: inset 3px 0 var(--accent);
+}
+
+.chat-main {
+  background: var(--bg);
+}
+
+.chat-messages {
+  padding: 40px clamp(15px, 5vw, 65px);
+}
+
+
+
+.chat-answer {
+  max-width: 720px;
+  line-height: 1.8;
+  color: var(--text);
+  margin: 22px auto;
+  overflow-wrap: anywhere;
+}
+
+.chat-input-area {
+  padding: 18px 22px 25px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.chat-input-row {
+  max-width: 900px;
+  padding: 9px;
+  border-radius: 17px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.chat-input-row input {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  font-size: 15px;
+}
+
+.chat-input-row input:focus {
+  outline: none;
+}
+
+.chat-input-row .icon-btn {
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  font-size: 19px;
+}
+
+.chat-input-row .primary {
+  min-width: 48px;
+  min-height: 45px;
+}
+
+/* SETTINGS */
+
+.settings-panel {
+  background: var(--bg);
+  padding: 35px;
+}
+
+.settings-panel h1 {
+  font-size: 35px;
+  letter-spacing: -.05em;
+}
+
+.settings-intro {
+  color: var(--muted);
+  margin: 10px 0 30px;
+}
+
+.settings-section {
+  max-width: 850px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  padding: 24px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+
+.settings-section h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.settings-row {
+  border-top: 1px solid var(--border);
+}
+
+.settings-row p {
+  color: var(--muted);
+}
+
+.settings-row select {
+  min-width: 150px;
+}
+
+/* LEGAL PAGE */
+
+.legal-page {
+  max-width: 850px;
+  margin: 35px auto;
+  padding: 30px;
+  line-height: 1.8;
+}
+
+.legal-page h1 {
+  margin-bottom: 20px;
+}
+
+.legal-page h2 {
+  margin: 28px 0 8px;
+}
+
+.legal-page p {
+  margin-bottom: 14px;
+  color: var(--muted);
+}
+
+/* FOOTER */
+
+.site-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  padding: 28px;
+}
+
+.site-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* LIGHT THEME */
+
+body.light-theme {
+  --bg: #f5f5f8;
+  --surface: #ffffff;
+  --surface-2: #f0f0f4;
+  --surface-3: #e8e8ef;
+  --border: #dedee6;
+  --text: #191920;
+  --muted: #686875;
+  --accent: #d9233d;
+  --accent-soft: #ffe8ec;
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.light-theme .navbar,
+body.light-theme .chat-header,
+body.light-theme .side-menu,
+body.light-theme .chat-input-area,
+body.light-theme .site-footer {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+body.light-theme .chat-main,
+body.light-theme #workspace,
+body.light-theme .settings-panel {
+  background: var(--bg);
+}
+
+body.light-theme .card,
+body.light-theme .settings-section {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+body.light-theme .chat-header h2,
+body.light-theme .settings-section h2,
+body.light-theme .card h2,
+body.light-theme .settings-panel h1,
+body.light-theme .legal-page h1,
+body.light-theme .legal-page h2 {
+  color: var(--text);
+}
+
+body.light-theme .chat-answer,
+body.light-theme .menu-item {
+  color: var(--text);
+}
+
+body.light-theme .menu-item.active {
+  background: var(--accent-soft);
+  color: #92172a;
+  border-color: #ffc4cc;
+}
+
+body.light-theme input,
+body.light-theme textarea,
+body.light-theme select {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+body.light-theme .chat-input-row {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+body.light-theme .chat-input-row input {
+  background: transparent;
+}
+
+body.light-theme .chat-header .icon-btn,
+body.light-theme .chat-input-row .icon-btn {
+  color: var(--text);
+}
+
+body.light-theme .secondary,
+body.light-theme .login-btn {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+body.light-theme .primary {
+  background: var(--accent);
+  color: white;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+  .navbar {
+    padding: 16px;
+  }
+
+  .logo {
+    font-size: 17px;
+  }
+
+  .hero {
+    margin: 20px auto;
+    padding: 35px 18px 60px;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  .hero p {
+    font-size: 15px;
+  }
+
+  .chat-header {
+    height: 65px;
+    padding: 10px 12px;
+  }
+
+  .side-menu {
+    position: absolute;
+    z-index: 10;
+    top: 65px;
+    bottom: 0;
+    left: 0;
+    width: min(280px, 82vw);
+    box-shadow: 15px 0 45px #00000055;
+  }
+
+  .chat-layout {
+    min-height: calc(100vh - 65px);
+  }
+
+  .chat-main {
+    min-height: calc(100vh - 65px);
+  }
+
+  .chat-messages {
+    padding: 20px 14px;
+  }
+
+  .chat-input-area {
+    padding: 12px;
+  }
+
+  .chat-input-row {
+    gap: 4px;
+  }
+
+  .chat-input-row button {
+    padding: 11px 12px;
+  }
+
+  .settings-panel {
+    padding: 20px 14px;
+  }
+
+  .settings-section {
+    padding: 18px;
+  }
+
+  .card {
+    padding: 23px;
+  }
+  
+  /* MAKORA MENU ICONS */
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  text-align: left;
+}
+
+.menu-item i {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #ff3030 !important;
+  stroke: #ff3030;
+  stroke-width: 1.8;
+}
+
+/* Keep icons red in every state */
+
+.menu-item:hover i,
+.menu-item.active i,
+.menu-item:focus i {
+  color: #ff3030 !important;
+  stroke: #ff3030 !important;
+}
+.menu-title {
+  color: #ffffff;
+}
+
+body.light-theme .menu-title {
+  color: #000000;
+}
+/* Keep all sidebar icons red */
+.side-menu .menu-item svg {
+  color: #ff3030 !important;
+  stroke: #ff3030 !important;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Keep icons red on hover and when selected */
+.side-menu .menu-item:hover svg,
+.side-menu .menu-item.active svg,
+.side-menu .menu-item:focus svg {
+  color: #ff3030 !important;
+  stroke: #ff3030 !important;
+}
+.welcome-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 25px;
+}
+
+.welcome-logo img {
+    width: 230px;
+    height: 250px;
+    object-fit: contain;
+}
+.chat-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 25px;
+}
+.chat-logo img {
+  width: 200px;
+  height: 250px;
+  object-fit: contain;
+}
+.theme-text {
+  color: white;
+}
+
+body.light-theme .theme-text {
+  color: black;
+}
+  
+  
+
+
+}
+
+/* ================================
+   MAKORA SETTINGS UI
+================================ */
+
+.settings-panel {
+  background: #0b0b0f;
+  color: #f5f5f7;
+  padding: 30px;
+}
+
+.settings-panel h1 {
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 750;
+  letter-spacing: -1px;
+  margin-bottom: 10px;
+}
+
+.settings-intro {
+  color: #92929f;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* Settings category groups */
+
+#settingsHome .settings-section {
+  max-width: 850px;
+  padding: 20px;
+  margin-bottom: 18px;
+  background: #14141a;
+  border: 1px solid #292933;
+  border-radius: 16px;
+}
+
+#settingsHome .settings-section h2 {
+  color: #a6a6b2;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 12px;
+}
+
+/* Category buttons */
+
+#settingsHome .settings-section button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 55px;
+  margin: 0;
+  padding: 15px 16px;
+  color: #eeeeF2;
+  background: transparent;
+  border: none;
+  border-top: 1px solid #292933;
+  border-radius: 0;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+#settingsHome .settings-section button:hover {
+  background: #202027;
+  color: #ff5969;
+}
+
+#settingsHome .settings-section button:active {
+  background: #29202a;
+}
+
+/* Logout */
+
+#settingsHome > button {
+  margin-top: 12px;
+  border: 1px solid #70333a;
+  color: #ff6977;
+  background: #241418;
+  border-radius: 11px;
+  padding: 13px 20px;
+}
+
+/* Individual settings pages */
+
+[id^="settingsPage-"] {
+  max-width: 850px;
+  animation: settingsFade 0.2s ease;
+}
+
+[id^="settingsPage-"] > .secondary {
+  margin-bottom: 25px;
+  padding: 11px 15px;
+  color: #c4c4ce;
+  background: #191920;
+  border: 1px solid #30303a;
+  border-radius: 10px;
+}
+
+[id^="settingsPage-"] > .secondary:hover {
+  border-color: #ff5969;
+  color: #ff6977;
+}
+
+[id^="settingsPage-"] .settings-section {
+  background: #14141a;
+  border: 1px solid #292933;
+  border-radius: 16px;
+  padding: 22px;
+}
+
+[id^="settingsPage-"] p {
+  color: #a1a1ad;
+  line-height: 1.6;
+}
+
+[id^="settingsPage-"] strong {
+  color: #f2f2f5;
+}
+
+[id^="settingsPage-"] .settings-row {
+  border-top-color: #292933;
+}
+
+[id^="settingsPage-"] select {
+  background: #1c1c24;
+  color: #f5f5f7;
+  border: 1px solid #383844;
+  border-radius: 10px;
+  padding: 11px 13px;
+}
+
+/* Wallet */
+
+#settingsPage-credits .credit-wallet {
+  width: 100%;
+}
+
+#settingsPage-credits #creditBalance {
+  color: #ff6877;
+  font-size: 32px;
+  margin: 18px 0;
+}
+
+#settingsPage-credits button {
+  border-radius: 10px;
+  padding: 11px 16px;
+}
+
+/* Animation */
+
+@keyframes settingsFade {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 650px) {
+  .settings-panel {
+    padding: 22px 14px;
+  }
+
+  #settingsHome .settings-section {
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  #settingsHome .settings-section button {
+    min-height: 58px;
+    padding: 14px 10px;
+    font-size: 13px;
+  }
+
+  [id^="settingsPage-"] .settings-section {
+    padding: 17px;
+  }
+
+  [id^="settingsPage-"] .settings-row {
+    gap: 10px;
+  }
+
+  [id^="settingsPage-"] select {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Light theme */
+
+body.light-theme .settings-panel {
+  background: #f5f5f8;
+  color: #17171d;
+}
+
+body.light-theme #settingsHome .settings-section,
+body.light-theme [id^="settingsPage-"] .settings-section {
+  background: #ffffff;
+  border-color: #e2e2e8;
+}
+
+body.light-theme #settingsHome .settings-section h2 {
+  color: #777783;
+}
+
+body.light-theme #settingsHome .settings-section button {
+  color: #25252d;
+  border-top-color: #eeeeF2;
+}
+
+body.light-theme #settingsHome .settings-section button:hover {
+  background: #fff1f2;
+  color: #d9364a;
+}
+
+body.light-theme [id^="settingsPage-"] strong,
+body.light-theme [id^="settingsPage-"] h1 {
+  color: #17171d;
+}
+
+body.light-theme [id^="settingsPage-"] p {
+  color: #666672;
+}
+
+body.light-theme [id^="settingsPage-"] select {
+  background: #ffffff;
+  color: #17171d;
+  border-color: #ddddE5;
+}
+
+/* Settings submenu Lucide icons */
+
+#settingsHome .settings-section button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+#settingsHome .settings-section button > i:first-child {
+  width: 20px;
+  height: 20px;
+  color: #ff5969;
+  flex-shrink: 0;
+}
+
+#settingsHome .settings-section button span {
+  flex: 1;
+  text-align: left;
+}
+
+#settingsHome .settings-section button > i:last-child {
+  width: 16px;
+  height: 16px;
+  color: #777783;
+  flex-shrink: 0;
+}
+
+#settingsHome .settings-section button:hover > i:first-child {
+  color: #ff8792;
+}
+
+
+/* SHOW / HIDE PASSWORD */
+
+.password-field-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.password-field-wrapper input {
+  width: 100%;
+  padding-right: 65px !important;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #ff3030;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px;
+}
+
+.password-toggle-btn:hover {
+  opacity: 0.75;
+}
+/* MAKORA PROFILE HEADER */
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 22px;
+    margin: 18px 0;
+    border-radius: 16px;
+    background: var(--card-bg, #151515);
+}
+
+.profile-avatar-container {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-avatar-default {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #303030;
+    font-size: 38px;
+}
+
+.profile-header-info {
+    min-width: 0;
+}
+
+.profile-header-info h2 {
+    margin: 0 0 6px;
+    overflow-wrap: anywhere;
+}
+
+.profile-header-info p {
+    margin: 5px 0;
+    color: #999;
+}
+
+.profile-picture-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.profile-picture-actions label {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+@media (max-width: 480px) {
+    .profile-header {
+        gap: 14px;
+        padding: 15px;
+    }
+
+    .profile-avatar-container,
+    .profile-avatar {
+        width: 76px;
+        height: 76px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">MΛKORΛ</div>
+
+  <div style="display:flex; gap:10px; align-items:center;">
+    <button id="welcomeSettingsButton" class="secondary"
+      onclick="openWelcomeSettings()" data-i18n="settings">
+      Settings
+    </button>
+
+    <button id="navLogin" class="login-btn"
+      onclick="showPage('login')" data-i18n="login">
+      Log in
+    </button>
+
+    <button id="navLogout" class="login-btn hidden"
+      onclick="logout()" data-i18n="logout">
+      Log out
+    </button>
+  </div>
+</header>
+
+  
+<!-- WELCOME PAGE -->
+
+<section id="welcome" class="hero">
+
+  <div class="welcome-logo">
+    <img src="CCE9A38F-166C-49FF-B9EA-A6189CE86977.png" alt="Makora Logo">
+  </div>
+    
+
+  <div class="tagline" data-i18n="tagline">
+    YOUR CONTENT. YOUR AI CREATOR.
+  </div>
+
+  <h1>
+    <span data-i18n="welcomeTitle">Your creative studio,</span><br>
+    <span class="red" data-i18n="welcomeSubtitle">powered by AI.</span>
+  </h1>
+
+  <p data-i18n="welcomeDescription">
+    Research, create, edit, publish and improve. Let Makora manage your content journey across platforms while you stay in control.
+    </p>
+
+  <div class="buttons">
+    <button class="primary" onclick="showPage('signup')"
+      data-i18n="getStarted">
+      Get Started
+    </button>
+
+    <button class="secondary" onclick="showPage('login')"
+      data-i18n="login">
+      Log in
+    </button>
+  </div>
+
+  
+</section>
+
+<!-- WELCOME SETTINGS -->
+
+<main id="welcomeSettings" class="hidden">
+
+  <div class="card">
+
+    <h2 data-i18n="settings">Settings</h2>
+
+    <p class="settings-note" data-i18n="mainSettingsNotice">
+      Main settings will be available after signing in.
+    </p>
+
+    <label for="welcomeLanguage" data-i18n="appLanguage">
+      App language
+    </label>
+
+    <select id="welcomeLanguage" class="welcome-setting-select">
+      <option value="English">English</option>
+      <option value="Tamil">தமிழ்(Tamil)</option>
+      <option value="Hindi">हिन्दी(Hindi)</option>
+      <option value="Telugu">తెలుగు(Telugu)</option>
+      
+    </select>
+
+    <label for="welcomeTheme" data-i18n="theme">
+      Theme
+    </label>
+
+    <select id="welcomeTheme" class="welcome-setting-select">
+      <option value="dark" data-i18n="dark">Dark</option>
+      <option value="light" data-i18n="light">Light</option>
+    </select>
+
+    <button class="primary full" onclick="saveWelcomeSettings()"
+      data-i18n="savePreferences">
+      Save preferences
+    </button>
+
+    <button class="secondary full" onclick="showPage('welcome')"
+      data-i18n="back">
+      Back
+    </button>
+
+    <p id="welcomeSettingsMessage" class="message"></p>
+
+  </div>
+
+</main>
+
+<!-- SIGNUP PAGE -->
+
+<main id="signup" class="hidden">
+
+  <div class="card">
+
+    <h2 data-i18n="createAccountTitle">
+      Create your account
+    </h2>
+
+    <form id="signupForm">
+
+      <label data-i18n="emailAddress">Email address</label>
+
+      <input id="signupEmail" type="email"
+        placeholder="Enter your email"
+        data-i18n-placeholder="enterEmail"
+        required>
+
+      <label data-i18n="password">Password</label>
+
+      <input id="signupPassword" type="password"
+        placeholder="At least 8 characters"
+        data-i18n-placeholder="passwordLength"
+        minlength="8" required>
+
+      <button class="primary full" type="submit"
+        data-i18n="createAccount">
+        Create account
+      </button>
+
+    </form>
+
+    
+    <div id="signupMessage" class="message"></div>
+
+    <div id="signupResendArea" class="hidden">
+
+    <button
+        id="signupResendVerificationButton"
+        class="primary full"
+        type="button"
+        onclick="resendSignupVerificationEmail()">
+        Resend Verification Email
+    </button>
+
+    <div id="signupResendVerificationStatus"
+         class="message"></div>
+
+</div>
+
+    <div class="switch">
+
+      <span data-i18n="alreadyAccount">
+        Already have an account?
+      </span>
+
+      <span class="link" onclick="showPage('login')"
+        data-i18n="login">
+        Log in
+      </span>
+
+    </div>
+
+  </div>
+
+</main>
+
+<!-- LOGIN PAGE -->
+
+<main id="login" class="hidden">
+
+  <div class="card">
+
+    <h2 data-i18n="welcomeBack">
+      Welcome back
+    </h2>
+
+    <form id="loginForm">
+
+      <label data-i18n="emailAddress">Email address</label>
+
+      <input id="loginEmail" type="email"
+        placeholder="Enter your email"
+        data-i18n-placeholder="enterEmail"
+        required>
+
+      <label data-i18n="password">Password</label>
+
+      <input id="loginPassword" type="password"
+        placeholder="Enter your password"
+        data-i18n-placeholder="enterPassword"
+        required>
+      
+
+
+      <button class="primary full" type="submit"
+        data-i18n="login">
+        Log in
+      </button>
+
+    </form>
+    
+    <p style="text-align:center; margin-top:15px;">
+      
+      <span class="link" onclick="sendPasswordReset()">
+        Forgot your password?
+      </span>
+    </p>
+
+    <p id="passwordResetRequestStatus" role="status"></p>
+
+
+    <div id="loginMessage" class="message"></div>
+
+    <div class="switch">
+
+      <span data-i18n="newHere">New here?</span>
+
+      <span class="link" onclick="showPage('signup')"
+        data-i18n="createAccount">
+        Create account
+      </span>
+
+    </div>
+
+  </div>
+
+</main>
+
+<!-- PASSWORD RESET PAGE -->
+<main id="passwordReset" class="hidden">
+
+  <div class="card">
+
+    <h2>Reset Your Password</h2>
+
+    <p>Enter your new Makora account password.</p>
+
+    <form id="passwordResetForm">
+
+      <label for="recoveryNewPassword">New password</label>
+      <input
+        id="recoveryNewPassword"
+        type="password"
+        minlength="8"
+        autocomplete="new-password"
+        placeholder="Enter new password"
+        required
+      >
+
+      <label for="recoveryConfirmPassword">Confirm password</label>
+      <input
+        id="recoveryConfirmPassword"
+        type="password"
+        autocomplete="new-password"
+        placeholder="Confirm new password"
+        required
+      >
+
+      <button class="primary full" type="submit">
+        Save New Password
+      </button>
+
+    </form>
+
+    <p id="passwordResetCompleteStatus" role="status"></p>
+
+  </div>
+
+</main>
+
+
+<!-- MAIN WORKSPACE -->
+
+<main id="workspace" class="hidden">
+
+  <header class="chat-header">
+
+    <button class="icon-btn"
+      onclick="toggleMenu()"
+      aria-label="Open menu"
+      data-i18n-aria="openMenu">
+      ☰
+    </button>
+
+    <h2>MAKORA AI</h2>
+
+    <button class="secondary" onclick="toggleThemeQuick()">
+      ◐ <span data-i18n="theme">Theme</span>
+    </button>
+
+    <button class="secondary" onclick="newChat()"
+      data-i18n="newChat">
+      New Chat
+    </button>
+
+  </header>
+
+  <div class="chat-layout">
+
+    <aside id="sideMenu" class="side-menu">
+      
+
+      <button class="menu-item"
+        
+        onclick="selectTool('MAKORA', this)">
+        <i data-lucide="bot"></i>
+        <span>MAKORA</span>
+        </button>
+      <button class="menu-item"
+        onclick="selectTool('Chat', this)">
+        <i data-lucide="message-circle"></i>
+        <span>Chat</span>
+      </button>
+
+      <button class="menu-item"
+        onclick="selectTool('Editor', this)">
+        <i data-lucide="scissors"></i>
+        <span data-i18n="editor">Editor</span>
+      </button>
+
+      <button class="menu-item"
+        onclick="selectTool('Video Generator', this)">
+        <i data-lucide="video"></i>
+        <span data-i18n="videoGenerator">Video Generator</span>
+      </button>
+
+      <button class="menu-item"
+        
+        onclick="selectTool('Audio Generator', this)">
+        <i data-lucide="audio-waveform"></i>
+        <span data-i18n="audioGenerator">Audio Generator</span>
+      </button>
+
+      <button class="menu-item"
+        
+        onclick="selectTool('Chat History', this)">
+        <i data-lucide="messages-square"></i>
+        <span data-i18n="chatHistory">Chat History</span>
+      </button>
+
+      <button class="menu-item"
+        onclick="selectTool('Settings', this)">
+        <i data-lucide="settings"></i>
+        <span data-i18n="settings">Settings</span>
+      </button>
+
+      <div class="menu-spacer"></div>
+
+      <button class="menu-item" onclick="logout()">
+        <i data-lucide="log-out"></i>
+        <span data-i18n="logout">Log out</span>
+     </button>
+
+</aside>
+
+    
+   <!-- CHAT AREA -->
+
+    <section class="chat-main">
+
+      <div id="chatMessages" class="chat-messages">
+
+        <div class="chat-logo">
+          <img src="CCE9A38F-166C-49FF-B9EA-A6189CE86977.png" alt="makora Logo">
+        </div>
+
+        <p id="chatAnswer" class="chat-answer"
+          data-i18n="chatGreeting">
+          Hi! I’m your MAKORA AI assistant.
+          What would you like to ask?
+        </p>
+
+        <button class="icon-btn"
+          onclick="toggleMute()"
+          id="muteButton"
+          data-i18n="mute">
+          🔊 Mute
+        </button>
+
+      </div>
+
+      <!-- CHAT INPUT -->
+
+      <div class="chat-input-area">
+
+        <div class="chat-input-row">
+
+          <button class="icon-btn"
+            onclick="document.getElementById('uploadImage').click()"
+            aria-label="Upload image"
+            data-i18n-aria="uploadImage">
+            ＋
+          </button>
+
+          <input id="chatInput"
+            type="text"
+            data-i18n-placeholder="chatPlaceholder"
+            placeholder="Message MAKORA AI…">
+
+          <input id="uploadImage"
+            type="file"
+            accept="image/*"
+            class="hidden">
+
+          <button class="icon-btn"
+            onclick="startVoice()"
+            aria-label="Voice input"
+            data-i18n-aria="voiceInput">
+            🎙
+          </button>
+
+          <button class="primary"
+            onclick="sendMessage()"
+            aria-label="Send"
+            data-i18n-aria="send">
+            ➤
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+<!-- SETTINGS PANEL -->
+<section id="settingsPanel" class="settings-panel hidden">
+
+  <!-- SETTINGS HOME -->
+  <div id="settingsHome">
+    <h1>Settings</h1>
+    <p class="settings-intro">
+      Manage your Makora account, preferences and social media experience.
+    </p>
+
+    <div class="settings-section">
+      <h2>Account</h2>
+      <button class="secondary" onclick="openSettingsSection('profile')">
+        <i data-lucide="user-round"></i>
+        <span>Profile & Account →</span>
+        <i data-lucide="chevron-right"></i>
+      </button>
+      <button class="secondary" onclick="openSettingsSection('security')">
+        <i data-lucide="shield-check"></i>
+        <span>Security →</span>
+        <i data-lucide="chevron-right"></i>
+      </button>
+    </div>
+
+    <div class="settings-section">
+      <h2>Preferences</h2>
+      <button class="secondary" onclick="openSettingsSection('general')"> 
+        <i data-lucide="sliders-horizontal"></i>
+        <span>General Preferences →</span>
+        <i data-lucide="chevron-right"></i>
+      </button>
+      <button class="secondary" onclick="openSettingsSection('ai')">
+        <i data-lucide="sparkles"></i>
+        <span>AI Preferences →</span>
+        <i data-lucide="chevron-right"></i>
+      </button>
+      <button class="secondary" onclick="openSettingsSection('notifications')">
+        <i data-lucide="bell"></i>
+        <span>Notifications →</span>
+        <i data-lucide="chevron-right"></i>
+      </button>
+    </div>
+
+    <div class="settings-section">
+      <h2>Social Media</h2>
+      <button class="secondary" onclick="openSettingsSection('social')">
+        <i data-lucide="share-2"></i>
+        <span>Social Media Accounts →</span>
+        <i data-lucide="chevron-right"></i>
+      </button>
+    </div>
+
+    <div class="settings-section">
+      <h2>Payments & Usage</h2>
+      <button class="secondary" onclick="openSettingsSection('credits')">
+        <i data-lucide="coins"></i>
+        <span>Makora Credits & Wallet →</span>
+        <i data-lucide="chevron-right"></i>
+        
+      </button>
+      <button class="secondary" onclick="openSettingsSection('billing')">
+        <i data-lucide="credit-card"></i>
+        <span>Subscription & Billing →</span>
+        <i data-lucide="chevron-right"></i>
+      </button>
+    </div>
+
+    <div class="settings-section">
+      <h2>More</h2>
+      <button class="secondary" onclick="openSettingsSection('privacy')">
+        <i data-lucide="lock-keyhole"></i>
+        <span>Privacy & Data →</span>
+        <i data-lucide="chevron-right"></i>
+      </button>
+      <button class="secondary" onclick="openSettingsSection('help')">
+        <i data-lucide="life-buoy"></i>
+        <span>Help & Support →</span>
+        <i data-lucide="chevron-right"></i>
+      </button>
+      <button class="secondary" onclick="openSettingsSection('about')">
+        <i data-lucide="info"></i>
+        <span>About Makora →</span>
+        <i data-lucide="chevron-right"></i>
+      </button>
+    </div>
+
+    <button class="secondary" onclick="logout()">Log out</button>
+  </div>
+
+  
+  
+<!-- PROFILE & ACCOUNT -->
+<div id="settingsPage-profile" class="hidden">
+  <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+  <h1>Profile & Account</h1>
+
+<!-- PROFILE HEADER -->
+<div class="profile-header">
+
+  <div class="profile-avatar-container">
+
+    <img
+      id="makoraProfilePicture"
+      class="profile-avatar"
+      src=""
+      alt="Profile picture"
+      style="display:none;"
+    >
+
+    <div
+      id="makoraDefaultAvatar"
+      class="profile-avatar profile-avatar-default">
+      <span>👤</span>
+    </div>
+
+  </div>
+
+  <div class="profile-header-info">
+
+    <h2 id="profileHeaderName">Loading...</h2>
+
+    <p>Makora Creator</p>
+
+    <div class="profile-picture-actions">
+
+      <label for="profilePictureInput" class="secondary">
+        Change Photo
+      </label>
+
+      <button
+        type="button"
+        class="secondary"
+        onclick="removeMakoraProfilePicture()">
+        Remove
+      </button>
+
+    </div>
+
+    <input
+      type="file"
+      id="profilePictureInput"
+      accept="image/png,image/jpeg,image/webp"
+      hidden
+    >
+
+    <p id="profilePictureStatus" role="status"></p>
+
+  </div>
+
+</div>
+
+<div class="settings-section">
+
+    <div class="settings-row">
+      <div>
+        <strong>Current display name</strong>
+        <p>Your account name.</p>
+      </div>
+      <p id="settingsDisplayName">Loading...</p>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Change display name</strong>
+        <p>Choose the name Makora should display.</p>
+      </div>
+      <input
+        id="newDisplayName"
+        type="text"
+        maxlength="40"
+        placeholder="Enter your display name"
+      >
+    </div>
+
+    <button class="primary" type="button" onclick="saveProfileDisplayName()">
+      Save Changes
+    </button>
+
+    <p id="profileSaveStatus" role="status"></p>
+
+    <div class="settings-row">
+      <div><strong>Email address</strong><p>Your registered email address.</p></div>
+      <p id="settingsEmail">Loading...</p>
+    </div>
+    <div class="settings-row">
+  <div>
+    <strong>Change email address</strong>
+    <p>Enter your new email address.</p>
+  </div>
+  <input
+    id="newEmailAddress"
+    type="email"
+    maxlength="254"
+    autocomplete="email"
+    placeholder="New email address"
+  >
+</div>
+
+<button
+  class="primary"
+  type="button"
+  id="changeEmailButton"
+  onclick="requestEmailChange()"
+>
+  Send Confirmation
+</button>
+
+<p id="emailChangeStatus" role="status"></p>
+
+    <div class="settings-row">
+      <div><strong>Email verification</strong><p>Your account verification status.</p></div>
+      <p id="settingsVerification">Loading...</p>
+    </div>
+    
+
+    <div class="settings-row">
+      <div><strong>Account created</strong><p>When you joined Makora.</p></div>
+      <p id="settingsCreatedAt">Loading...</p>
+    </div>
+
+  </div>
+</div>
+
+  <!-- GENERAL PREFERENCES -->
+  <div id="settingsPage-general" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>General Preferences</h1>
+    <div class="settings-section">
+      <div class="settings-row">
+        <div>
+          <strong>Interface language</strong>
+          <p>Choose your preferred app language.</p>
+        </div>
+        <select id="settingsLanguage">
+          <option>English</option>
+          <option>Tamil</option>
+          <option>Hindi</option>
+          <option>Telugu</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <div>
+          <strong>Theme</strong>
+          <p>Choose how Makora looks.</p>
+        </div>
+        <select id="settingsTheme">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI PREFERENCES -->
+  <div id="settingsPage-ai" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>AI Preferences</h1>
+    <p>Set default preferences for content created with Makora.</p>
+    <div class="settings-section">
+      <div class="settings-row">
+        <div>
+          <strong>Default content language</strong>
+          <p>The language Makora should use when creating content.</p>
+        </div>
+        <select id="settingsVideoLanguage">
+          <option>English</option>
+          <option>Tamil</option>
+          <option>Hindi</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <div>
+          <strong>Content style</strong>
+          <p>Your preferred style for generated content.</p>
+        </div>
+        <select id="settingsStyle">
+          <option>Professional</option>
+          <option>Informative</option>
+          <option>Educational</option>
+          <option>Entertaining</option>
+          <option>Funny</option>
+          <option>Inspirational</option>
+          <option>Minimalist</option>
+          <option>Creative</option>
+          <option>Makora's Choice</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL MEDIA ACCOUNTS -->
+  <div id="settingsPage-social" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Social Media Accounts</h1>
+    <div class="settings-section">
+      <p>Connect the social media accounts you want to manage with Makora.</p>
+      <p><strong>Instagram:</strong> Not connected</p>
+      <p><strong>Facebook:</strong> Not connected</p>
+      <p><strong>YouTube:</strong> Not connected</p>
+      <p>Account connections will be available after the official platform integrations are implemented.</p>
+    </div>
+  </div>
+
+  <!-- MAKORA CREDITS -->
+  <div id="settingsPage-credits" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Makora Credits & Wallet</h1>
+    <div class="settings-section">
+      <div class="credit-wallet">
+        <h3>Makora Credits</h3>
+        <p>Your universal AI credit balance.</p>
+        <h2 id="creditBalance">Loading...</h2>
+        <button type="button" onclick="loadCreditWallet()">Refresh Balance</button>
+        <h3 style="margin-top:24px;">Transaction History</h3>
+        <div id="creditTransactions">Loading transactions...</div>
+        <p id="creditWalletStatus"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBSCRIPTION & BILLING -->
+  <div id="settingsPage-billing" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Subscription & Billing</h1>
+    <div class="settings-section">
+      <p>Subscription plans, payment history and billing management are not connected yet.</p>
+      <p>This section will show your plan and billing information when the payment system is implemented.</p>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div id="settingsPage-notifications" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Notifications</h1>
+    <div class="settings-section">
+      <p>Notification preferences are not available yet.</p>
+      <p>Notification controls will be added when Makora's notification system is implemented.</p>
+    </div>
+  </div>
+
+  <!-- PRIVACY & DATA -->
+  <div id="settingsPage-privacy" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Privacy & Data</h1>
+    <div class="settings-section">
+      <p>Chat history, data export and account deletion controls are not available in the app yet.</p>
+      <p>These controls must be implemented before public launch.</p>
+    </div>
+  </div>
+
+  <!-- SECURITY -->
+  
+<!-- SECURITY -->
+<div id="settingsPage-security" class="hidden">
+  <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+  <h1>Security</h1>
+
+  <div class="settings-section">
+
+    <h3>Change Password</h3>
+    <p>Update the password used to access your Makora account.</p>
+
+    <div class="settings-row">
+      <label for="currentPassword">Current password</label>
+      <input
+        id="currentPassword"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Enter current password"
+      >
+    </div>
+
+    <div class="settings-row">
+      <label for="newPassword">New password</label>
+      <input
+        id="newPassword"
+        type="password"
+        autocomplete="new-password"
+        minlength="8"
+        placeholder="Enter new password"
+      >
+    </div>
+
+    <div class="settings-row">
+      <label for="confirmNewPassword">Confirm new password</label>
+      <input
+        id="confirmNewPassword"
+        type="password"
+        autocomplete="new-password"
+        placeholder="Confirm new password"
+      >
+    </div>
+
+    <button
+      class="primary"
+      id="changePasswordButton"
+      type="button"
+      onclick="changeMakoraPassword()"
+    >
+      Update Password
+    </button>
+
+    <p id="passwordChangeStatus" role="status"></p>
+
+    <hr>
+
+    <h3>Active Sessions</h3>
+    <p>
+      Sign out of other devices where your Makora account is currently signed in.
+      This device will remain signed in.
+    </p>
+
+    <button
+      class="secondary"
+      id="signOutOtherSessionsButton"
+      type="button"
+      onclick="signOutOtherSessions()"
+    >
+      Sign Out Other Sessions
+    </button>
+
+    <p id="sessionSecurityStatus" role="status"></p>
+
+  </div>
+  <div class="settings-section">
+  <h3>Delete Account</h3>
+
+  <p>
+    Permanently delete your Makora account.
+    This action cannot be undone.
+  </p>
+
+  <button
+    type="button"
+    class="secondary"
+    onclick="showDeleteAccountConfirmation()">
+    Delete My Account
+  </button>
+
+  <div id="deleteAccountConfirmation" class="hidden">
+
+    <p>
+      Are you sure? Your account and associated data
+      may be permanently deleted.
+    </p>
+
+    <label for="deleteAccountText">
+      Type DELETE to confirm
+    </label>
+
+    <input
+      id="deleteAccountText"
+      type="text"
+      placeholder="Type DELETE">
+
+    <label for="deleteAccountPassword">
+      Enter your current password
+    </label>
+
+    <input
+      id="deleteAccountPassword"
+      type="password"
+      placeholder="Current password"
+      autocomplete="current-password">
+
+    <button
+      type="button"
+      class="secondary"
+      onclick="cancelDeleteAccount()">
+      Cancel
+    </button>
+
+    <button
+      type="button"
+      class="primary"
+      onclick="deleteMakoraAccount()">
+      Permanently Delete Account
+    </button>
+
+    <p id="deleteAccountStatus" role="status"></p>
+
+  </div>
+</div>
+  <button
+    type="button"
+    class="secondary"
+    id="testPasswordButton">
+    
+  
+  
+    Test Password Verification
+</button>
+  
+
+  
+</div>
+
+
+  <!-- HELP & SUPPORT -->
+  <div id="settingsPage-help" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>Help & Support</h1>
+    <div class="settings-section">
+      <p>Help articles and support options will be added before public launch.</p>
+    </div>
+  </div>
+
+  <!-- ABOUT MAKORA -->
+  <div id="settingsPage-about" class="hidden">
+    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+    <h1>About Makora</h1>
+    <div class="settings-section">
+      <p><strong>Makora</strong></p>
+      <p>AI Social Media Manager</p>
+      <p>Manage your social media workflow with AI-assisted tools.</p>
+      <button onclick="openLegal()">Legal & Privacy</button>
+      <p class="settings-note">Makora is currently under development. Some features may not be available.</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer id="siteFooter" class="site-footer">
+
+  <div>
+    © 2026 AI YOUTUBER.
+    <span data-i18n="prototype">Prototype.</span>
+  </div>
+
+  <div style="margin-top: 10px;">
+
+    <a href="#"
+      onclick="openLegal(); return false;"
+      data-i18n="legalPrivacy">
+      Legal &amp; Privacy
+    </a>
+
+    <a onclick="showPage('welcome')"
+      data-i18n="home">
+      Home
+    </a>
+
+  </div>
+
+</footer>
+
+<!-- LEGAL PAGE -->
+
+<main id="legal" class="legal-page hidden">
+
+  <h1 data-i18n="legalPrivacy">
+    Legal &amp; Privacy
+  </h1>
+
+  <p>
+    <strong data-i18n="lastUpdated">Last updated:</strong>
+    October 2026
+  </p>
+
+  <p data-i18n="prototypeDescription">
+    AI YOUTUBER is currently a prototype. Features may be incomplete,
+    and generated content may be inaccurate. Please review all content
+    before using or publishing it.
+  </p>
+
+  <h2 data-i18n="prototypeFeatures">
+    What the prototype does
+  </h2>
+
+  <p data-i18n="prototypeFeaturesDescription">
+    AI YOUTUBER is intended to help users plan and create YouTube content.
+    The current prototype includes account access and a chat interface.
+    Some displayed features are not yet connected or available.
+  </p>
+
+  <h2 data-i18n="accountData">
+    Information and account data
+  </h2>
+
+  <p data-i18n="accountDataDescription">
+    The prototype uses Supabase for account authentication. If you create
+    an account, your email address and authentication data are processed
+    by Supabase to provide that service. Do not enter passwords, private
+    information, or confidential material into the chat.
+  </p>
+
+  <h2 data-i18n="generatedContent">
+    AI-generated content
+  </h2>
+
+  <p data-i18n="generatedContentDescription">
+    AI-generated ideas, text, audio, or other content may be incorrect,
+    incomplete, or unsuitable. You are responsible for checking content,
+    permissions, and accuracy before publishing.
+  </p>
+
+  <h2 data-i18n="thirdPartyServices">
+    YouTube and third-party services
+  </h2>
+
+  <p data-i18n="thirdPartyDescription">
+    YouTube features and integrations are not currently connected in this
+    prototype. If they are added, their use will be subject to applicable
+    third-party terms and policies.
+  </p>
+
+  <h2 data-i18n="privacyControls">
+    Privacy and data controls
+  </h2>
+
+  <p data-i18n="privacyDescription">
+    This prototype does not yet provide a complete in-app process for
+    exporting or deleting all account data. Avoid using it for sensitive
+    information. Before public launch, the service needs a reviewed privacy
+    policy and a clear way to request data access or deletion.
+  </p>
+
+  <h2 data-i18n="contact">
+    Contact
+  </h2>
+
+  <p data-i18n="contactDescription">
+    For questions about this prototype, contact the project owner through
+    the contact method provided when the service is publicly launched.
+  </p>
+
+  <button class="secondary"
+    onclick="backFromLegal()"
+    data-i18n="back">
+    Back
+  </button>
+
+</main>
+
+</body>
+
+<script>
+const SUPABASE_URL = "https://xxzcbjsbiaveclxmoqpu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_2GXwDmXYiO6GBapwH3la1A_yukRPEmF";
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+
+const MAKORA_WORKER_URL =
+  "https://black-boat-3f22ai-youtuber-api.kapil20122504.workers.dev";
+
+async function loadCreditWallet() {
+  const balanceElement = document.getElementById("creditBalance");
+  const historyElement = document.getElementById("creditTransactions");
+  const statusElement = document.getElementById("creditWalletStatus");
+
+  balanceElement.textContent = "Loading...";
+  historyElement.textContent = "Loading transactions...";
+  statusElement.textContent = "";
+
+  try {
+    const { data: { session }, error } =
+      await supabaseClient.auth.getSession();
+
+    if (error || !session) {
+      throw new Error("Please log in again.");
+    }
+
+    const headers = {
+      "Authorization": `Bearer ${session.access_token}`
+    };
+
+    const [walletResponse, transactionsResponse] =
+      await Promise.all([
+        fetch(`${MAKORA_WORKER_URL}/wallet`, {
+          method: "GET",
+          headers,
+          cache: "no-store"
+        }),
+        fetch(`${MAKORA_WORKER_URL}/transactions`, {
+          method: "GET",
+          headers,
+          cache: "no-store"
+        })
+      ]);
+
+    const wallet = await walletResponse.json();
+    const history = await transactionsResponse.json();
+
+    if (!walletResponse.ok) {
+      throw new Error(wallet.error || "Could not load wallet.");
+    }
+
+    if (!transactionsResponse.ok) {
+      throw new Error(
+        history.error || "Could not load transaction history."
+      );
+    }
+
+    balanceElement.textContent =
+      Number(wallet.balance).toLocaleString() + " credits";
+
+    historyElement.innerHTML = "";
+
+    if (!history.transactions?.length) {
+      historyElement.textContent = "No transactions yet.";
+      return;
+    }
+
+    history.transactions.forEach(transaction => {
+      const row = document.createElement("div");
+      row.style.padding = "12px 0";
+      row.style.borderBottom = "1px solid #444";
+
+      const description = document.createElement("div");
+      description.textContent =
+        transaction.description || transaction.transaction_type;
+
+      const amount = document.createElement("strong");
+      const value = Number(transaction.amount);
+
+      amount.textContent =
+        (value > 0 ? "+" : "") + value.toLocaleString() + " credits";
+
+      const date = document.createElement("small");
+      date.textContent =
+        new Date(transaction.created_at).toLocaleString();
+
+      row.append(description, amount, date);
+      historyElement.appendChild(row);
+    });
+
+  } catch (error) {
+    balanceElement.textContent = "Unavailable";
+    historyElement.textContent = "Could not load transactions.";
+    statusElement.textContent = error.message;
+  }
+}
+
+
+
+const interfaceTranslations = {
+  English: {
+    // Navigation
+    settings: "Settings",
+    login: "Log in",
+    logout: "Log out",
+    getStarted: "Get Started",
+    newChat: "New Chat",
+    home: "Home",
+    back: "Back",
+    editor: "Editor",
+    videoGenerator: "Video Generator",
+    audioGenerator: "Audio Generator",
+    chatHistory: "Chat History",
+    legalPrivacy: "Legal & Privacy",
+
+    // Welcome page
+    tagline: "YOUR CONTENT. YOUR AI CREATOR.",
+    welcomeTitle: "Your creative studio,",
+    welcomeSubtitle: "powered by AI.",
+    welcomeDescription: "Research, create, edit, publish and improve. Let Makora manage your content journey across platforms while you stay in control.",
+
+    // Welcome settings
+    appLanguage: "App language",
+    theme: "Theme",
+    dark: "Dark",
+    light: "Light",
+    savePreferences: "Save preferences",
+    mainSettingsNotice: "Main settings will be available after signing in.",
+
+    // Account
+    createAccountTitle: "Create your account",
+    welcomeBack: "Welcome back",
+    emailAddress: "Email address",
+    password: "Password",
+    enterEmail: "Enter your email",
+    enterPassword: "Enter your password",
+    passwordLength: "At least 8 characters",
+    createAccount: "Create account",
+    alreadyAccount: "Already have an account?",
+    newHere: "New here?",
+
+    // Chat interface
+    chatGreeting: "Hi! I’m your MAKORA AI assistant. What would you like to ask?",
+    chatPlaceholder: "Message MAKORA AI…",
+    uploadImage: "Upload image",
+    voiceInput: "Voice input",
+    mute: "Mute",
+    unmute: "Unmute",
+    send: "Send",
+
+    // Settings page
+    managePreferences: "Manage your account and AI YOUTUBER preferences.",
+    profile: "Profile",
+    loadingAccount: "Loading account...",
+    preferences: "Preferences",
+    defaultLanguage: "Default language",
+    chooseLanguage: "Choose your preferred language.",
+    chooseTheme: "Choose how the app looks.",
+    aiPreferences: "AI Preferences",
+    videoLanguage: "Video language",
+    preferredVideoLanguage: "Preferred language for video content.",
+    contentStyle: "Content style",
+    preferredContentStyle: "Preferred style for generated content.",
+    usagePlan: "Usage & Plan",
+    planNotice: "Your plan and usage information will appear here when subscriptions are connected.",
+    privacyData: "Privacy & Data",
+    privacyNotice: "Chat history, data export, and account deletion controls will be added when those features are connected.",
+    helpSupport: "Help & Support",
+    supportNotice: "Support options will be available when the app is ready for users.",
+    legal: "Legal",
+    prototypeNotice: "This is a prototype. Preference controls are not saved yet.",
+    preferencesSaved: "Preferences saved on this device.",
+
+    // Content styles
+    informative: "Informative",
+    educational: "Educational",
+    entertaining: "Entertaining",
+    cinematic: "Cinematic",
+    aiChoice: "AI's Choice",
+
+    // Chat history
+    yourChatHistory: "Your Chat History",
+    loadingChats: "Loading your chats...",
+    noSavedChats: "No saved chats yet. Start a chat to save it.",
+    rename: "Rename",
+    delete: "Delete",
+    newChatName: "Enter a new chat name:",
+    emptyChatName: "Chat name cannot be empty.",
+    deleteChatConfirm: "Delete this chat? This cannot be undone.",
+
+    // Editor
+    videoEditor: "Video Editor",
+    editorDescription: "Upload a video, then choose the section to preview.",
+    startTime: "Start time:",
+    endTime: "End time:",
+    previewTrim: "Preview trimmed section",
+    chooseVideo: "Please choose a video file.",
+    loadingVideo: "Loading video…",
+    previewing: "Previewing selected section…",
+    previewFinished: "Preview finished.",
+    videoLength: "Video length:",
+
+    // Audio generator
+    enterScript: "Enter a script and listen to it spoken aloud.",
+    narrationPlaceholder: "Type or paste your narration here...",
+    voice: "Voice",
+    defaultVoice: "Default voice",
+    playAudio: "Play audio",
+    stop: "Stop",
+    enterTextFirst: "Please enter some text first.",
+    speechUnsupported: "Text-to-speech is not supported in this browser.",
+    playingAudio: "Playing audio...",
+
+    // General messages
+    creatingAccount: "Creating your account...",
+    accountCreated: "Account created!",
+    verifyEmail: "Account created. Please check your email and verify your account before logging in.",
+    loggingIn: "Logging in...",
+    accountUnavailable: "Not available",
+    couldNotLoadAccount: "Could not load account",
+    voiceComingSoon: "Voice input will be added in a later step.",
+    featureComingSoon: "This feature will be connected in a later step.",
+    aiRequestFailed: "The AI request failed.",
+    requestFailed: "Request failed.",
+    couldNotOpenChat: "Could not open this chat:",
+    couldNotRenameChat: "Could not rename chat:",
+    couldNotDeleteChat: "Could not delete chat:",
+    saveChatFailed: "The AI replied, but the chat could not be saved:",
+
+    // Legal page
+    lastUpdated: "Last updated:",
+    prototype: "Prototype.",
+    prototypeDescription: "MAKORA AI is currently a prototype. Features may be incomplete, and generated content may be inaccurate. Please review all content before using or publishing it.",
+    prototypeFeatures: "What the prototype does",
+    prototypeFeaturesDescription: "MAKORA AI is intended to help users plan and create YouTube content. The current prototype includes account access and a chat interface. Some displayed features are not yet connected or available.",
+    accountData: "Information and account data",
+    accountDataDescription: "The prototype uses Supabase for account authentication. If you create an account, your email address and authentication data are processed by Supabase to provide that service. Do not enter passwords, private information, or confidential material into the chat.",
+    generatedContent: "AI-generated content",
+    generatedContentDescription: "AI-generated ideas, text, audio, or other content may be incorrect, incomplete, or unsuitable. You are responsible for checking content, permissions, and accuracy before publishing.",
+    thirdPartyServices: "YouTube and third-party services",
+    thirdPartyDescription: "YouTube features and integrations are not currently connected in this prototype. If they are added, their use will be subject to applicable third-party terms and policies.",
+    privacyControls: "Privacy and data controls",
+    privacyDescription: "This prototype does not yet provide a complete in-app process for exporting or deleting all account data. Avoid using it for sensitive information. Before public launch, the service needs a reviewed privacy policy and a clear way to request data access or deletion.",
+    contact: "Contact",
+    contactDescription: "For questions about this prototype, contact the project owner through the contact method provided when the service is publicly launched."
+  },
+
+  Tamil: {
+    // Navigation
+    settings: "அமைப்புகள்",
+    login: "உள்நுழை",
+    logout: "வெளியேறு",
+    getStarted: "தொடங்குங்கள்",
+    newChat: "புதிய உரையாடல்",
+    home: "முகப்பு",
+    back: "பின்னால்",
+    editor: "திருத்தி",
+    videoGenerator: "வீடியோ உருவாக்கி",
+    audioGenerator: "ஒலி உருவாக்கி",
+    chatHistory: "உரையாடல் வரலாறு",
+    legalPrivacy: "சட்டம் மற்றும் தனியுரிமை",
+
+    // Welcome page
+    tagline: "உங்கள் சேனல். உங்கள் AI படைப்பாளர்.",
+    welcomeTitle: "உங்கள் YouTube சேனல்,",
+    welcomeSubtitle: "AI மூலம் இயக்கப்படுகிறது.",
+    welcomeDescription: "ஆராயுங்கள், உருவாக்குங்கள், வெளியிடுங்கள், மேம்படுத்துங்கள். உங்கள் கட்டுப்பாட்டில் இருக்கும்போதே உங்கள் AI படைப்பாளர் உங்கள் உள்ளடக்கப் பயணத்தை நிர்வகிக்கட்டும்.",
+
+    // Welcome settings
+    appLanguage: "செயலி மொழி",
+    theme: "தோற்றம்",
+    dark: "இருண்ட பயன்முறை",
+    light: "ஒளி பயன்முறை",
+    savePreferences: "விருப்பங்களைச் சேமி",
+    mainSettingsNotice: "உள்நுழைந்த பிறகு முக்கிய அமைப்புகள் கிடைக்கும்.",
+
+    // Account
+    createAccountTitle: "உங்கள் கணக்கை உருவாக்குங்கள்",
+    welcomeBack: "மீண்டும் வரவேற்கிறோம்",
+    emailAddress: "மின்னஞ்சல் முகவரி",
+    password: "கடவுச்சொல்",
+    enterEmail: "உங்கள் மின்னஞ்சலை உள்ளிடுங்கள்",
+    enterPassword: "உங்கள் கடவுச்சொல்லை உள்ளிடுங்கள்",
+    passwordLength: "குறைந்தது 8 எழுத்துகள்",
+    createAccount: "கணக்கை உருவாக்கு",
+    alreadyAccount: "ஏற்கனவே கணக்கு உள்ளதா?",
+    newHere: "இங்கு புதியவரா?",
+
+    // Chat interface
+    chatGreeting: "வணக்கம்! நான் உங்கள் AI YOUTUBER உதவியாளர். நீங்கள் என்ன கேட்க விரும்புகிறீர்கள்?",
+    chatPlaceholder: "AI YOUTUBER-க்கு செய்தி அனுப்புங்கள்…",
+    uploadImage: "படத்தைப் பதிவேற்றுங்கள்",
+    voiceInput: "குரல் உள்ளீடு",
+    mute: "ஒலியை நிறுத்து",
+    unmute: "ஒலியை இயக்கு",
+    send: "அனுப்பு",
+
+    // Settings page
+    managePreferences: "உங்கள் கணக்கு மற்றும் AI YOUTUBER விருப்பங்களை நிர்வகிக்கவும்.",
+    profile: "சுயவிவரம்",
+    loadingAccount: "கணக்கு ஏற்றப்படுகிறது...",
+    preferences: "விருப்பங்கள்",
+    defaultLanguage: "இயல்புநிலை மொழி",
+    chooseLanguage: "உங்களுக்கு விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்.",
+    chooseTheme: "செயலியின் தோற்றத்தைத் தேர்ந்தெடுக்கவும்.",
+    aiPreferences: "AI விருப்பங்கள்",
+    videoLanguage: "வீடியோ மொழி",
+    preferredVideoLanguage: "வீடியோ உள்ளடக்கத்திற்கான விருப்பமான மொழி.",
+    contentStyle: "உள்ளடக்க பாணி",
+    preferredContentStyle: "உருவாக்கப்படும் உள்ளடக்கத்திற்கான விருப்பமான பாணி.",
+    usagePlan: "பயன்பாடு மற்றும் திட்டம்",
+    planNotice: "சந்தா வசதி இணைக்கப்பட்டதும் உங்கள் திட்டம் மற்றும் பயன்பாட்டு விவரங்கள் இங்கே தோன்றும்.",
+    privacyData: "தனியுரிமை மற்றும் தரவு",
+    privacyNotice: "அரட்டை வரலாறு, தரவு ஏற்றுமதி மற்றும் கணக்கு நீக்குதல் வசதிகள் பின்னர் சேர்க்கப்படும்.",
+    helpSupport: "உதவி மற்றும் ஆதரவு",
+    supportNotice: "செயலி பயனர்களுக்குத் தயாரானதும் ஆதரவு வசதிகள் கிடைக்கும்.",
+    legal: "சட்டம்",
+    prototypeNotice: "இது ஒரு மாதிரி செயலி. விருப்பங்கள் இன்னும் சேமிக்கப்படவில்லை.",
+    preferencesSaved: "விருப்பங்கள் இந்தச் சாதனத்தில் சேமிக்கப்பட்டன.",
+
+    // Content styles
+    informative: "தகவல் சார்ந்தது",
+    educational: "கல்வி சார்ந்தது",
+    entertaining: "பொழுதுபோக்கு",
+    cinematic: "திரைப்பட பாணி",
+    aiChoice: "AI-யின் தேர்வு",
+
+    // Chat history
+    yourChatHistory: "உங்கள் உரையாடல் வரலாறு",
+    loadingChats: "உங்கள் உரையாடல்கள் ஏற்றப்படுகின்றன...",
+    noSavedChats: "சேமிக்கப்பட்ட உரையாடல்கள் எதுவும் இல்லை. புதிய உரையாடலைத் தொடங்குங்கள்.",
+    rename: "பெயரை மாற்று",
+    delete: "நீக்கு",
+    newChatName: "புதிய உரையாடல் பெயரை உள்ளிடுங்கள்:",
+    emptyChatName: "உரையாடல் பெயர் காலியாக இருக்கக்கூடாது.",
+    deleteChatConfirm: "இந்த உரையாடலை நீக்கவா? இதை மீட்டெடுக்க முடியாது.",
+
+    // Editor
+    videoEditor: "வீடியோ திருத்தி",
+    editorDescription: "ஒரு வீடியோவைப் பதிவேற்றி, முன்னோட்டம் பார்க்க வேண்டிய பகுதியைத் தேர்ந்தெடுக்கவும்.",
+    startTime: "தொடக்க நேரம்:",
+    endTime: "முடிவு நேரம்:",
+    previewTrim: "தேர்ந்தெடுத்த பகுதியைப் பார்",
+    chooseVideo: "தயவுசெய்து ஒரு வீடியோ கோப்பைத் தேர்ந்தெடுக்கவும்.",
+    loadingVideo: "வீடியோ ஏற்றப்படுகிறது…",
+    previewing: "தேர்ந்தெடுத்த பகுதி முன்னோட்டம் காட்டப்படுகிறது…",
+    previewFinished: "முன்னோட்டம் முடிந்தது.",
+    videoLength: "வீடியோ நீளம்:",
+
+    // Audio generator
+    enterScript: "ஒரு உரையை உள்ளிட்டு, அது குரலில் வாசிக்கப்படுவதைக் கேளுங்கள்.",
+    narrationPlaceholder: "உங்கள் குரல்வழி உரையை இங்கே தட்டச்சு செய்யவும் அல்லது ஒட்டவும்...",
+    voice: "குரல்",
+    defaultVoice: "இயல்புநிலை குரல்",
+    playAudio: "ஒலியை இயக்கு",
+    stop: "நிறுத்து",
+    enterTextFirst: "முதலில் சில உரைகளை உள்ளிடுங்கள்.",
+    speechUnsupported: "இந்த உலாவியில் உரையை குரலாக மாற்றும் வசதி இல்லை.",
+    playingAudio: "ஒலி இயக்கப்படுகிறது...",
+
+    // General messages
+    creatingAccount: "உங்கள் கணக்கு உருவாக்கப்படுகிறது...",
+    accountCreated: "கணக்கு உருவாக்கப்பட்டது!",
+    verifyEmail: "கணக்கு உருவாக்கப்பட்டது. உள்நுழைவதற்கு முன் உங்கள் மின்னஞ்சலைச் சரிபார்க்கவும்.",
+    loggingIn: "உள்நுழைகிறது...",
+    accountUnavailable: "கிடைக்கவில்லை",
+    couldNotLoadAccount: "கணக்கை ஏற்ற முடியவில்லை",
+    voiceComingSoon: "குரல் உள்ளீடு பின்னர் சேர்க்கப்படும்.",
+    featureComingSoon: "இந்த வசதி பின்னர் இணைக்கப்படும்.",
+    aiRequestFailed: "AI கோரிக்கை தோல்வியடைந்தது.",
+    requestFailed: "கோரிக்கை தோல்வியடைந்தது.",
+    couldNotOpenChat: "இந்த உரையாடலைத் திறக்க முடியவில்லை:",
+    couldNotRenameChat: "உரையாடலின் பெயரை மாற்ற முடியவில்லை:",
+    couldNotDeleteChat: "உரையாடலை நீக்க முடியவில்லை:",
+    saveChatFailed: "AI பதிலளித்தது. ஆனால் உரையாடலைச் சேமிக்க முடியவில்லை:",
+
+    // Legal page
+    lastUpdated: "கடைசியாகப் புதுப்பிக்கப்பட்டது:",
+    prototype: "மாதிரி.",
+    prototypeDescription: "AI YOUTUBER தற்போது ஒரு மாதிரி செயலியாக உள்ளது. சில வசதிகள் முழுமையடையாமல் இருக்கலாம்; உருவாக்கப்படும் உள்ளடக்கங்களில் தவறுகள் இருக்கலாம். பயன்படுத்துவதற்கு அல்லது வெளியிடுவதற்கு முன் அனைத்து உள்ளடக்கங்களையும் சரிபார்க்கவும்.",
+    prototypeFeatures: "இந்த மாதிரி செயலியின் செயல்பாடுகள்",
+    prototypeFeaturesDescription: "YouTube உள்ளடக்கத்தைத் திட்டமிடவும் உருவாக்கவும் பயனர்களுக்கு உதவுவதே AI YOUTUBER-ன் நோக்கம். தற்போதைய மாதிரியில் கணக்கு அணுகலும் உரையாடல் வசதியும் உள்ளன. காட்டப்படும் சில வசதிகள் இன்னும் இணைக்கப்படவில்லை.",
+    accountData: "கணக்கு மற்றும் தகவல்கள்",
+    accountDataDescription: "கணக்கு அங்கீகாரத்திற்காக இந்த மாதிரி செயலி Supabase-ஐப் பயன்படுத்துகிறது. கணக்கை உருவாக்கும்போது, உங்கள் மின்னஞ்சல் முகவரி மற்றும் அங்கீகாரத் தரவுகள் Supabase மூலம் செயலாக்கப்படும். கடவுச்சொற்கள், தனிப்பட்ட தகவல்கள் அல்லது ரகசியத் தகவல்களை உரையாடலில் உள்ளிட வேண்டாம்.",
+    generatedContent: "AI உருவாக்கும் உள்ளடக்கம்",
+    generatedContentDescription: "AI உருவாக்கும் யோசனைகள், உரைகள், ஒலி அல்லது பிற உள்ளடக்கங்களில் தவறுகள் இருக்கலாம். வெளியிடுவதற்கு முன் உள்ளடக்கம், அனுமதிகள் மற்றும் துல்லியத்தைச் சரிபார்ப்பது உங்கள் பொறுப்பு.",
+    thirdPartyServices: "YouTube மற்றும் மூன்றாம் தரப்பு சேவைகள்",
+    thirdPartyDescription: "இந்த மாதிரி செயலியில் YouTube வசதிகளும் இணைப்புகளும் தற்போது இணைக்கப்படவில்லை. அவை சேர்க்கப்பட்டால், தொடர்புடைய மூன்றாம் தரப்பு விதிமுறைகள் மற்றும் கொள்கைகள் பொருந்தும்.",
+    privacyControls: "தனியுரிமை மற்றும் தரவுக் கட்டுப்பாடுகள்",
+    privacyDescription: "அனைத்து கணக்குத் தரவுகளையும் ஏற்றுமதி செய்ய அல்லது நீக்குவதற்கான முழுமையான வசதி இந்த மாதிரி செயலியில் இன்னும் இல்லை. முக்கியமான தகவல்களைப் பயன்படுத்த வேண்டாம். பொதுமக்கள் பயன்பாட்டிற்கு வெளியிடுவதற்கு முன், தனியுரிமைக் கொள்கையும் தரவை அணுக அல்லது நீக்கக் கோரும் முறையும் உருவாக்கப்பட வேண்டும்.",
+    contact: "தொடர்பு",
+    contactDescription: "இந்த மாதிரி செயலி குறித்த கேள்விகளுக்கு, சேவை பொதுமக்களுக்கு வெளியிடப்படும்போது வழங்கப்படும் தொடர்பு வழியைப் பயன்படுத்தவும்."
+  },
+  Hindi: {
+    settings: "सेटिंग्स",
+    login: "लॉग इन",
+    logout: "लॉग आउट",
+    getStarted: "शुरू करें",
+    newChat: "नई चैट",
+    home: "होम",
+    back: "वापस",
+    editor: "वीडियो एडिटर",
+    videoGenerator: "वीडियो जनरेटर",
+    audioGenerator: "ऑडियो जनरेटर",
+    chatHistory: "चैट इतिहास",
+    legalPrivacy: "कानूनी और गोपनीयता",
+
+    tagline: "आपका चैनल। आपका AI क्रिएटर।",
+    welcomeTitle: "आपका AI YouTuber",
+    welcomeSubtitle: "आपका चैनल, आपकी रचनात्मकता।",
+    welcomeDescription: "अपने YouTube चैनल को बनाने और प्रबंधित करने में AI की मदद लें।",
+
+    appLanguage: "ऐप की भाषा",
+    theme: "थीम",
+    dark: "डार्क",
+    light: "लाइट",
+    savePreferences: "सेटिंग्स सेव करें",
+    mainSettingsNotice: "अपनी ऐप सेटिंग्स बदलें।",
+
+    createAccountTitle: "अपना अकाउंट बनाएं",
+    welcomeBack: "वापसी पर स्वागत है",
+    emailAddress: "ईमेल पता",
+    password: "पासवर्ड",
+    enterEmail: "अपना ईमेल दर्ज करें",
+    enterPassword: "अपना पासवर्ड दर्ज करें",
+    passwordLength: "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।",
+    createAccount: "अकाउंट बनाएं",
+    alreadyAccount: "पहले से अकाउंट है?",
+    newHere: "यहाँ नए हैं?",
+
+    chatGreeting: "नमस्ते! मैं आपका AI YOUTUBER सहायक हूँ। आप क्या बनाना चाहते हैं?",
+    chatPlaceholder: "अपना संदेश लिखें...",
+    uploadImage: "इमेज अपलोड करें",
+    voiceInput: "आवाज़ से इनपुट दें",
+    mute: "आवाज़ बंद करें",
+    unmute: "आवाज़ चालू करें",
+    send: "भेजें",
+
+    managePreferences: "अपनी प्राथमिकताएँ प्रबंधित करें",
+    profile: "प्रोफ़ाइल",
+    loadingAccount: "अकाउंट लोड हो रहा है...",
+    preferences: "प्राथमिकताएँ",
+    defaultLanguage: "डिफ़ॉल्ट भाषा",
+    chooseLanguage: "भाषा चुनें",
+    chooseTheme: "थीम चुनें",
+
+    aiPreferences: "AI प्राथमिकताएँ",
+    videoLanguage: "वीडियो की भाषा",
+    preferredVideoLanguage: "अपनी पसंदीदा वीडियो भाषा चुनें",
+    contentStyle: "कंटेंट स्टाइल",
+    preferredContentStyle: "अपनी पसंदीदा कंटेंट स्टाइल चुनें",
+
+    usagePlan: "उपयोग और प्लान",
+    planNotice: "आपका प्लान और उपयोग यहाँ दिखाई देगा।",
+    privacyData: "गोपनीयता और डेटा",
+    privacyNotice: "अपने डेटा और गोपनीयता सेटिंग्स प्रबंधित करें।",
+    helpSupport: "सहायता और सपोर्ट",
+    supportNotice: "सहायता के लिए सपोर्ट से संपर्क करें।",
+    legal: "कानूनी जानकारी",
+    prototypeNotice: "यह एक प्रोटोटाइप ऐप है।",
+
+    preferencesSaved: "आपकी सेटिंग्स सेव हो गई हैं।",
+
+    informative: "जानकारीपूर्ण",
+    educational: "शैक्षिक",
+    entertaining: "मनोरंजक",
+    cinematic: "सिनेमैटिक",
+    aiChoice: "AI की पसंद",
+
+    yourChatHistory: "आपकी चैट हिस्ट्री",
+    loadingChats: "चैट लोड हो रही हैं...",
+    noSavedChats: "अभी कोई सेव की गई चैट नहीं है।",
+    rename: "नाम बदलें",
+    delete: "डिलीट करें",
+    newChatName: "नई चैट का नाम दर्ज करें",
+    emptyChatName: "चैट का नाम खाली नहीं हो सकता।",
+    deleteChatConfirm: "क्या आप वाकई इस चैट को डिलीट करना चाहते हैं?",
+
+    videoEditor: "वीडियो एडिटर",
+    editorDescription: "अपना वीडियो चुनें और एडिटिंग शुरू करें।",
+    startTime: "शुरुआती समय",
+    endTime: "समाप्ति समय",
+    previewTrim: "एडिट किया गया वीडियो देखें",
+    chooseVideo: "वीडियो चुनें",
+    loadingVideo: "वीडियो लोड हो रहा है...",
+    previewing: "प्रीव्यू चल रहा है...",
+    previewFinished: "प्रीव्यू समाप्त हो गया।",
+    videoLength: "वीडियो की अवधि",
+
+    enterScript: "अपनी स्क्रिप्ट दर्ज करें",
+    narrationPlaceholder: "यहाँ अपना टेक्स्ट लिखें...",
+    voice: "आवाज़",
+    defaultVoice: "डिफ़ॉल्ट आवाज़",
+    playAudio: "ऑडियो चलाएँ",
+    stop: "रोकें",
+    enterTextFirst: "कृपया पहले टेक्स्ट दर्ज करें।",
+    speechUnsupported: "आपका ब्राउज़र टेक्स्ट-टू-स्पीच सपोर्ट नहीं करता।",
+    playingAudio: "ऑडियो चल रहा है...",
+
+    creatingAccount: "अकाउंट बनाया जा रहा है...",
+    accountCreated: "अकाउंट सफलतापूर्वक बनाया गया।",
+    verifyEmail: "कृपया अपना ईमेल सत्यापित करें।",
+    loggingIn: "लॉग इन हो रहा है...",
+    accountUnavailable: "अकाउंट की जानकारी उपलब्ध नहीं है।",
+    couldNotLoadAccount: "अकाउंट लोड नहीं हो सका।",
+    voiceComingSoon: "वॉइस सुविधा जल्द आ रही है।",
+    featureComingSoon: "यह सुविधा जल्द आ रही है।",
+    aiRequestFailed: "AI अनुरोध पूरा नहीं हो सका।",
+    requestFailed: "अनुरोध विफल हो गया।",
+    couldNotOpenChat: "चैट नहीं खोली जा सकी।",
+    couldNotRenameChat: "चैट का नाम नहीं बदला जा सका।",
+    couldNotDeleteChat: "चैट डिलीट नहीं की जा सकी।",
+    saveChatFailed: "चैट सेव नहीं हो सकी।",
+
+    lastUpdated: "आखिरी बार अपडेट किया गया",
+    prototype: "प्रोटोटाइप",
+    prototypeDescription: "यह ऐप अभी विकास के चरण में है।",
+    prototypeFeatures: "प्रोटोटाइप सुविधाएँ",
+    prototypeFeaturesDescription: "कुछ सुविधाएँ अभी पूरी तरह काम नहीं करती हैं।",
+
+    accountData: "अकाउंट डेटा",
+    accountDataDescription: "आपकी अकाउंट जानकारी सुरक्षित रूप से प्रबंधित की जाती है।",
+    generatedContent: "AI द्वारा बनाया गया कंटेंट",
+    generatedContentDescription: "AI द्वारा बनाया गया कंटेंट हमेशा सही या सटीक हो, यह ज़रूरी नहीं है।",
+    thirdPartyServices: "थर्ड-पार्टी सेवाएँ",
+    thirdPartyDescription: "यह ऐप कुछ बाहरी सेवाओं का उपयोग करता है।",
+    privacyControls: "गोपनीयता नियंत्रण",
+    privacyDescription: "आप अपनी गोपनीयता और डेटा सेटिंग्स प्रबंधित कर सकते हैं।",
+    contact: "संपर्क",
+    contactDescription: "सहायता के लिए हमसे संपर्क करें।",
+
+    openMenu: "मेन्यू खोलें",
+    audioFinished: "ऑडियो पूरा हो गया।",
+    couldNotPlayAudio: "ऑडियो नहीं चलाया जा सका।",
+    audioStopped: "ऑडियो रोक दिया गया।",
+    thinking: "AI सोच रहा है...",
+    noAIReply: "AI से जवाब नहीं मिल सका।",
+    pressPlayPreview: "प्रीव्यू देखने के लिए प्ले दबाएँ।",
+    chatHistoryLoadFailed: "चैट हिस्ट्री लोड नहीं हो सकी।"
+  },
+  Telugu: {
+    // Navigation
+    settings: "సెట్టింగ్‌లు",
+    login: "లాగిన్",
+    logout: "లాగ్ అవుట్",
+    getStarted: "ప్రారంభించండి",
+    newChat: "కొత్త చాట్",
+    home: "హోమ్",
+    back: "వెనుకకు",
+    editor: "ఎడిటర్",
+    videoGenerator: "వీడియో జనరేటర్",
+    audioGenerator: "ఆడియో జనరేటర్",
+    chatHistory: "చాట్ చరిత్ర",
+    legalPrivacy: "చట్టపరమైన సమాచారం & గోప్యత",
+
+    // Welcome page
+    tagline: "మీ కంటెంట్. మీ AI క్రియేటర్.",
+    welcomeTitle: "మీ సృజనాత్మక స్టూడియో,",
+    welcomeSubtitle: "AI ద్వారా శక్తివంతం చేయబడింది.",
+    welcomeDescription: "పరిశోధించండి, సృష్టించండి, ఎడిట్ చేయండి, ప్రచురించండి మరియు మెరుగుపరచండి. మీరు నియంత్రణలో ఉంటూనే, వివిధ ప్లాట్‌ఫారమ్‌లలో మీ కంటెంట్ ప్రయాణాన్ని Makora నిర్వహించనివ్వండి.",
+
+    // Welcome settings
+    appLanguage: "యాప్ భాష",
+    theme: "థీమ్",
+    dark: "డార్క్",
+    light: "లైట్",
+    savePreferences: "ప్రాధాన్యతలను సేవ్ చేయండి",
+    mainSettingsNotice: "లాగిన్ అయిన తర్వాత ప్రధాన సెట్టింగ్‌లు అందుబాటులో ఉంటాయి.",
+
+    // Account
+    createAccountTitle: "మీ ఖాతాను సృష్టించండి",
+    welcomeBack: "తిరిగి స్వాగతం",
+    emailAddress: "ఈమెయిల్ చిరునామా",
+    password: "పాస్‌వర్డ్",
+    enterEmail: "మీ ఈమెయిల్ నమోదు చేయండి",
+    enterPassword: "మీ పాస్‌వర్డ్ నమోదు చేయండి",
+    passwordLength: "కనీసం 8 అక్షరాలు",
+    createAccount: "ఖాతాను సృష్టించండి",
+    alreadyAccount: "ఇప్పటికే ఖాతా ఉందా?",
+    newHere: "ఇక్కడ కొత్తగా వచ్చారా?",
+
+    // Chat interface
+    chatGreeting: "హాయ్! నేను మీ MAKORA AI అసిస్టెంట్‌ను. మీరు ఏమి అడగాలనుకుంటున్నారు?",
+    chatPlaceholder: "MAKORA AIకి సందేశం పంపండి…",
+    uploadImage: "చిత్రాన్ని అప్‌లోడ్ చేయండి",
+    voiceInput: "వాయిస్ ఇన్‌పుట్",
+    mute: "మ్యూట్ చేయండి",
+    unmute: "అన్‌మ్యూట్ చేయండి",
+    send: "పంపండి",
+
+    // Settings page
+    managePreferences: "మీ ఖాతా మరియు AI YOUTUBER ప్రాధాన్యతలను నిర్వహించండి.",
+    profile: "ప్రొఫైల్",
+    loadingAccount: "ఖాతా లోడ్ అవుతోంది...",
+    preferences: "ప్రాధాన్యతలు",
+    defaultLanguage: "డిఫాల్ట్ భాష",
+    chooseLanguage: "మీకు ఇష్టమైన భాషను ఎంచుకోండి.",
+    chooseTheme: "యాప్ రూపాన్ని ఎంచుకోండి.",
+    aiPreferences: "AI ప్రాధాన్యతలు",
+    videoLanguage: "వీడియో భాష",
+    preferredVideoLanguage: "వీడియో కంటెంట్ కోసం మీకు ఇష్టమైన భాష.",
+    contentStyle: "కంటెంట్ శైలి",
+    preferredContentStyle: "సృష్టించిన కంటెంట్ కోసం మీకు ఇష్టమైన శైలి.",
+    usagePlan: "వినియోగం & ప్లాన్",
+    planNotice: "సబ్‌స్క్రిప్షన్‌లు కనెక్ట్ అయినప్పుడు మీ ప్లాన్ మరియు వినియోగ వివరాలు ఇక్కడ కనిపిస్తాయి.",
+    privacyData: "గోప్యత & డేటా",
+    privacyNotice: "చాట్ చరిత్ర, డేటా ఎగుమతి మరియు ఖాతా తొలగింపు ఎంపికలు సంబంధిత ఫీచర్లు కనెక్ట్ అయినప్పుడు అందుబాటులోకి వస్తాయి.",
+    helpSupport: "సహాయం & మద్దతు",
+    supportNotice: "యాప్ వినియోగదారుల కోసం సిద్ధమైనప్పుడు మద్దతు ఎంపికలు అందుబాటులో ఉంటాయి.",
+    legal: "చట్టపరమైన సమాచారం",
+    prototypeNotice: "ఇది ఒక ప్రోటోటైప్. ప్రాధాన్యతల నియంత్రణలు ఇంకా సేవ్ కావడం లేదు.",
+    preferencesSaved: "ప్రాధాన్యతలు ఈ పరికరంలో సేవ్ చేయబడ్డాయి.",
+
+    // Content styles
+    informative: "సమాచారాత్మక",
+    educational: "విద్యాపరమైన",
+    entertaining: "వినోదాత్మక",
+    cinematic: "సినిమాటిక్",
+    aiChoice: "AI ఎంపిక",
+
+    // Chat history
+    yourChatHistory: "మీ చాట్ చరిత్ర",
+    loadingChats: "మీ చాట్‌లు లోడ్ అవుతున్నాయి...",
+    noSavedChats: "ఇంకా సేవ్ చేసిన చాట్‌లు లేవు. సేవ్ చేయడానికి కొత్త చాట్ ప్రారంభించండి.",
+    rename: "పేరు మార్చండి",
+    delete: "తొలగించండి",
+    newChatName: "కొత్త చాట్ పేరును నమోదు చేయండి:",
+    emptyChatName: "చాట్ పేరు ఖాళీగా ఉండకూడదు.",
+    deleteChatConfirm: "ఈ చాట్‌ను తొలగించాలా? దీన్ని తిరిగి పొందలేరు.",
+
+    // Editor
+    videoEditor: "వీడియో ఎడిటర్",
+    editorDescription: "వీడియోను అప్‌లోడ్ చేసి, ప్రివ్యూ చేయాలనుకుంటున్న భాగాన్ని ఎంచుకోండి.",
+    startTime: "ప్రారంభ సమయం:",
+    endTime: "ముగింపు సమయం:",
+    previewTrim: "ఎంచుకున్న భాగాన్ని ప్రివ్యూ చేయండి",
+    chooseVideo: "దయచేసి వీడియో ఫైల్‌ను ఎంచుకోండి.",
+    loadingVideo: "వీడియో లోడ్ అవుతోంది…",
+    previewing: "ఎంచుకున్న భాగాన్ని ప్రివ్యూ చేస్తోంది…",
+    previewFinished: "ప్రివ్యూ పూర్తయింది.",
+    videoLength: "వీడియో నిడివి:",
+
+    // Audio generator
+    enterScript: "స్క్రిప్ట్‌ను నమోదు చేసి, దాన్ని వాయిస్‌లో వినండి.",
+    narrationPlaceholder: "మీ నేరేషన్‌ను ఇక్కడ టైప్ చేయండి లేదా పేస్ట్ చేయండి...",
+    voice: "వాయిస్",
+    defaultVoice: "డిఫాల్ట్ వాయిస్",
+    playAudio: "ఆడియోను ప్లే చేయండి",
+    stop: "ఆపండి",
+    enterTextFirst: "దయచేసి ముందుగా కొంత టెక్స్ట్ నమోదు చేయండి.",
+    speechUnsupported: "ఈ బ్రౌజర్‌లో టెక్స్ట్-టు-స్పీచ్‌కు మద్దతు లేదు.",
+    playingAudio: "ఆడియో ప్లే అవుతోంది...",
+
+    // General messages
+    creatingAccount: "మీ ఖాతా సృష్టించబడుతోంది...",
+    accountCreated: "ఖాతా సృష్టించబడింది!",
+    verifyEmail: "ఖాతా సృష్టించబడింది. లాగిన్ చేయడానికి ముందు మీ ఈమెయిల్‌ను తనిఖీ చేసి ఖాతాను ధృవీకరించండి.",
+    loggingIn: "లాగిన్ అవుతోంది...",
+    accountUnavailable: "అందుబాటులో లేదు",
+    couldNotLoadAccount: "ఖాతాను లోడ్ చేయలేకపోయాము",
+    voiceComingSoon: "వాయిస్ ఇన్‌పుట్ తదుపరి దశలో జోడించబడుతుంది.",
+    featureComingSoon: "ఈ ఫీచర్ తదుపరి దశలో కనెక్ట్ చేయబడుతుంది.",
+    aiRequestFailed: "AI అభ్యర్థన విఫలమైంది.",
+    requestFailed: "అభ్యర్థన విఫలమైంది.",
+    couldNotOpenChat: "ఈ చాట్‌ను తెరవలేకపోయాము:",
+    couldNotRenameChat: "చాట్ పేరు మార్చలేకపోయాము:",
+    couldNotDeleteChat: "చాట్‌ను తొలగించలేకపోయాము:",
+    saveChatFailed: "AI సమాధానం ఇచ్చింది, కానీ చాట్‌ను సేవ్ చేయలేకపోయాము:",
+
+    // Legal page
+    lastUpdated: "చివరిగా నవీకరించిన తేదీ:",
+    prototype: "ప్రోటోటైప్.",
+    prototypeDescription: "MAKORA AI ప్రస్తుతం ఒక ప్రోటోటైప్ దశలో ఉంది. కొన్ని ఫీచర్లు పూర్తిగా పనిచేయకపోవచ్చు మరియు రూపొందించిన కంటెంట్‌లో తప్పులు ఉండవచ్చు. కంటెంట్‌ను ఉపయోగించే లేదా ప్రచురించే ముందు దయచేసి తనిఖీ చేయండి.",
+    prototypeFeatures: "ప్రోటోటైప్ ఏమి చేస్తుంది",
+    prototypeFeaturesDescription: "MAKORA AI వినియోగదారులకు YouTube కంటెంట్‌ను ప్లాన్ చేయడంలో మరియు సృష్టించడంలో సహాయపడటానికి రూపొందించబడింది. ప్రస్తుత ప్రోటోటైప్‌లో ఖాతా యాక్సెస్ మరియు చాట్ ఇంటర్‌ఫేస్ ఉన్నాయి. కొన్ని ఫీచర్లు ఇంకా కనెక్ట్ చేయబడలేదు లేదా అందుబాటులో లేవు.",
+    accountData: "సమాచారం మరియు ఖాతా డేటా",
+    accountDataDescription: "ఈ ప్రోటోటైప్ ఖాతా ధృవీకరణ కోసం Supabaseను ఉపయోగిస్తుంది. మీరు ఖాతాను సృష్టిస్తే, ఆ సేవను అందించడానికి మీ ఈమెయిల్ చిరునామా మరియు ధృవీకరణ డేటా Supabase ద్వారా ప్రాసెస్ చేయబడతాయి. చాట్‌లో పాస్‌వర్డ్‌లు, వ్యక్తిగత సమాచారం లేదా గోప్యమైన విషయాలను నమోదు చేయవద్దు.",
+    generatedContent: "AI రూపొందించిన కంటెంట్",
+    generatedContentDescription: "AI రూపొందించిన ఆలోచనలు, టెక్స్ట్, ఆడియో లేదా ఇతర కంటెంట్ తప్పుగా, అసంపూర్ణంగా లేదా అనుచితంగా ఉండవచ్చు. ప్రచురించే ముందు కంటెంట్ యొక్క ఖచ్చితత్వం మరియు అనుమతులను తనిఖీ చేయడం మీ బాధ్యత.",
+    thirdPartyServices: "YouTube మరియు ఇతర సేవలు",
+    thirdPartyDescription: "ఈ ప్రోటోటైప్‌లో ప్రస్తుతం YouTube ఫీచర్లు మరియు ఇంటిగ్రేషన్‌లు కనెక్ట్ చేయబడలేదు. భవిష్యత్తులో అవి జోడించబడితే, వాటి వినియోగం సంబంధిత మూడవ పక్ష నిబంధనలు మరియు విధానాలకు లోబడి ఉంటుంది.",
+    privacyControls: "గోప్యత మరియు డేటా నియంత్రణలు",
+    privacyDescription: "ఈ ప్రోటోటైప్‌లో ప్రస్తుతం మొత్తం ఖాతా డేటాను ఎగుమతి చేయడానికి లేదా తొలగించడానికి పూర్తి ప్రక్రియ అందుబాటులో లేదు. సున్నితమైన సమాచారాన్ని ఉపయోగించవద్దు. పబ్లిక్ లాంచ్‌కు ముందు, సమీక్షించబడిన గోప్యతా విధానం మరియు డేటా యాక్సెస్ లేదా తొలగింపు కోసం స్పష్టమైన అభ్యర్థన విధానం అవసరం.",
+    contact: "సంప్రదించండి",
+    contactDescription: "ఈ ప్రోటోటైప్ గురించి ప్రశ్నల కోసం, సేవ పబ్లిక్‌గా ప్రారంభించినప్పుడు అందించబడే సంప్రదింపు మార్గం ద్వారా ప్రాజెక్ట్ యజమానిని సంప్రదించండి."
+}
+};
+  
+let currentInterfaceLanguage = "English";
+
+function translate(key) {
+  return interfaceTranslations[currentInterfaceLanguage]?.[key]
+    || interfaceTranslations.English[key]
+    || key;
+}
+
+function applyInterfaceLanguage(language) {
+  currentInterfaceLanguage =
+    interfaceTranslations[language] ? language : "English";
+
+  const words = interfaceTranslations[currentInterfaceLanguage];
+
+  document.querySelectorAll("[data-i18n]").forEach(element => {
+    const key = element.dataset.i18n;
+    if (words[key]) element.textContent = words[key];
+  });
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+    const key = element.dataset.i18nPlaceholder;
+    if (words[key]) element.placeholder = words[key];
+  });
+
+  document.querySelectorAll("[data-i18n-aria]").forEach(element => {
+    const key = element.dataset.i18nAria;
+    if (words[key]) element.setAttribute("aria-label", words[key]);
+  });
+
+  document.documentElement.lang =
+    currentInterfaceLanguage === "Tamil" ? "ta" : 
+  
+    currentInterfaceLanguage === "Hindi" ? "hi" : 
+
+    currentInterfaceLanguage === "Telugu" ? "te" : "en";
+
+  localStorage.setItem(
+    "activeInterfaceLanguage",
+    currentInterfaceLanguage
+  );
+}
+
+
+let currentChatId = null;
+let currentMessages = [];
+let pageBeforeLegal = "welcome";
+let activeWorkspaceUserId = null;
+const pages = [
+  "welcome",
+  "welcomeSettings",
+  "signup",
+  "login",
+  "passwordReset",
+  "workspace",
+  "legal"
+];
+
+function showPage(page) {
+  pages.forEach(id => {
+    document.getElementById(id).classList.add("hidden");
+  });
+
+  const selectedPage = document.getElementById(page);
+  if (!selectedPage) {
+    console.error("Unknown page:", page);
+    return;
+  }
+
+  selectedPage.classList.remove("hidden");
+
+  const isWorkspace = page === "workspace";
+  const isLegal = page === "legal";
+
+  document.getElementById("navLogin").classList.toggle(
+    "hidden",
+    isWorkspace || isLegal
+  );
+
+  document.getElementById("navLogout").classList.toggle(
+    "hidden",
+    !isWorkspace && !isLegal
+  );
+
+  document.getElementById("siteFooter").classList.toggle(
+    "hidden",
+    isWorkspace || isLegal
+  );
+  document.getElementById("welcomeSettingsButton").classList.toggle("hidden", page !== "welcome");
+}
+  
+function showMessage(id, message) {
+  document.getElementById(id).textContent = message;
+}
+
+document.getElementById("signupForm").addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        const email = document.getElementById("signupEmail").value.trim();
+        const password = document.getElementById("signupPassword").value;
+
+        showMessage("signupMessage", "Creating your account...");
+
+        document.getElementById("signupResendArea")
+            .classList.add("hidden");
+
+        localStorage.setItem("pendingSignupEmail", email);
+
+        const { data, error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: {
+                emailRedirectTo: window.location.origin + window.location.pathname
+            }
+        });
+
+        if (error) {
+            showMessage("signupMessage", error.message);
+            localStorage.removeItem("pendingSignupEmail");
+            return;
+        }
+
+        if (data.session) {
+            localStorage.removeItem("pendingSignupEmail");
+            showMessage("signupMessage", "Account created!");
+            showDashboard(data.user);
+        } else {
+            showMessage(
+                "signupMessage",
+                "Account created. Please check your email and verify your account before logging in."
+            );
+
+            document.getElementById("signupResendArea")
+                .classList.remove("hidden");
+        }
+    }
+);
+document.getElementById("loginForm").addEventListener("submit",
+async function(event) {
+  event.preventDefault();
+
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  showMessage("loginMessage", "Logging in...");
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    showMessage("loginMessage", error.message);
+    return;
+  }
+
+  showDashboard(data.user);
+});
+
+async function sendPasswordReset() {
+  const email = document.getElementById("loginEmail").value.trim();
+  const status = document.getElementById("passwordResetRequestStatus");
+
+  if (!email) {
+    status.textContent = "Enter your registered email address first.";
+    return;
+  }
+
+  status.textContent = "Sending password reset email...";
+
+  try {
+    const { error } =
+      await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo:
+          window.location.origin + window.location.pathname
+      });
+
+    if (error) throw error;
+
+    status.textContent =
+      "If an account exists for this address, a password reset email will be sent. Check your inbox.";
+
+  } catch (error) {
+    status.textContent =
+      "Could not send reset email: " + error.message;
+  }
+}
+
+
+document.getElementById("passwordResetForm")
+  .addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const password =
+      document.getElementById("recoveryNewPassword").value;
+
+    const confirmation =
+      document.getElementById("recoveryConfirmPassword").value;
+
+    const status =
+      document.getElementById("passwordResetCompleteStatus");
+
+    if (password.length < 8) {
+      status.textContent =
+        "Password must contain at least 8 characters.";
+      return;
+    }
+
+    if (password !== confirmation) {
+      status.textContent = "Passwords do not match.";
+      return;
+    }
+
+    const button = this.querySelector("button[type='submit']");
+    button.disabled = true;
+    button.textContent = "Updating...";
+
+    try {
+      const { error } =
+        await supabaseClient.auth.updateUser({
+          password: password
+        });
+
+      if (error) throw error;
+
+      status.textContent =
+        "Password updated successfully. You can now log in.";
+
+      document.getElementById("recoveryNewPassword").value = "";
+      document.getElementById("recoveryConfirmPassword").value = "";
+
+    } catch (error) {
+      status.textContent =
+        "Could not update password: " + error.message;
+
+    } finally {
+      button.disabled = false;
+      button.textContent = "Save New Password";
+    }
+  });
+
+function showDashboard(user) {
+  if (!user) return;
+
+  // Prevent duplicate loading for the same account.
+  if (activeWorkspaceUserId === user.id) {
+    return;
+  }
+
+  // Register the new account.
+  activeWorkspaceUserId = user.id;
+  settingsUserId = user.id;
+
+  // Reset previous account's chat state.
+  currentChatId = null;
+  currentMessages = [];
+
+  // Clear old profile information.
+  document.getElementById("settingsDisplayName").textContent = "Loading...";
+  document.getElementById("settingsEmail").textContent = "Loading...";
+  document.getElementById("settingsVerification").textContent = "Loading...";
+  document.getElementById("settingsCreatedAt").textContent = "Loading...";
+
+  // Reset workspace panels.
+  document.getElementById("settingsPanel").classList.add("hidden");
+
+  const chatMain = document.querySelector(".chat-main");
+  chatMain.classList.remove("hidden");
+
+  document.querySelector(".chat-input-area").style.display = "flex";
+  showChatInput(true);
+
+  // Reset chat interface.
+  renderMessages();
+
+  // Reset selected menu item.
+  document.querySelectorAll(".menu-item").forEach(item => {
+    item.classList.remove("active");
+  });
+
+  const chatButton = [...document.querySelectorAll(".menu-item")]
+    .find(item => item.textContent.trim() === "Chat");
+
+  if (chatButton) {
+    chatButton.classList.add("active");
+  }
+
+  // Load the new account's preferences.
+  loadSettings();
+
+  document.getElementById("navLogin").classList.add("hidden");
+  document.getElementById("navLogout").classList.remove("hidden");
+
+  showPage("workspace");
+}
+function togglePassword(inputId, checkbox) {
+  const passwordInput = document.getElementById(inputId);
+
+  if (!passwordInput) return;
+
+  passwordInput.type = checkbox.checked
+    ? "text"
+    : "password";
+}
+
+function toggleMenu() {
+  document.getElementById("sideMenu").classList.toggle("hidden");
+}
+
+
+
+  
+function renderMessages() {
+  const chatMessages = document.getElementById("chatMessages");
+  chatMessages.innerHTML = "";
+
+  if (currentMessages.length === 0) {
+    chatMessages.innerHTML = `
+      <div class="chat-logo"><img src="CCE9A38F-166C-49FF-B9EA-A6189CE86977.png" alt="makora Logo"></div>
+      
+      
+      
+      
+      <p class="chat-answer">
+        Hi! I’m your MAKORA AI assistant. What would you like to create?
+      </p>
+      <button class="icon-btn" onclick="toggleMute()" id="muteButton">
+        🔊 Mute
+      </button>
+    `;
+    return;
+  }
+
+  currentMessages.forEach(message => {
+    const paragraph = document.createElement("p");
+    paragraph.className = "chat-answer";
+    paragraph.textContent =
+      (message.role === "user" ? "You: " : "MAKORA AI: ") +
+      message.content;
+    chatMessages.appendChild(paragraph);
+  });
+
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+showChatInput(true);
+function newChat() {
+  document.querySelector(".chat-input-area").style.display = "block";
+  showChatInput(true);
+  currentChatId = null;
+  currentMessages = [];
+  document.getElementById("chatInput").value = "";
+  renderMessages();
+}
+
+async function saveCurrentChat() {
+  const { data: userData, error: userError } =
+    await supabaseClient.auth.getUser();
+
+  if (userError || !userData.user) {
+    throw new Error("Please log in again to save this chat.");
+  }
+
+  // Create a title from the first user message.
+  const title =
+    currentMessages.find(message => message.role === "user")
+      ?.content.slice(0, 60) || "New Chat";
+
+  if (!currentChatId) {
+    // New chat: save its initial title and messages.
+    const { data, error } = await supabaseClient
+      .from("chat_history")
+      .insert({
+        user_id: userData.user.id,
+        title,
+        messages: currentMessages
+      })
+      .select("id")
+      .single();
+
+    if (error) throw error;
+    currentChatId = data.id;
+  } else {
+    // Existing chat: update messages, but preserve its title.
+    const { error } = await supabaseClient
+      .from("chat_history")
+      .update({
+        messages: currentMessages,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", currentChatId);
+
+    if (error) throw error;
+  }
+}
+async function openChat(chatId) {
+  const { data, error } = await supabaseClient
+    .from("chat_history")
+    .select("id, messages")
+    .eq("id", chatId)
+    .single();
+
+  if (error) {
+    alert("Could not open this chat: " + error.message);
+    return;
+  }
+
+  currentChatId = data.id;
+  currentMessages = Array.isArray(data.messages) ? data.messages : [];
+
+  document.getElementById("settingsPanel").classList.add("hidden");
+  document.querySelector(".chat-main").classList.remove("hidden");
+
+  // Show the message box so you can continue this chat.
+  document.querySelector(".chat-input-area").style.display = "block";
+  showChatInput(true);
+
+  renderMessages();
+}
+
+async function showChatHistory() {
+  const chatMessages = document.getElementById("chatMessages");
+  chatMessages.innerHTML = "<p class='chat-answer'>Loading your chats...</p>";
+
+  const { data, error } = await supabaseClient
+    .from("chat_history")
+    .select("id, title, updated_at")
+    .order("updated_at", { ascending: false });
+
+  if (error) {
+    chatMessages.textContent = "Could not load chat history: " + error.message;
+    return;
+  }
+
+  chatMessages.innerHTML = "<h2>Your Chat History</h2>";
+
+  if (!data || data.length === 0) {
+    chatMessages.innerHTML +=
+      "<p class='chat-answer'>No saved chats yet. Start a chat to save it.</p>";
+    return;
+  }
+
+  data.forEach(chat => {
+    const row = document.createElement("div");
+    row.style.cssText =
+      "display:flex; gap:8px; align-items:center; max-width:650px; margin:10px auto;";
+
+    const openButton = document.createElement("button");
+    openButton.className = "menu-item";
+    openButton.textContent = chat.title || "New Chat";
+    openButton.style.flex = "1";
+    openButton.onclick = () => openChat(chat.id);
+
+    const renameButton = document.createElement("button");
+    renameButton.className = "secondary";
+    renameButton.textContent = "Rename";
+    renameButton.onclick = () => renameChat(chat.id, chat.title || "");
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "secondary";
+    deleteButton.textContent = "Delete";
+    deleteButton.onclick = () => deleteChat(chat.id);
+
+    row.append(openButton, renameButton, deleteButton);
+    chatMessages.appendChild(row);
+  });
+}
+async function renameChat(chatId, oldTitle) {
+  const newTitle = prompt("Enter a new chat name:", oldTitle);
+
+  if (newTitle === null) return;
+
+  const title = newTitle.trim();
+  if (!title) {
+    alert("Chat name cannot be empty.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("chat_history")
+    .update({ title, updated_at: new Date().toISOString() })
+    .eq("id", chatId);
+
+  if (error) {
+    alert("Could not rename chat: " + error.message);
+    return;
+  }
+
+  await showChatHistory();
+}
+
+async function deleteChat(chatId) {
+  if (!confirm("Delete this chat? This cannot be undone.")) return;
+
+  const { error } = await supabaseClient
+    .from("chat_history")
+    .delete()
+    .eq("id", chatId);
+
+  if (error) {
+    alert("Could not delete chat: " + error.message);
+    return;
+  }
+
+  if (currentChatId === chatId) {
+    currentChatId = null;
+    currentMessages = [];
+  }
+
+  await showChatHistory();
+}
+function showChatInput(show) {
+  document.querySelector(".chat-input-area").classList.toggle("hidden", !show);
+}
+
+
+async function saveProfileDisplayName() {
+  const input = document.getElementById("newDisplayName");
+  const status = document.getElementById("profileSaveStatus");
+  const saveButton = document.querySelector(
+    '#settingsPage-profile button.primary'
+  );
+
+  const newName = input.value.trim();
+
+  if (!newName) {
+    status.textContent = "Please enter a display name.";
+    return;
+  }
+
+  if (newName.length > 40) {
+    status.textContent = "Name must be 40 characters or fewer.";
+    return;
+  }
+
+  saveButton.disabled = true;
+  saveButton.textContent = "Saving...";
+  status.textContent = "";
+
+  try {
+    const { data, error } =
+      await supabaseClient.auth.updateUser({
+        data: {
+          full_name: newName
+        }
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    const savedName =
+      data.user.user_metadata.full_name || newName;
+
+    // Update existing display name
+    document.getElementById("settingsDisplayName").textContent =
+      savedName;
+
+    // Update profile header name
+    document.getElementById("profileHeaderName").textContent =
+      savedName;
+
+    input.value = "";
+
+    status.textContent = "Display name updated successfully.";
+
+  } catch (error) {
+    status.textContent = "Could not save: " + error.message;
+
+  } finally {
+    saveButton.disabled = false;
+    saveButton.textContent = "Save Changes";
+  }
+}
+
+
+async function requestEmailChange() {
+  const input = document.getElementById("newEmailAddress");
+  const status = document.getElementById("emailChangeStatus");
+  const button = document.getElementById("changeEmailButton");
+
+  const newEmail = input.value.trim().toLowerCase();
+
+  if (!newEmail) {
+    status.textContent = "Please enter your new email address.";
+    return;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+    status.textContent = "Please enter a valid email address.";
+    return;
+  }
+
+  const currentEmail =
+    document.getElementById("settingsEmail").textContent
+      .trim()
+      .toLowerCase();
+
+  if (newEmail === currentEmail) {
+    status.textContent = "This is already your current email address.";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Sending...";
+  status.textContent = "";
+
+  try {
+    const { data, error } =
+      await supabaseClient.auth.updateUser({
+        email: newEmail
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    const pendingEmail = data.user?.new_email;
+
+    status.textContent = pendingEmail
+      ? "Confirmation requested for " + pendingEmail +
+        ". Check your email inboxes to complete the change."
+      : "Confirmation requested. Check your email inboxes to complete the change.";
+
+    input.value = "";
+
+  } catch (error) {
+    status.textContent = "Could not request email change: " + error.message;
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Send Confirmation";
+  }
+}
+
+async function changeMakoraPassword() {
+  const currentPassword =
+    document.getElementById("currentPassword").value;
+
+  const newPassword =
+    document.getElementById("newPassword").value;
+
+  const confirmPassword =
+    document.getElementById("confirmNewPassword").value;
+
+  const status =
+    document.getElementById("passwordChangeStatus");
+
+  const button =
+    document.getElementById("changePasswordButton");
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    status.textContent = "Please fill in all password fields.";
+    return;
+  }
+
+  if (newPassword.length < 8) {
+    status.textContent = "New password must contain at least 8 characters.";
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    status.textContent = "New passwords do not match.";
+    return;
+  }
+
+  if (currentPassword === newPassword) {
+    status.textContent = "Choose a different password.";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Updating...";
+  status.textContent = "";
+
+  try {
+    const { data: userData, error: userError } =
+      await supabaseClient.auth.getUser();
+
+    if (userError || !userData.user?.email) {
+      throw userError || new Error("Could not verify your account.");
+    }
+
+    // Verify the current password first.
+    const { error: loginError } =
+      await supabaseClient.auth.signInWithPassword({
+        email: userData.user.email,
+        password: currentPassword
+      });
+
+    if (loginError) {
+      throw new Error("Your current password is incorrect.");
+    }
+
+    // Update the password on the existing account.
+    const { error: updateError } =
+      await supabaseClient.auth.updateUser({
+        password: newPassword
+      });
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    document.getElementById("currentPassword").value = "";
+    document.getElementById("newPassword").value = "";
+    document.getElementById("confirmNewPassword").value = "";
+
+    status.textContent = "Password updated successfully.";
+
+  } catch (error) {
+    status.textContent = "Could not update password: " + error.message;
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Update Password";
+  }
+}
+
+
+async function signOutOtherSessions() {
+  const status =
+    document.getElementById("sessionSecurityStatus");
+
+  const button =
+    document.getElementById("signOutOtherSessionsButton");
+
+  const confirmed = confirm(
+    "Sign out your Makora account from all other devices?"
+  );
+
+  if (!confirmed) return;
+
+  button.disabled = true;
+  button.textContent = "Signing out...";
+  status.textContent = "";
+
+  try {
+    const { error } =
+      await supabaseClient.auth.signOut({
+        scope: "others"
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    status.textContent =
+      "Other sessions have been signed out.";
+
+  } catch (error) {
+    status.textContent =
+      "Could not sign out other sessions: " + error.message;
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Sign Out Other Sessions";
+  }
+}
+
+function showSettingsHome() {
+  document.getElementById("settingsHome").classList.remove("hidden");
+
+  document.querySelectorAll('[id^="settingsPage-"]').forEach(page => {
+    page.classList.add("hidden");
+  });
+}
+
+function openSettingsSection(section) {
+  const allowedSections = [
+    "profile",
+    "general",
+    "ai",
+    "social",
+    "credits",
+    "billing",
+    "notifications",
+    "privacy",
+    "security",
+    "help",
+    "about"
+  ];
+
+  if (!allowedSections.includes(section)) {
+    console.error("Unknown Settings section:", section);
+    return;
+  }
+
+  document.getElementById("settingsHome").classList.add("hidden");
+
+  document.querySelectorAll('[id^="settingsPage-"]').forEach(page => {
+    page.classList.add("hidden");
+  });
+
+  const selectedPage = document.getElementById("settingsPage-" + section);
+
+  if (selectedPage) {
+    selectedPage.classList.remove("hidden");
+  }
+
+  if (section === "credits") {
+    loadCreditWallet();
+  }
+}
+
+async function selectTool(tool, button) {
+  document.querySelectorAll(".menu-item").forEach(item => {
+    item.classList.remove("active");
+  });
+
+  button.classList.add("active");
+
+  const settingsPanel = document.getElementById("settingsPanel");
+  const chatMain = document.querySelector(".chat-main");
+  const chatMessages = document.getElementById("chatMessages");
+
+  if (tool === "Settings") {
+    showChatInput(false);
+    chatMain.classList.add("hidden");
+    settingsPanel.classList.remove("hidden");
+    showSettingsHome();
+
+    const { data, error } = await supabaseClient.auth.getUser();
+
+if (error || !data.user) {
+
+  document.getElementById("settingsDisplayName").textContent =
+    "Could not load account";
+
+  document.getElementById("settingsEmail").textContent =
+    "Could not load account";
+
+  document.getElementById("settingsVerification").textContent =
+    "Unavailable";
+
+  document.getElementById("settingsCreatedAt").textContent =
+    "Unavailable";
+
+} else {
+
+  const user = data.user;
+
+  const displayName =
+    user.user_metadata?.full_name ||
+    user.user_metadata?.name ||
+    "Not set";
+
+  document.getElementById("settingsDisplayName").textContent =
+    displayName;
+  document.getElementById("profileHeaderName").textContent =
+    displayName;
+
+  document.getElementById("settingsEmail").textContent =
+    user.email || "Not available";
+
+  document.getElementById("settingsVerification").textContent =
+    user.email_confirmed_at ? "Verified" : "Not verified";
+
+  document.getElementById("settingsCreatedAt").textContent =
+    user.created_at
+      ? new Date(user.created_at).toLocaleDateString()
+      : "Not available";
+}
+
+await loadCreditWallet();
+    return;
+  }
+  
+  settingsPanel.classList.add("hidden");
+  chatMain.classList.remove("hidden");
+
+  // Show the shared input only in the main AI YOUTUBER 
+  if (tool === "MAKORA") {
+    
+    showMakoraPlatformDemo();
+    return;
+
+}
+  if (tool === "Chat") {
+    document.querySelector(".chat-input-area").style.display = "block";
+    
+
+    showChatInput(true);
+    renderMessages();
+
+  
+
+
+    return;
+
+}
+  if (tool === "Chat History") {
+    await showChatHistory();
+    return;
+  }
+  if (tool === "Editor") {
+    showEditor();
+    return;
+  }
+  if (tool === "Audio Generator") {
+    showAudioGenerator();
+    return;
+  }
+  if (tool === "Video Generator") {
+    showVideoGenerator();
+    return;
+}
+}
+function showVideoGenerator() {
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <div class="tool-screen">
+      <h2>Video Generator</h2>
+      <p>Create videos with Makora AI.</p>
+      <textarea
+        id="videoPrompt"
+        placeholder="Describe the video you want to create..."
+        style="width:min(100%,650px);min-height:180px;
+        padding:15px;background:#151515;color:white;
+        border:1px solid #444;border-radius:8px;font:inherit;">
+    </textarea>
+        
+      </textarea>
+      <button onclick="alert('Video generation will be added next!')">
+        Generate Video
+      </button>
+    </div>
+  `;
+
+  showChatInput(false);
+}
+
+
+function showMakoraPlatformDemo() {
+  
+  const chatMessages = document.getElementById("chatMessages");
+
+  document.querySelector(".chat-input-area").style.display = "none";
+
+  chatMessages.innerHTML = `
+    <div style="
+      max-width:700px;
+      margin:40px auto;
+      color:white;
+      text-align:center;
+      font-family:Arial,sans-serif;
+    ">
+      
+      <h1 class="theme-text">MAKORA AI</h1>
+
+      <p style="color:#aaa;margin:12px 0 30px;">
+        Choose a platform to explore its demo.
+      </p>
+
+      <div style="
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:15px;
+      ">
+
+        <button onclick="openPlatformDemo('YouTube')"
+          style="padding:30px 10px;background:#242424;color:white;border:1px solid #444;border-radius:12px;">
+          <img src="https://cdn.simpleicons.org/youtube/FF0000"
+            width="38" height="38" alt="YouTube logo">
+          <br><br>YouTube
+        </button>
+
+        <button onclick="openPlatformDemo('Instagram')"
+          style="padding:30px 10px;background:#242424;color:white;border:1px solid #444;border-radius:12px;">
+          <img src="https://cdn.simpleicons.org/instagram/E4405F"
+            width="38" height="38" alt="Instagram logo">
+          <br><br>Instagram
+        </button>
+
+        <button onclick="openPlatformDemo('Facebook')"
+          style="padding:30px 10px;background:#242424;color:white;border:1px solid #444;border-radius:12px;">
+          <img src="https://cdn.simpleicons.org/facebook/0866FF"
+            width="38" height="38" alt="Facebook logo">
+          <br><br>Facebook
+        </button>
+
+        <button onclick="openPlatformDemo('X')"
+          style="padding:30px 10px;background:#242424;color:white;border:1px solid #444;border-radius:12px;">
+          <img src="https://cdn.simpleicons.org/x/FFFFFF"
+            width="38" height="38" alt="X logo">
+          <br><br>X
+        </button>
+
+      </div>
+    </div>
+  `;
+}
+
+function openPlatformDemo(platform) {
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <div style="max-width:700px;margin:30px auto;color:white;text-align:center;">
+      <button onclick="showMakoraPlatformDemo()"
+        style="float:left;background:#242424;color:white;border:1px solid #444;padding:10px;border-radius:8px;">
+        <<- Back
+      </button>
+
+      <div style="clear:both;padding-top:50px;">
+        <h1 class="theme-text">${platform} Demo</h1>
+        <p style="color:#aaa;margin-top:15px;">
+          Welcome to the ${platform} demo experience.
+        </p>
+        <p style="color:#ff3030;margin-top:25px;">
+          Demo experience coming soon.
+        </p>
+      </div>
+    </div>
+  `;
+}
+  
+
+  
+
+
+  
+  
+
+
+let audioRecorder = null;
+let audioChunks = [];
+let generatedAudioUrl = null;
+let audioContext = null;
+let audioDestination = null;
+
+function showAudioGenerator() {
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <h2>Audio Generator</h2>
+    <p class="chat-answer">
+      Generate, preview and download your narration.
+    </p>
+
+    <textarea id="audioText"
+      placeholder="Type your narration here..."
+      style="width:min(100%,650px);min-height:180px;
+      padding:15px;background:#151515;color:white;
+      border:1px solid #444;border-radius:8px;font:inherit;">
+    </textarea>
+
+    <div style="margin:15px auto;max-width:650px;text-align:left;">
+
+      <label for="audioLanguage">Language</label>
+      <select id="audioLanguage"
+        style="display:block;width:100%;margin:8px 0 15px;padding:12px;">
+        <option value="all">All languages</option>
+        <option value="en">English</option>
+        <option value="hi">Hindi</option>
+        <option value="ta">Tamil</option>
+        <option value="te">Telugu</option>
+      </select>
+
+      <label for="audioVoice">Voice</label>
+      <select id="audioVoice"
+        style="display:block;width:100%;margin:8px 0 15px;padding:12px;">
+        <option value="">Default voice</option>
+      </select>
+
+      <label for="audioRate">Speaking speed</label>
+      <input id="audioRate" type="range"
+        min="0.5" max="2" step="0.1" value="1">
+
+      <label for="audioPitch">Voice pitch</label>
+      <input id="audioPitch" type="range"
+        min="0.5" max="2" step="0.1" value="1">
+
+      <p id="audioSettingsInfo" class="chat-answer">
+        Speed: 1× | Pitch: 1
+      </p>
+
+      <p id="audioCharacterCount" class="chat-answer">
+        0 characters
+      </p>
+    </div>
+
+    <button class="primary" onclick="generateAudio()">
+      Generate Audio
+    </button>
+
+    <button class="secondary" onclick="stopAudio()">
+      ■ Stop
+    </button>
+
+    <div style="max-width:650px;margin:20px auto;">
+      <p id="audioStatus" class="chat-answer"></p>
+
+      <audio id="generatedAudio"
+        controls
+        style="width:100%;display:none;margin-top:15px;">
+      </audio>
+
+      <a id="downloadAudio"
+        style="display:none;margin-top:15px;
+        color:#ff3030;font-weight:bold;"
+        download="makora-audio.wav">
+        ↓ Download Audio
+      </a>
+    </div>
+  `;
+
+  loadAudioVoices();
+
+  const audioText = document.getElementById("audioText");
+  const audioRate = document.getElementById("audioRate");
+  const audioPitch = document.getElementById("audioPitch");
+  const characterCount = document.getElementById("audioCharacterCount");
+  const settingsInfo = document.getElementById("audioSettingsInfo");
+
+  function updateAudioSettings() {
+    settingsInfo.textContent =
+      `Speed: ${audioRate.value}× | Pitch: ${audioPitch.value}`;
+  }
+
+  audioText.addEventListener("input", () => {
+    characterCount.textContent =
+      `${audioText.value.length} characters`;
+  });
+
+  audioRate.addEventListener("input", updateAudioSettings);
+  audioPitch.addEventListener("input", updateAudioSettings);
+
+  updateAudioSettings();
+}
+
+function loadAudioVoices() {
+  const voiceSelect = document.getElementById("audioVoice");
+  const languageSelect = document.getElementById("audioLanguage");
+
+  if (!voiceSelect || !languageSelect ||
+      !("speechSynthesis" in window)) return;
+
+  function populateVoices() {
+    const voices = speechSynthesis.getVoices();
+    const selectedLanguage = languageSelect.value;
+    const previousVoice = voiceSelect.value;
+
+    const filteredVoices = selectedLanguage === "all"
+      ? voices
+      : voices.filter(voice =>
+          voice.lang.toLowerCase().startsWith(selectedLanguage)
+        );
+
+    voiceSelect.innerHTML =
+      '<option value="">Default voice</option>';
+
+    filteredVoices.forEach(voice => {
+      const index = voices.indexOf(voice);
+      const option = document.createElement("option");
+
+      option.value = index;
+      option.textContent = `${voice.name} (${voice.lang})`;
+
+      voiceSelect.appendChild(option);
+    });
+
+    if (filteredVoices.length === 0) {
+      voiceSelect.innerHTML =
+        '<option value="">No voices available for this language</option>';
+    } else if (
+      [...voiceSelect.options].some(option =>
+        option.value === previousVoice
+      )
+    ) {
+      voiceSelect.value = previousVoice;
+    }
+  }
+
+  languageSelect.addEventListener("change", populateVoices);
+
+  populateVoices();
+  speechSynthesis.onvoiceschanged = populateVoices;
+}
+
+async function generateAudio() {
+  const text = document.getElementById("audioText").value.trim();
+  const status = document.getElementById("audioStatus");
+
+  if (!text) {
+    status.textContent = "Please enter some text.";
+    return;
+  }
+
+  status.textContent = "Preparing audio...";
+
+  if (!("speechSynthesis" in window)) {
+    status.textContent = "Speech synthesis is unavailable.";
+    return;
+  }
+
+  try {
+    speechSynthesis.cancel();
+
+    const voices = speechSynthesis.getVoices();
+    const selectedVoice =
+      document.getElementById("audioVoice").value;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+
+const selectedLanguage =
+  document.getElementById("audioLanguage").value;
+
+const languageCodes = {
+  en: "en-IN",
+  hi: "hi-IN",
+  ta: "ta-IN",
+  te: "te-IN"
+};
+
+utterance.lang =
+  languageCodes[selectedLanguage] || navigator.language;
+
+utterance.rate =
+  Number(document.getElementById("audioRate").value);
+
+utterance.pitch =
+  Number(document.getElementById("audioPitch").value);
+    if (selectedVoice !== "" && voices[Number(selectedVoice)]) {
+      
+     
+      utterance.voice = voices[Number(selectedVoice)];
+      utterance.lang = voices[Number(selectedVoice)].lang;
+   }
+
+    utterance.onstart = () => {
+      status.textContent =
+        "Speaking. Recording support is required for downloading.";
+    };
+
+    utterance.onend = () => {
+      status.textContent =
+        "Speech finished. Browser speech cannot automatically be saved as an MP3 or WAV file.";
+    };
+
+    utterance.onerror = () => {
+      status.textContent = "Audio generation failed.";
+    };
+
+    speechSynthesis.speak(utterance);
+
+  } catch (error) {
+    status.textContent = "Could not generate audio.";
+    console.error(error);
+  }
+}
+
+function stopAudio() {
+  if ("speechSynthesis" in window) {
+    speechSynthesis.cancel();
+  }
+
+  const status = document.getElementById("audioStatus");
+
+  if (status) {
+    status.textContent = "Audio stopped.";
+  }
+}
+
+async function sendMessage() {
+  const input = document.getElementById("chatInput");
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  currentMessages.push({ role: "user", content: message });
+  input.value = "";
+
+  // Show a temporary reply while the AI is working.
+  currentMessages.push({
+    role: "assistant",
+    content: "Thinking..."
+  });
+  renderMessages();
+
+  try {
+    
+    
+    const { data: { session } } =
+      
+      await supabaseClient.auth.getSession();
+
+    if (!session) {
+      
+      alert("Please log in again.");
+    return;
+   }
+
+    const response = await fetch("https://black-boat-3f22ai-youtuber-api.kapil20122504.workers.dev/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.reply || "The AI request failed.");
+    }
+
+    // Replace the temporary reply with the real AI response.
+    currentMessages[currentMessages.length - 1].content =
+      data.reply || "I couldn't generate a reply.";
+  } catch (error) {
+    currentMessages[currentMessages.length - 1].content =
+      error.message || "Request failed.";
+    console.error(error);
+  }
+
+  renderMessages();
+
+  try {
+    await saveCurrentChat();
+  } catch (error) {
+    alert("The AI replied, but the chat could not be saved: " + error.message);
+  }
+}
+function toggleMute() {
+  const button = document.getElementById("muteButton");
+  button.textContent = button.textContent.includes("Mute")
+    ? "🔇 Unmute"
+    : "🔊 Mute";
+}
+
+function startVoice() {
+  alert("Voice input will be added in a later step.");
+}  
+
+async function logout() {
+  clearSensitiveAccountFields();
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  // Clear account identity.
+  activeWorkspaceUserId = null;
+  settingsUserId = null;
+
+  // Clear previous account's chat state.
+  currentChatId = null;
+  currentMessages = [];
+
+  // Clear profile information.
+  document.getElementById("settingsDisplayName").textContent = "Not logged in";
+  document.getElementById("settingsEmail").textContent = "Not logged in";
+  document.getElementById("settingsVerification").textContent = "Unavailable";
+  document.getElementById("settingsCreatedAt").textContent = "Unavailable";
+
+  // Clear wallet display.
+  document.getElementById("creditBalance").textContent = "—";
+  document.getElementById("creditTransactions").textContent = "";
+  document.getElementById("creditWalletStatus").textContent = "";
+
+  // Reset workspace panels.
+  document.getElementById("settingsPanel").classList.add("hidden");
+  document.querySelector(".chat-main").classList.remove("hidden");
+
+  renderMessages();
+
+  document.querySelectorAll(".menu-item").forEach(item => {
+    item.classList.remove("active");
+  });
+
+  // Return to welcome page.
+  document.getElementById("navLogout").classList.add("hidden");
+  document.getElementById("navLogin").classList.remove("hidden");
+
+  showPage("welcome");
+}
+let settingsUserId = null;
+
+function settingsStorageKey() {
+  return settingsUserId
+    ? `aiYoutuberSettings_${settingsUserId}`
+    : null;
+}
+
+function applyTheme(theme) {
+  document.body.classList.toggle("light-theme", theme === "light");
+}
+  
+function toggleThemeQuick() {
+  const isLight = document.body.classList.contains("light-theme");
+  const newTheme = isLight ? "dark" : "light";
+
+  applyTheme(newTheme);
+
+  if (settingsUserId) {
+    const key = settingsStorageKey();
+    const saved = JSON.parse(localStorage.getItem(key) || "{}");
+
+    saved.theme = newTheme;
+    localStorage.setItem(key, JSON.stringify(saved));
+
+    document.getElementById("settingsTheme").value = newTheme;
+  } else {
+    const saved = JSON.parse(
+      localStorage.getItem("welcomePreferences") || "{}"
+    );
+
+    saved.theme = newTheme;
+    localStorage.setItem("welcomePreferences", JSON.stringify(saved));
+    document.getElementById("welcomeTheme").value = newTheme;
+  }
+}
+
+function showEditor() {
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <style>
+      .studio {
+        width:100%;
+        max-width:1100px;
+        margin:auto;
+        color:white;
+        font-family:Arial,sans-serif;
+      }
+
+      .studio button, .studio input, .studio select {
+        font:inherit;
+      }
+
+      .studio button {
+        background:#252525;
+        color:white;
+        border:1px solid #444;
+        border-radius:8px;
+        padding:10px 13px;
+        cursor:pointer;
+      }
+
+      .studio button:disabled {
+        opacity:.4;
+      }
+
+      .studio button.active {
+        background:#ff3030;
+      }
+
+      .studio-top, .studio-row {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        flex-wrap:wrap;
+      }
+
+      .studio-top {
+        padding:12px 0;
+        border-bottom:1px solid #333;
+      }
+
+      .studio-muted {
+        color:#999;
+        font-size:12px;
+      }
+
+      .studio-preview-area, .studio-timeline,
+      .studio-panel {
+        background:#151515;
+        border:1px solid #383838;
+        border-radius:10px;
+        padding:15px;
+        margin-top:15px;
+      }
+
+      .studio-preview {
+        position:relative;
+        width:100%;
+        max-width:650px;
+        height:320px;
+        margin:auto;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:#000;
+        overflow:hidden;
+        border-radius:8px;
+      }
+
+      .studio-preview video {
+        width:100%;
+        height:100%;
+        object-fit:contain;
+      }
+
+      .studio-tools {
+        display:flex;
+        gap:8px;
+        overflow-x:auto;
+        padding:15px 0;
+      }
+
+      .studio-tools button {
+        min-width:85px;
+      }
+
+      .studio-track {
+        display:flex;
+        align-items:center;
+        gap:8px;
+        margin:12px 0;
+        min-width:500px;
+      }
+
+      .studio-track-name {
+        width:65px;
+        flex-shrink:0;
+        color:#aaa;
+        font-size:12px;
+      }
+
+      .studio-track-content {
+        flex:1;
+        min-height:65px;
+        background:#202020;
+        border:1px dashed #555;
+        border-radius:6px;
+        display:flex;
+        align-items:center;
+        gap:7px;
+        padding:7px;
+        overflow-x:auto;
+      }
+
+      .studio-clip {
+        min-width:100px;
+        max-width:220px;
+        height:48px;
+        flex-shrink:0;
+        padding:7px;
+        background:#792c2c;
+        border:2px solid #ff5555;
+        border-radius:6px;
+        color:white;
+        font-size:11px;
+        text-align:left;
+        overflow:hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+      }
+
+      .studio-clip.selected {
+        border:2px solid #fff;
+        background:#c52c2c;
+      }
+
+      .studio-panel input[type="range"] {
+        width:100%;
+        accent-color:#ff3030;
+      }
+
+      .studio-panel input[type="text"] {
+        width:100%;
+        padding:10px;
+        background:#252525;
+        color:white;
+        border:1px solid #444;
+        border-radius:7px;
+      }
+
+      .studio-export {
+        background:#ff3030 !important;
+      }
+
+      @media(max-width:600px) {
+        .studio-preview {
+          height:260px;
+        }
+      .editorheading {
+        color: #FFFFFF
+      
+      }
+      body.light-theme .editorheading {
+        color: #000000
+      }
+      }
+    </style>
+
+    <div class="studio">
+
+      <div class="studio-top">
+        <div>
+          <h2 class="editorheading">MAKORA EDITOR STUDIO</h2>
+          <span class="studio-muted">Manual Video Editor</span>
+        </div>
+
+        <div class="studio-row">
+          <button id="studioUndo" disabled>↶</button>
+          <button id="studioRedo" disabled>↷</button>
+          <button id="studioExport" class="studio-export">Export</button>
+        </div>
+      </div>
+
+      <div class="studio-preview-area">
+
+        <div class="studio-row" style="margin-bottom:12px;">
+          <span class="studio-muted">VIDEO PREVIEW</span>
+
+          <select id="studioRatio"
+            style="background:#252525;color:white;padding:8px;">
+            <option value="16:9">16:9 YouTube</option>
+            <option value="9:16">9:16 Shorts</option>
+            <option value="1:1">1:1 Square</option>
+          </select>
+        </div>
+
+        <div class="studio-preview" id="studioPreview">
+          <span id="studioPlaceholder" class="studio-muted">
+            Import videos to begin editing
+          </span>
+
+          <video id="studioVideo" playsinline
+            style="display:none;"></video>
+          <div id="studioTextOverlay" style="
+          
+
+    position:absolute;
+
+    z-index:5;
+
+    left:50%;
+
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    color:white;
+
+    font-size:28px;
+
+    font-weight:bold;
+
+    text-align:center;
+
+    text-shadow:2px 2px 5px black;
+
+    width:90%;
+
+    pointer-events:none;
+
+    display:none;
+
+    overflow-wrap:anywhere;
+
+  ">
+
+</div>
+
+  
+        </div>
+
+        <div class="studio-row" style="justify-content:center;margin-top:15px;">
+          <button id="studioPlay">▶ Play</button>
+          <button id="studioPause">Ⅱ Pause</button>
+          <span id="studioTime" class="studio-muted">0:00 / 0:00</span>
+        </div>
+
+      </div>
+
+      <h3 style="margin-top:20px;">Editing Tools</h3>
+
+      <div class="studio-tools">
+        <button data-tool="media">＋ Media</button>
+        <button data-tool="trim">✂ Trim</button>
+        <button data-tool="split">⫽ Split</button>
+        <button data-tool="audio">♫ Audio</button>
+        <button data-tool="text">T Text</button>
+
+        <button data-tool="filters">◐ Filters</button>
+
+        <button data-tool="speed">⏩ Speed</button>
+      </div>
+
+      <div class="studio-panel" id="studioToolPanel">
+        <span class="studio-muted">
+          Select a tool to begin.
+        </span>
+      </div>
+
+      <div class="studio-timeline">
+
+        <div class="studio-row">
+          <h3>Timeline</h3>
+          <span id="studioDuration" class="studio-muted">
+            No videos
+          </span>
+        </div>
+
+        <div class="studio-track">
+          <div class="studio-track-name">VIDEO</div>
+          <div class="studio-track-content" id="videoTrack">
+            <span class="studio-muted">No clips</span>
+          </div>
+        </div>
+        <div class="studio-track">
+        
+          <div class="studio-track-name">AUDIO</div>
+          <div class="studio-track-content" id="audioTrack">
+            <span class="studio-muted">No audio</span>
+          </div>
+       </div>
+
+        <p class="studio-muted">
+          Timeline position:
+          <span id="studioPosition">0.0s</span>
+        </p>
+
+        <input id="studioPlayhead" type="range"
+          min="0" max="0" value="0" step="0.1"
+          disabled style="width:100%;accent-color:#ff3030;">
+
+      </div>
+
+      <div class="studio-panel">
+
+        <h3>Media Library</h3>
+
+<p class="studio-muted" style="margin:10px 0;">
+
+  Select multiple video files.
+
+</p>
+
+<input id="studioVideoInput"
+
+  type="file"  accept="video/*" multiple
+
+  style="max-width:100%;">
+
+<p class="studio-muted" style="margin:14px 0 10px;">
+
+  Import audio files.
+
+</p>
+
+<input id="studioAudioInput"
+
+  type="file" multiple
+
+  style="max-width:100%;">
+
+<div id="studioMediaList" style="margin-top:12px;"></div>
+
+<p id="studioStatus" class="studio-muted"
+
+  style="margin-top:12px;">
+
+  Ready to edit.
+
+</p>
+
+</div>
+
+</div>
+`;
+
+  const video = document.getElementById("studioVideo");
+  const videoInput = document.getElementById("studioVideoInput");
+  const videoTrack = document.getElementById("videoTrack");
+  const audioInput = document.getElementById("studioAudioInput");
+  const audioTrack = document.getElementById("audioTrack");
+
+
+  const playhead = document.getElementById("studioPlayhead");
+  const status = document.getElementById("studioStatus");
+  const panel = document.getElementById("studioToolPanel");
+  const placeholder = document.getElementById("studioPlaceholder");
+  video.addEventListener("volumechange", () => {
+  console.log("Video volume:", video.volume);
+  console.log("Video muted:", video.muted);
+});
+
+  // Each imported file is stored once.
+  const sources = {};
+  // Store imported audio files.
+  let audioSources = [];
+  let audioPlayer = new Audio();
+  
+  audioPlayer.preload = "auto";
+
+  // Each timeline segment refers to an imported source.
+  let clips = [];
+
+  let selectedClipId = null;
+  let currentClipId = null;
+  let clipCounter = 0;
+  let sourceCounter = 0;
+
+  let history = [];
+  let historyIndex = -1;
+  let pendingLoad = null;
+
+  function formatTime(seconds) {
+    if (!Number.isFinite(seconds)) return "0:00";
+
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+
+    return minutes + ":" + String(secs).padStart(2, "0");
+  }
+
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    })[char]);
+  }
+
+  function getClip(id) {
+    return clips.find(clip => clip.id === id);
+  }
+
+  function clipDuration(clip) {
+    return clip.end - clip.start;
+  }
+
+  function totalDuration() {
+    return clips.reduce(
+      (total, clip) => total + clipDuration(clip), 0
+    );
+  }
+
+  function selectedIndex() {
+    return clips.findIndex(
+      clip => clip.id === selectedClipId
+    );
+  }
+
+  function updateHistoryButtons() {
+    document.getElementById("studioUndo").disabled =
+      historyIndex <= 0;
+
+    document.getElementById("studioRedo").disabled =
+      historyIndex >= history.length - 1;
+  }
+
+  function saveEdit() {
+    const snapshot = {
+      clips: JSON.parse(JSON.stringify(clips)),
+      selectedClipId
+    };
+
+    history = history.slice(0, historyIndex + 1);
+    history.push(snapshot);
+    historyIndex++;
+
+    updateHistoryButtons();
+  }
+
+  function updateTimeline() {
+    const total = totalDuration();
+
+    document.getElementById("studioDuration").textContent =
+      clips.length + " clips · " + formatTime(total);
+
+    playhead.max = total;
+    playhead.disabled = clips.length === 0;
+
+    if (clips.length === 0) {
+      videoTrack.innerHTML =
+        '<span class="studio-muted">No clips</span>';
+
+      return;
+    }
+
+    videoTrack.innerHTML = clips.map((clip, index) => {
+      const source = sources[clip.sourceId];
+
+      const name = source ? source.name : "Video";
+
+      return `
+        <button class="studio-clip
+          ${clip.id === selectedClipId ? "selected" : ""}"
+          data-clip-id="${clip.id}"
+          style="width:${Math.max(100, clipDuration(clip) * 18)}px;">
+          ${index + 1}. ${escapeHTML(name)}
+          <br>
+          ${clipDuration(clip).toFixed(1)}s
+        </button>
+      `;
+    }).join("");
+
+    videoTrack.querySelectorAll("[data-clip-id]").forEach(button => {
+      button.addEventListener("click", () => {
+        selectClip(button.dataset.clipId);
+      });
+    });
+  }
+
+  function updateMediaList() {
+    const list = document.getElementById("studioMediaList");
+
+    list.innerHTML = Object.values(sources).map(source => `
+      <p class="studio-muted" style="margin:6px 0;">
+        🎬 ${escapeHTML(source.name)}
+        · ${formatTime(source.duration)}
+      </p>
+    `).join("");
+  }
+
+  function getGlobalPosition() {
+    let position = 0;
+
+    for (const clip of clips) {
+      if (clip.id === currentClipId) {
+        return position + Math.max(
+          0,
+          Math.min(video.currentTime - clip.start, clipDuration(clip))
+        );
+      }
+
+      position += clipDuration(clip);
+    }
+
+    return 0;
+  }
+
+  function updateClock() {
+    const position = getGlobalPosition();
+    const total = totalDuration();
+
+    playhead.value = position;
+
+    document.getElementById("studioPosition").textContent =
+      position.toFixed(1) + "s";
+
+    document.getElementById("studioTime").textContent =
+      formatTime(position) + " / " + formatTime(total);
+  }
+  function applyClipEffects(clip) {
+  if (!clip) return;
+
+  const overlay = document.getElementById("studioTextOverlay");
+
+  // Text overlay
+  overlay.textContent = clip.text || "";
+  overlay.style.display = clip.text ? "block" : "none";
+  overlay.style.fontSize = (clip.textSize || 28) + "px";
+
+  // Visual filters
+  const filters = {
+    none: "none",
+    grayscale: "grayscale(100%)",
+    sepia: "sepia(100%)",
+    vintage: "sepia(45%) contrast(110%) brightness(90%)",
+    blur: "blur(3px)",
+    bright: "brightness(130%)",
+    contrast: "contrast(150%)",
+    warm: "sepia(25%) saturate(140%)"
+  };
+
+  video.style.filter = filters[clip.filter || "none"];
+
+  // Playback speed
+  video.playbackRate = Number(clip.speed) || 1;
+  video.volume = Math.max(
+  0,
+  Math.min(1, Number(clip.volume ?? 1))
+);
+  }
+
+  function loadClip(id, sourceTime, autoplay = false) {
+    const clip = getClip(id);
+
+    if (!clip) return;
+
+    const source = sources[clip.sourceId];
+
+    if (!source) return;
+
+    selectedClipId = id;
+    currentClipId = id;
+    applyClipEffects(clip);
+    
+
+    video.style.display = "block";
+    placeholder.style.display = "none";
+
+    const sameSource =
+      video.dataset.sourceId === clip.sourceId &&
+      video.readyState >= 1;
+
+    if (sameSource) {
+      video.currentTime = Math.max(
+        clip.start,
+        Math.min(sourceTime, clip.end)
+      );
+
+      if (autoplay) {
+        video.play().catch(() => {
+          status.textContent = "Could not play this video.";
+        });
+      }
+    } else {
+      pendingLoad = {
+        id,
+        time: Math.max(clip.start, Math.min(sourceTime, clip.end)),
+        autoplay
+      };
+
+      video.pause();
+      video.dataset.sourceId = clip.sourceId;
+      video.src = source.url;
+      video.load();
+    
+
+
+      video.onloadedmetadata = () => {
+        if (currentClipId !== id) return;
+        
+
+        applyClipEffects(clip);
+
+        if (pendingLoad && pendingLoad.id === id) {
+          video.currentTime = pendingLoad.time;
+
+          if (pendingLoad.autoplay) {
+            video.play().catch(() => {
+              status.textContent = "Could not play this video.";
+        });
+       }
+
+          pendingLoad = null;
+  }
+};
+    }
+
+    updateTimeline();
+    updateClock();
+  }
+
+  function selectClip(id) {
+    const clip = getClip(id);
+
+    if (!clip) return;
+
+    video.pause();
+    loadClip(id, clip.start);
+    status.textContent = "Selected: " + sources[clip.sourceId].name;
+  }
+
+  function findNextClip() {
+    const index = clips.findIndex(
+      clip => clip.id === currentClipId
+    );
+
+    if (index >= 0 && index < clips.length - 1) {
+      return clips[index + 1];
+    }
+
+    return null;
+  }
+
+  function playNextClip() {
+    const next = findNextClip();
+
+    if (next) {
+      loadClip(next.id, next.start, true);
+    } else {
+      video.pause();
+      status.textContent = "Timeline playback finished.";
+    }
+  }
+
+  video.addEventListener("loadedmetadata", () => {
+    if (!pendingLoad) return;
+
+    const request = pendingLoad;
+    pendingLoad = null;
+
+    const clip = getClip(request.id);
+
+    if (!clip) return;
+
+    video.currentTime = request.time;
+
+    updateClock();
+
+    if (request.autoplay) {
+      video.play().catch(() => {
+        status.textContent = "Could not play this video.";
+      });
+    }
+  });
+
+  video.addEventListener("timeupdate", () => {
+    const clip = getClip(currentClipId);
+
+    if (!clip) return;
+
+    if (video.currentTime >= clip.end - 0.04) {
+      if (!video.paused) {
+        playNextClip();
+      }
+
+      return;
+    }
+
+    updateClock();
+  });
+
+  video.addEventListener("ended", () => {
+    playNextClip();
+  });
+
+  // Import multiple videos and read their durations.
+  videoInput.addEventListener("change", async () => {
+    const files = Array.from(videoInput.files || []);
+
+    if (!files.length) return;
+
+    let imported = 0;
+
+    for (const file of files) {
+      if (!file.type.startsWith("video/")) {
+        status.textContent = "Skipped an invalid video file.";
+        continue;
+      }
+
+      if (file.size > 100 * 1024 * 1024) {
+        status.textContent = "Skipped a video larger than 100 MB.";
+        continue;
+      }
+
+      status.textContent = "Reading " + file.name + "...";
+
+      const url = URL.createObjectURL(file);
+
+      const duration = await new Promise(resolve => {
+        const probe = document.createElement("video");
+
+        probe.preload = "metadata";
+        probe.onloadedmetadata = () => resolve(probe.duration);
+        probe.onerror = () => resolve(0);
+        probe.src = url;
+      });
+
+      if (!Number.isFinite(duration) || duration <= 0) {
+        URL.revokeObjectURL(url);
+        status.textContent = "Could not read " + file.name;
+        continue;
+      }
+
+      const sourceId = "source_" + (++sourceCounter);
+
+      sources[sourceId] = {
+        name: file.name,
+        url,
+        duration
+      };
+
+      const clip = {
+        id: "clip_" + (++clipCounter),
+        sourceId,
+        start: 0,
+        end: duration
+      };
+
+      clips.push(clip);
+      imported++;
+    }
+
+    videoInput.value = "";
+
+    updateMediaList();
+    updateTimeline();
+    saveEdit();
+
+    if (!selectedClipId && clips.length) {
+      selectClip(clips[0].id);
+    }
+
+    status.textContent =
+      imported + " video(s) imported successfully.";
+  });
+  // Import multiple audio files and read their durations.
+audioInput.addEventListener("change", async () => {
+  const files = Array.from(audioInput.files || []);
+
+  if (!files.length) return;
+
+  let imported = 0;
+
+  for (const file of files) {
+    if (file.type && !file.type.startsWith("audio/")) {
+      status.textContent = "Skipped an invalid audio file.";
+      continue;
+    }
+
+    status.textContent = "Reading " + file.name + "...";
+
+    const url = URL.createObjectURL(file);
+
+    const duration = await new Promise(resolve => {
+      const probe = new Audio();
+
+      probe.preload = "metadata";
+      probe.onloadedmetadata = () => resolve(probe.duration);
+      probe.onerror = () => resolve(0);
+      probe.src = url;
+      probe.load();
+    });
+
+    if (!Number.isFinite(duration) || duration <= 0) {
+      URL.revokeObjectURL(url);
+      status.textContent = "Could not read " + file.name;
+      continue;
+    }
+
+    audioSources.push({
+      name: file.name,
+      url,
+      duration
+    });
+    if (audioSources.length === 1) {
+      audioPlayer.src = audioSources[0].url;
+      audioPlayer.load();
+   }
+      
+    imported++;
+  }
+
+  audioInput.value = "";
+
+  // Display imported audio files in the AUDIO track.
+  audioTrack.innerHTML = "";
+
+  if (audioSources.length === 0) {
+    audioTrack.textContent = "No audio";
+  } else {
+    audioSources.forEach(audio => {
+      const item = document.createElement("div");
+
+      const minutes = Math.floor(audio.duration / 60);
+      const seconds = Math.floor(audio.duration % 60);
+
+      item.textContent =
+        "🎵 " + audio.name + " (" +
+        minutes + ":" + String(seconds).padStart(2, "0") + ")";
+
+      item.style.padding = "8px";
+      item.style.margin = "4px";
+      item.style.background = "#252525";
+      item.style.borderRadius = "6px";
+
+      audioTrack.appendChild(item);
+    });
+  }
+
+  status.textContent =
+    imported + " audio file(s) imported successfully.";
+});
+  // Keep audio playback synchronised with video.
+video.addEventListener("play", () => {
+  if (!audioPlayer.src) return;
+
+  if (audioPlayer.ended) {
+    audioPlayer.currentTime = 0;
+  }
+
+  audioPlayer.play().catch(() => {
+    status.textContent = "Could not play the audio.";
+  });
+});
+
+video.addEventListener("pause", () => {
+  audioPlayer.pause();
+});
+
+  // Playback controls.
+  document.getElementById("studioPlay").addEventListener("click", () => {
+    if (!clips.length) {
+      status.textContent = "Import a video first.";
+      return;
+    }
+
+    let clip = getClip(currentClipId);
+
+    if (!clip) {
+      clip = clips[0];
+      loadClip(clip.id, clip.start);
+    }
+
+    if (
+      video.currentTime < clip.start ||
+      video.currentTime >= clip.end
+    ) {
+      video.currentTime = clip.start;
+    }
+
+    video.play().catch(() => {
+      status.textContent = "Could not play this video.";
+    });
+  });
+
+  document.getElementById("studioPause").addEventListener("click", () => {
+    video.pause();
+  });
+
+  // Seek through the entire timeline.
+  function seekTimeline(position) {
+    if (!clips.length) return;
+
+    let remaining = Math.max(
+      0,
+      Math.min(position, totalDuration())
+    );
+
+    for (const clip of clips) {
+      const duration = clipDuration(clip);
+
+      if (remaining <= duration) {
+        loadClip(clip.id, clip.start + remaining);
+        return;
+      }
+
+      remaining -= duration;
+    }
+
+    const last = clips[clips.length - 1];
+    loadClip(last.id, last.end);
+  }
+
+  playhead.addEventListener("input", () => {
+    video.pause();
+    seekTimeline(Number(playhead.value));
+  });
+
+  // Change preview shape.
+  document.getElementById("studioRatio").addEventListener("change", event => {
+    const preview = document.getElementById("studioPreview");
+    const ratio = event.target.value;
+
+    if (ratio === "9:16") {
+      preview.style.maxWidth = "230px";
+      preview.style.height = "400px";
+    } else if (ratio === "1:1") {
+      preview.style.maxWidth = "350px";
+      preview.style.height = "350px";
+    } else {
+      preview.style.maxWidth = "650px";
+      preview.style.height = "320px";
+    }
+
+    preview.style.aspectRatio = ratio.replace(":", "/");
+  });
+
+  // Real split: create two timeline segments from one clip.
+  function splitSelectedClip() {
+    const index = selectedIndex();
+
+    if (index < 0) {
+      status.textContent = "Select a clip first.";
+      return;
+    }
+
+    const clip = clips[index];
+
+    if (currentClipId !== clip.id) {
+      status.textContent = "Select the clip you want to split.";
+      return;
+    }
+
+    const splitTime = video.currentTime;
+
+    if (
+      splitTime <= clip.start + 0.1 ||
+      splitTime >= clip.end - 0.1
+    ) {
+      status.textContent =
+        "Move the playhead inside the selected clip before splitting.";
+      return;
+    }
+
+    const left = {
+      ...clip,
+      id: "clip_" + (++clipCounter),
+      end: splitTime
+    };
+
+    const right = {
+      ...clip,
+      id: "clip_" + (++clipCounter),
+      start: splitTime
+    };
+
+    clips.splice(index, 1, left, right);
+
+    selectedClipId = right.id;
+
+    saveEdit();
+    updateTimeline();
+    loadClip(right.id, right.start);
+
+    status.textContent = "Clip successfully split into two segments.";
+  }
+
+  // Tool panels.
+  function openTool(tool) {
+    document.querySelectorAll("[data-tool]").forEach(button => {
+      button.classList.toggle(
+        "active",
+        button.dataset.tool === tool
+      );
+    });
+
+    if (tool === "media") {
+      panel.innerHTML = `
+        <h3>Media Library</h3>
+        <p class="studio-muted">
+          Import multiple videos using the file picker below.
+        </p>
+      `;
+    }
+
+    if (tool === "split") {
+      panel.innerHTML = `
+        <h3>Split Clip</h3>
+        <p class="studio-muted" style="margin:10px 0;">
+          Select a clip, move the playhead to the split point,
+          and press the button.
+        </p>
+        <button id="studioDoSplit">Split Selected Clip</button>
+      `;
+
+      document.getElementById("studioDoSplit").addEventListener(
+        "click",
+        splitSelectedClip
+      );
+    }
+
+    if (tool === "trim") {
+      const clip = getClip(selectedClipId);
+
+      if (!clip) {
+        panel.innerHTML = `
+          <h3>Trim Clip</h3>
+          <p class="studio-muted">Select a timeline clip first.</p>
+        `;
+        return;
+      }
+
+      const source = sources[clip.sourceId];
+
+      panel.innerHTML = `
+        <h3>Trim Selected Clip</h3>
+
+        <p class="studio-muted" style="margin-top:12px;">
+          Start: <span id="trimStartValue">${clip.start.toFixed(1)}</span>s
+        </p>
+
+        <input id="trimStart" type="range"
+          min="0" max="${source.duration}"
+          step="0.1" value="${clip.start}">
+
+        <p class="studio-muted" style="margin-top:12px;">
+          End: <span id="trimEndValue">${clip.end.toFixed(1)}</span>s
+        </p>
+
+        <input id="trimEnd" type="range"
+          min="0" max="${source.duration}"
+          step="0.1" value="${clip.end}">
+
+        <button id="applyTrim" style="margin-top:12px;">
+          Apply Trim
+        </button>
+
+        <p class="studio-muted" style="margin-top:10px;">
+          Trim changes the selected timeline segment's boundaries.
+        </p>
+      `;
+
+      const start = document.getElementById("trimStart");
+      const end = document.getElementById("trimEnd");
+
+      start.addEventListener("input", () => {
+        document.getElementById("trimStartValue").textContent =
+          Number(start.value).toFixed(1);
+      });
+
+      end.addEventListener("input", () => {
+        document.getElementById("trimEndValue").textContent =
+          Number(end.value).toFixed(1);
+      });
+
+      document.getElementById("applyTrim").addEventListener("click", () => {
+        const newStart = Number(start.value);
+        const newEnd = Number(end.value);
+
+        if (newEnd <= newStart + 0.1) {
+          status.textContent = "End time must be after start time.";
+          return;
+        }
+
+        clip.start = newStart;
+        clip.end = newEnd;
+
+        video.pause();
+
+        saveEdit();
+        updateTimeline();
+        loadClip(clip.id, clip.start);
+
+        status.textContent = "Trim applied to the timeline.";
+        openTool("trim");
+      });
+    }
+    if (tool === "text") {
+  const clip = getClip(selectedClipId);
+
+  if (!clip) {
+    panel.innerHTML = `
+      <h3>Text Editor</h3>
+      <p class="studio-muted">Select a video clip first.</p>
+    `;
+    return;
+  }
+
+  if (clip.text === undefined) clip.text = "";
+
+  panel.innerHTML = `
+    <h3>Text Overlay</h3>
+
+    <p class="studio-muted" style="margin:10px 0;">
+      Enter the text you want to display over your video.
+    </p>
+
+    <input id="studioTextInput"
+      type="text"
+      maxlength="100"
+      placeholder="Enter your text..."
+      value="${escapeHTML(clip.text)}">
+
+    <p class="studio-muted" style="margin:12px 0 6px;">
+      Text size
+    </p>
+
+    <input id="studioTextSize"
+      type="range" min="14" max="60" value="${clip.textSize || 28}">
+
+    <button id="studioApplyText" style="margin-top:12px;">
+      Apply Text
+    </button>
+
+    <button id="studioRemoveText" style="margin-top:12px;">
+      Remove Text
+    </button>
+  `;
+
+  document.getElementById("studioApplyText")
+    .addEventListener("click", () => {
+      clip.text = document.getElementById("studioTextInput").value;
+      clip.textSize = Number(document.getElementById("studioTextSize").value);
+
+      const overlay = document.getElementById("studioTextOverlay");
+      overlay.textContent = clip.text;
+      overlay.style.fontSize = clip.textSize + "px";
+      overlay.style.display = clip.text ? "block" : "none";
+
+      saveEdit();
+      status.textContent = "Text applied to selected clip.";
+    });
+
+  document.getElementById("studioRemoveText")
+    .addEventListener("click", () => {
+      clip.text = "";
+      const overlay = document.getElementById("studioTextOverlay");
+      overlay.textContent = "";
+      overlay.style.display = "none";
+
+      saveEdit();
+      status.textContent = "Text removed.";
+      openTool("text");
+    });
+}
+    if (tool === "filters") {
+  const clip = getClip(selectedClipId);
+
+  if (!clip) {
+    panel.innerHTML = `
+      <h3>Video Filters</h3>
+      <p class="studio-muted">Select a video clip first.</p>
+    `;
+    return;
+  }
+
+  if (!clip.filter) clip.filter = "none";
+
+  panel.innerHTML = `
+    <h3>Video Filters</h3>
+
+    <p class="studio-muted" style="margin:10px 0;">
+      Choose a visual effect for your selected clip.
+    </p>
+
+    <select id="studioFilterSelect"
+      style="width:100%;padding:12px;background:#252525;color:white;border:1px solid #444;border-radius:7px;">
+
+      <option value="none">Original</option>
+      <option value="grayscale">Black and White</option>
+      <option value="sepia">Sepia</option>
+      <option value="vintage">Vintage</option>
+      <option value="blur">Blur</option>
+      <option value="bright">Bright</option>
+      <option value="contrast">High Contrast</option>
+      <option value="warm">Warm</option>
+    </select>
+
+    <button id="studioApplyFilter" style="margin-top:12px;">
+      Apply Filter
+    </button>
+  `;
+
+  const filterSelect = document.getElementById("studioFilterSelect");
+  filterSelect.value = clip.filter;
+
+  document.getElementById("studioApplyFilter")
+    .addEventListener("click", () => {
+      clip.filter = filterSelect.value;
+
+      applyClipEffects(clip);
+      saveEdit();
+
+      status.textContent = "Filter applied to selected clip.";
+    });
+}
+    if (tool === "speed") {
+  const clip = getClip(selectedClipId);
+
+  if (!clip) {
+    panel.innerHTML = `
+      <h3>Playback Speed</h3>
+      <p class="studio-muted">Select a video clip first.</p>
+    `;
+    return;
+  }
+
+  if (!clip.speed) clip.speed = 1;
+
+  panel.innerHTML = `
+    <h3>Playback Speed</h3>
+
+    <p class="studio-muted" style="margin:10px 0;">
+      Change how fast or slow your selected clip plays.
+    </p>
+
+    <select id="studioSpeedSelect"
+      style="width:100%;padding:12px;background:#252525;color:white;border:1px solid #444;border-radius:7px;">
+
+      <option value="0.25">0.25× Very Slow</option>
+      <option value="0.5">0.5× Slow</option>
+      <option value="0.75">0.75×</option>
+      <option value="1">1× Normal</option>
+      <option value="1.25">1.25×</option>
+      <option value="1.5">1.5× Fast</option>
+      <option value="2">2× Very Fast</option>
+      <option value="3">3×</option>
+    </select>
+
+    <button id="studioApplySpeed" style="margin-top:12px;">
+      Apply Speed
+    </button>
+  `;
+
+  const speedSelect = document.getElementById("studioSpeedSelect");
+  speedSelect.value = String(clip.speed);
+
+  document.getElementById("studioApplySpeed")
+    .addEventListener("click", () => {
+      clip.speed = Number(speedSelect.value);
+
+      applyClipEffects(clip);
+      saveEdit();
+
+      status.textContent =
+        "Playback speed set to " + clip.speed + "×.";
+    });
+}
+    if (tool === "audio") {
+      
+      const clip = getClip(selectedClipId);
+      
+
+      if (!clip) {
+        
+        panel.innerHTML = `
+        
+        <h3>Audio Controls</h3>
+        <p class="studio-muted">Select a video clip first.</p>
+       `;
+        return;
+        }
+
+      if (clip.volume === undefined) clip.volume = 1;
+
+        panel.innerHTML = `
+        <h3>Audio Controls</h3>
+
+        <p class="studio-muted" style="margin:12px 0;">
+        Adjust the original audio volume of this clip.
+        </p>
+
+        <label>
+        Volume: 
+        <span id="studioVolumeValue">
+          ${Math.round(clip.volume * 100)}%
+        </span>
+        </label>
+
+       <input id="studioVolume"
+         type="range"
+         min="0"
+         max="1"
+         step="0.01"
+         value="${clip.volume}">
+
+       <button id="studioMute" style="margin-top:12px;">
+         ${clip.volume === 0 ? "Restore Volume" : "Mute"}
+       </button>
+
+       <button id="studioApplyVolume" style="margin-top:12px;">
+         Save Volume
+       </button>
+       `;
+
+    const volume = document.getElementById("studioVolume");
+    const volumeValue = document.getElementById("studioVolumeValue");
+
+    volume.addEventListener("input", () => {
+      
+      const player = document.getElementById("studioVideo");
+
+      if (player) {
+        player.muted = false;
+        player.volume = Number(volume.value);
+        
+        volumeValue.textContent =
+          Math.round(Number(volume.value) * 100) + "%";
+      }
+    
+    });
+
+   document.getElementById("studioMute").addEventListener("click", () => {
+     volume.value = Number(volume.value) === 0 ? 1 : 0;
+     volume.dispatchEvent(new Event("input"));
+  });
+
+   document.getElementById("studioApplyVolume")
+     .addEventListener("click", () => {
+       
+      clip.volume = Number(volume.value);
+      applyClipEffects(clip);
+      saveEdit();
+      status.textContent = "Clip volume saved.";
+    });
+}
+  }
+    
+    
+    
+    
+
+
+  document.querySelectorAll("[data-tool]").forEach(button => {
+    button.addEventListener("click", () => {
+      openTool(button.dataset.tool);
+    });
+  });
+
+  // Delete selected clip.
+  function deleteSelectedClip() {
+    const index = selectedIndex();
+
+    if (index < 0) return;
+
+    const wasCurrent = currentClipId === selectedClipId;
+
+    clips.splice(index, 1);
+
+    selectedClipId = clips[index]?.id ||
+      clips[index - 1]?.id || null;
+
+    if (wasCurrent) {
+      video.pause();
+      currentClipId = null;
+    }
+
+    saveEdit();
+    updateTimeline();
+
+    if (selectedClipId) {
+      selectClip(selectedClipId);
+    } else {
+      video.removeAttribute("src");
+      video.style.display = "none";
+      placeholder.style.display = "block";
+      updateClock();
+    }
+
+    status.textContent = "Selected clip deleted.";
+  }
+
+  // Move a selected clip left or right.
+  function moveSelectedClip(direction) {
+    const index = selectedIndex();
+    const newIndex = index + direction;
+
+    if (
+      index < 0 ||
+      newIndex < 0 ||
+      newIndex >= clips.length
+    ) return;
+
+    const [clip] = clips.splice(index, 1);
+    clips.splice(newIndex, 0, clip);
+
+    saveEdit();
+    updateTimeline();
+
+    status.textContent = "Clip order changed.";
+  }
+
+  function showSelectedClipControls() {
+    const clip = getClip(selectedClipId);
+
+    if (!clip) return;
+
+    panel.innerHTML = `
+      <h3>Selected Clip</h3>
+
+      <p class="studio-muted" style="margin:10px 0;">
+        ${escapeHTML(sources[clip.sourceId].name)}
+        · ${clipDuration(clip).toFixed(1)} seconds
+      </p>
+
+      <div class="studio-row">
+        <button id="moveClipLeft">← Move Left</button>
+        <button id="moveClipRight">Move Right →</button>
+        <button id="deleteClip">Delete Clip</button>
+      </div>
+    `;
+
+    document.getElementById("moveClipLeft").addEventListener(
+      "click", () => moveSelectedClip(-1)
+    );
+
+    document.getElementById("moveClipRight").addEventListener(
+      "click", () => moveSelectedClip(1)
+    );
+
+    document.getElementById("deleteClip").addEventListener(
+      "click", deleteSelectedClip
+    );
+  }
+
+  // Undo and redo restore timeline structure.
+  function restoreHistory(index) {
+    const state = history[index];
+
+    if (!state) return;
+
+    video.pause();
+
+    clips = JSON.parse(JSON.stringify(state.clips));
+
+    selectedClipId = clips.some(
+      clip => clip.id === state.selectedClipId
+    ) ? state.selectedClipId : clips[0]?.id || null;
+
+    historyIndex = index;
+
+    updateTimeline();
+    updateHistoryButtons();
+
+    if (selectedClipId) {
+      selectClip(selectedClipId);
+    } else {
+      currentClipId = null;
+      video.removeAttribute("src");
+      video.style.display = "none";
+      placeholder.style.display = "block";
+    }
+
+    status.textContent = "Timeline history restored.";
+  }
+
+  document.getElementById("studioUndo").addEventListener("click", () => {
+    if (historyIndex > 0) {
+      restoreHistory(historyIndex - 1);
+    }
+  });
+
+  document.getElementById("studioRedo").addEventListener("click", () => {
+    if (historyIndex < history.length - 1) {
+      restoreHistory(historyIndex + 1);
+    }
+  });
+
+  document.getElementById("studioExport").addEventListener("click", () => {
+    status.textContent =
+      "MP4 export is not connected yet. We will build the rendering engine separately.";
+  });
+
+  // Initial history state.
+  saveEdit();
+
+  updateTimeline();
+
+  // Show clip controls whenever a clip is selected.
+  const originalSelectClip = selectClip;
+
+  // Keep the main selection function connected to the controls.
+  videoTrack.addEventListener("click", event => {
+    if (event.target.closest("[data-clip-id]")) {
+      setTimeout(showSelectedClipControls, 0);
+    }
+  });
+  showChatInput(false);
+}
+
+
+
+
+
+
+function loadSettings() {
+  const key = settingsStorageKey();
+  if (!key) return;
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(key) || "{}");
+
+    const selectedLanguage =
+      saved.language ||
+      localStorage.getItem("activeInterfaceLanguage") ||
+      JSON.parse(localStorage.getItem("welcomePreferences") || "{}").language ||
+      "English";
+
+    document.getElementById("settingsLanguage").value =
+      selectedLanguage;
+
+    document.getElementById("settingsTheme").value =
+      saved.theme || "dark";
+
+    document.getElementById("settingsVideoLanguage").value =
+      saved.videoLanguage || "English";
+
+    document.getElementById("settingsStyle").value =
+      saved.style || "Informative";
+
+    applyInterfaceLanguage(selectedLanguage);
+    applyTheme(saved.theme || "dark");
+
+  } catch (error) {
+    console.error("Could not load settings:", error);
+    applyTheme("dark");
+  }
+}
+
+function saveSettings() {
+  const key = settingsStorageKey();
+  if (!key) return;
+
+  const settings = {
+    language: document.getElementById("settingsLanguage").value,
+    theme: document.getElementById("settingsTheme").value,
+    videoLanguage: document.getElementById("settingsVideoLanguage").value,
+    style: document.getElementById("settingsStyle").value
+  };
+  applyInterfaceLanguage(document.getElementById("settingsLanguage").value);
+
+  localStorage.setItem(key, JSON.stringify(settings));
+  applyTheme(settings.theme);
+
+  document.querySelector(".settings-note").textContent =
+    "Preferences saved on this device. AI behavior will use them when AI features are connected.";
+}
+
+[
+  "settingsLanguage",
+  "settingsTheme",
+  "settingsVideoLanguage",
+  "settingsStyle"
+].forEach(id => {
+  document.getElementById(id).addEventListener("change", saveSettings);
+});
+function openWelcomeSettings() {
+  const saved = JSON.parse(localStorage.getItem("welcomePreferences") || "{}");
+
+  document.getElementById("welcomeLanguage").value =
+    saved.language || "English";
+
+  document.getElementById("welcomeTheme").value =
+    saved.theme || "dark";
+
+  showPage("welcomeSettings");
+}
+
+function saveWelcomeSettings() {
+  const preferences = {
+    language: document.getElementById("welcomeLanguage").value,
+    theme: document.getElementById("welcomeTheme").value
+  };
+
+  localStorage.setItem("welcomePreferences", JSON.stringify(preferences));
+  applyInterfaceLanguage(preferences.language);
+
+  // Apply the selected theme immediately.
+  applyTheme(preferences.theme);
+
+  document.getElementById("welcomeSettingsMessage").textContent =
+    "Preferences saved on this device.";
+}
+
+function loadWelcomePreferences() {
+  const saved = JSON.parse(localStorage.getItem("welcomePreferences") || "{}");
+  applyTheme(saved.theme || "dark");
+}
+
+loadWelcomePreferences();
+async function checkSession() {
+  const { data, error } = await supabaseClient.auth.getSession();
+
+  if (error) {
+    console.error(error);
+    showPage("welcome");
+    return;
+  }
+
+  if (data.session) {
+    showDashboard(data.session.user);
+  } else {
+    const preferences = JSON.parse(
+      localStorage.getItem("welcomePreferences") || "{}"
+    );
+
+    applyInterfaceLanguage(preferences.language || "English");
+    applyTheme(preferences.theme || "dark");
+    showPage("welcome");
+  }
+}
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (event === "PASSWORD_RECOVERY") {
+  showPage("passwordReset");
+  return;
+}
+  if (event === "SIGNED_IN" && session) {
+    showDashboard(session.user);
+  }
+  if (event === "SIGNED_OUT") {
+
+    activeWorkspaceUserId = null;
+
+    settingsUserId = null;
+
+    currentChatId = null;
+
+    currentMessages = [];
+    document.getElementById("settingsPanel").classList.add("hidden");
+
+    document.querySelector(".chat-main").classList.remove("hidden");
+
+    document.getElementById("navLogout").classList.add("hidden");
+
+    document.getElementById("navLogin").classList.remove("hidden");
+
+    showPage("welcome");
+  }
+});
+// SHOW / HIDE PASSWORD FOR ALL PASSWORD FIELDS
+
+function addShowPasswordButtons() {
+
+  const passwordInputs = document.querySelectorAll(
+    'input[type="password"]'
+  );
+
+  passwordInputs.forEach(input => {
+
+    // Prevent duplicate buttons
+    if (input.parentElement.classList.contains(
+      "password-field-wrapper"
+    )) {
+      return;
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "password-field-wrapper";
+
+    input.parentNode.insertBefore(wrapper, input);
+
+    wrapper.appendChild(input);
+
+    const toggleButton = document.createElement("button");
+
+    toggleButton.type = "button";
+    toggleButton.className = "password-toggle-btn";
+    toggleButton.textContent = "Show";
+    toggleButton.setAttribute("aria-label", "Show password");
+
+    toggleButton.addEventListener("click", () => {
+
+      const isHidden = input.type === "password";
+
+      input.type = isHidden ? "text" : "password";
+
+      toggleButton.textContent = isHidden ? "Hide" : "Show";
+
+      toggleButton.setAttribute(
+        "aria-label",
+        isHidden ? "Hide password" : "Show password"
+      );
+
+    });
+
+    wrapper.appendChild(toggleButton);
+
+  });
+
+}
+
+addShowPasswordButtons();
+checkSession();
+
+function openLegal() {
+  pageBeforeLegal = document.getElementById("legal").classList.contains("hidden")
+    ? getCurrentPage()
+    : pageBeforeLegal;
+
+  showPage("legal");
+}
+
+function getCurrentPage() {
+  return pages.find(id =>
+    !document.getElementById(id).classList.contains("hidden")
+  ) || "welcome";
+}
+
+function backFromLegal() {
+  showPage(pageBeforeLegal);
+  
+}
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+});
+window.showDeleteAccountConfirmation = function () {
+    const confirmation =
+        document.getElementById("deleteAccountConfirmation");
+
+    if (!confirmation) {
+        alert("Confirmation section not found!");
+        return;
+    }
+
+    confirmation.classList.remove("hidden");
+
+    alert("Delete Account confirmation opened!");
+};
+
+window.cancelDeleteAccount = function () {
+    const confirmation =
+        document.getElementById("deleteAccountConfirmation");
+
+    confirmation.classList.add("hidden");
+
+    document.getElementById("deleteAccountText").value = "";
+    document.getElementById("deleteAccountPassword").value = "";
+};
+
+window.deleteMakoraAccount = async function () {
+  
+
+    const confirmationText =
+        document.getElementById("deleteAccountText").value.trim();
+
+    const password =
+        document.getElementById("deleteAccountPassword").value;
+
+    if (confirmationText !== "DELETE") {
+        alert('Please type DELETE exactly to confirm.');
+        return;
+    }
+
+    if (!password) {
+        alert("Please enter your current password.");
+        return;
+    }
+
+    const confirmed = confirm(
+        "Are you absolutely sure you want to permanently delete your Makora account?"
+    );
+
+    if (!confirmed) return;
+
+    alert("Verifying your password...");
+
+    try {
+        const { data, error } =
+            await supabaseClient.functions.invoke("smart-action", {
+                body: {
+                    password: password,
+                    confirm_delete: true
+                }
+            });
+
+        if (error) {
+            let details = error.message;
+
+            if (error.context) {
+                try {
+                    details += "\n" +
+                        await error.context.clone().text();
+                } catch (e) {}
+            }
+
+            alert("ACCOUNT DELETION FAILED:\n" + details);
+            return;
+        }
+
+        if (!data || data.success !== true || data.deleted !== true) {
+            alert("Deletion was not confirmed by the server.");
+            return;
+        }
+
+        alert("Makora account deletion completed.");
+
+        await supabaseClient.auth.signOut();
+
+        window.location.reload();
+
+    } catch (error) {
+        alert("ERROR:\n" + error.message);
+    }
+};
+window.testDeleteAccountPasswordCheck = async function () {
+    alert("Step 1: Test function started.");
+
+    const passwordInput =
+        document.getElementById("deleteAccountPassword");
+
+    if (!passwordInput || !passwordInput.value) {
+        alert("Please enter your current password.");
+        return;
+    }
+
+    alert("Step 2: Password found. Connecting to Supabase...");
+
+    try {
+        const { data, error } =
+            await supabaseClient.functions.invoke("smart-action", {
+                body: {
+                    password: passwordInput.value,
+                    dry_run: true
+                    
+                }
+            });
+
+        if (error) {
+            let details = error.message;
+
+            if (error.context) {
+                try {
+                    details += "\n" +
+                        await error.context.clone().text();
+                } catch (e) {}
+            }
+
+            alert("TEST FAILED:\n" + details);
+            return;
+        }
+
+        alert("TEST RESULT:\n" + JSON.stringify(data));
+
+    } catch (error) {
+        alert("ERROR:\n" + error.message);
+    }
+};
+document.addEventListener("DOMContentLoaded", function () {
+    const testButton =
+        document.getElementById("testPasswordButton");
+
+    if (!testButton) {
+        console.error("Test button not found!");
+        return;
+    }
+
+    testButton.addEventListener("click", function () {
+        alert("Test button is working!");
+
+        if (typeof window.testDeleteAccountPasswordCheck === "function") {
+            window.testDeleteAccountPasswordCheck();
+        } else {
+            alert("Password test function was not found!");
+        }
+    });
+});
+function clearSensitiveAccountFields() {
+    const passwordField =
+        document.getElementById("deleteAccountPassword");
+
+    const confirmationField =
+        document.getElementById("deleteAccountText");
+
+    if (passwordField) {
+        passwordField.value = "";
+    }
+
+    if (confirmationField) {
+        confirmationField.value = "";
+    }
+
+    const confirmation =
+        document.getElementById("deleteAccountConfirmation");
+
+    if (confirmation) {
+        confirmation.classList.add("hidden");
+    }
+}
+
+window.resendSignupVerificationEmail = async function() {
+
+    const button = document.getElementById(
+        "signupResendVerificationButton"
+    );
+
+    const status = document.getElementById(
+        "signupResendVerificationStatus"
+    );
+
+    const email = localStorage.getItem("pendingSignupEmail");
+
+    if (!email) {
+        status.textContent = "Please sign up again.";
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Sending...";
+    status.textContent = "";
+
+    try {
+
+        const { error } = await supabaseClient.auth.resend({
+            type: "signup",
+            email: email
+        });
+
+        if (error) throw error;
+
+        status.textContent =
+            "Verification email sent. Please check your inbox.";
+
+    } catch (error) {
+
+        status.textContent =
+            "Could not send email: " + error.message;
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "Resend Verification Email";
+
+    }
+};
+</script>
+
+</body>
+</html>
+

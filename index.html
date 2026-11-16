@@ -3869,6 +3869,193 @@ document.getElementById("passwordResetForm")
     }
   });
 
+// ========================================
+// MAKORA PROFILE PHOTO
+// ========================================
+
+function showDefaultMakoraAvatar() {
+  const image = document.getElementById("makoraProfilePicture");
+  const fallback = document.getElementById("makoraDefaultAvatar");
+
+  image.src = "";
+  image.style.display = "none";
+  fallback.style.display = "flex";
+}
+
+async function loadMakoraProfilePicture(user) {
+  if (!user) return;
+
+  const image = document.getElementById("makoraProfilePicture");
+  const fallback = document.getElementById("makoraDefaultAvatar");
+  const headerName = document.getElementById("profileHeaderName");
+
+  const avatarPath = user.user_metadata?.avatar_path;
+
+  if (headerName) {
+    headerName.textContent =
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      "Makora Creator";
+  }
+
+  if (!avatarPath) {
+    showDefaultMakoraAvatar();
+    return;
+  }
+
+  try {
+    const { data, error } = await supabaseClient.storage
+      .from("profile-avatars")
+      .createSignedUrl(avatarPath, 3600);
+
+    if (error) throw error;
+
+    image.src = data.signedUrl;
+    image.style.display = "block";
+    fallback.style.display = "none";
+
+    image.onerror = () => {
+      showDefaultMakoraAvatar();
+    };
+
+  } catch (error) {
+    console.error("Could not load profile photo:", error);
+    showDefaultMakoraAvatar();
+  }
+}
+
+async function uploadMakoraProfilePicture(file) {
+  const status = document.getElementById("profilePictureStatus");
+  const input = document.getElementById("profilePictureInput");
+
+  if (!file) return;
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    status.textContent = "Choose a JPG, PNG, or WEBP image.";
+    input.value = "";
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    status.textContent = "Image must be smaller than 2 MB.";
+    input.value = "";
+    return;
+  }
+
+  status.textContent = "Uploading photo...";
+
+  try {
+    const { data: userData, error: userError } =
+      await supabaseClient.auth.getUser();
+
+    if (userError || !userData.user) {
+      throw new Error("Please log in again.");
+    }
+
+    const user = userData.user;
+    const extension = file.type.split("/")[1];
+
+    const filePath = `${user.id}/avatar.${extension}`;
+
+    const { error: uploadError } = await supabaseClient.storage
+      .from("profile-avatars")
+      .upload(filePath, file, {
+        upsert: true,
+        contentType: file.type
+      });
+
+    if (uploadError) throw uploadError;
+
+    const { error: updateError } = await supabaseClient.auth.updateUser({
+      data: {
+        avatar_path: filePath
+      }
+    });
+
+    if (updateError) throw updateError;
+
+    const { data: refreshedUser, error: refreshError } =
+      await supabaseClient.auth.getUser();
+
+    if (refreshError) throw refreshError;
+
+    await loadMakoraProfilePicture(refreshedUser.user);
+
+    status.textContent = "Profile photo updated successfully.";
+
+  } catch (error) {
+    console.error("Profile photo upload failed:", error);
+    status.textContent = "Upload failed: " + error.message;
+
+  } finally {
+    input.value = "";
+  }
+}
+
+async function removeMakoraProfilePicture() {
+  const status = document.getElementById("profilePictureStatus");
+
+  const confirmed = confirm(
+    "Are you sure you want to remove your profile photo?"
+  );
+
+  if (!confirmed) return;
+
+  status.textContent = "Removing photo...";
+
+  try {
+    const { data: userData, error: userError } =
+      await supabaseClient.auth.getUser();
+
+    if (userError || !userData.user) {
+      throw new Error("Please log in again.");
+    }
+
+    const user = userData.user;
+    const avatarPath = user.user_metadata?.avatar_path;
+
+    if (avatarPath) {
+      const { error: storageError } = await supabaseClient.storage
+        .from("profile-avatars")
+        .remove([avatarPath]);
+
+      if (storageError) throw storageError;
+    }
+
+    const { error: updateError } = await supabaseClient.auth.updateUser({
+      data: {
+        avatar_path: null
+      }
+    });
+
+    if (updateError) throw updateError;
+
+    showDefaultMakoraAvatar();
+
+    status.textContent = "Profile photo removed.";
+
+  } catch (error) {
+    console.error("Profile photo removal failed:", error);
+    status.textContent = "Could not remove photo: " + error.message;
+  }
+}
+
+// Connect the file input to the upload function.
+document.getElementById("profilePictureInput")
+  .addEventListener("change", function() {
+    const file = this.files[0];
+
+    if (file) {
+      uploadMakoraProfilePicture(file);
+    }
+  });
+
 function showDashboard(user) {
   if (!user) return;
 

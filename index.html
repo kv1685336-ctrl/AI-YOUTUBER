@@ -5602,8 +5602,7 @@ async function logout() {
   }
 
   // Clear account identity.
-  document.getElementById("headerProfileButton")
-    .classList.add("hidden");
+  
   activeWorkspaceUserId = null;
   settingsUserId = null;
 
@@ -7295,59 +7294,26 @@ function loadWelcomePreferences() {
 
 loadWelcomePreferences();
 async function checkSession() {
-  console.log("MAKORA: Checking saved login session...");
+  const { data, error } = await supabaseClient.auth.getSession();
 
-  try {
-    const { data, error } =
-      await supabaseClient.auth.getSession();
+  if (error) {
+    console.error(error);
+    showPage("welcome");
+    return;
+  }
 
-    if (error) {
-      console.error("MAKORA SESSION ERROR:", error);
+  if (data.session) {
+    showDashboard(data.session.user);
+  } else {
+    const preferences = JSON.parse(
+      localStorage.getItem("welcomePreferences") || "{}"
+    );
 
-      alert("Session error: " + error.message);
-
-      showPage("welcome");
-      return;
-    }
-
-    if (data.session) {
-      console.log(
-        "MAKORA: Saved session found.",
-        data.session.user.id
-      );
-
-      alert("Saved session FOUND. Opening Makora.");
-
-      showDashboard(data.session.user);
-
-    } else {
-      console.log("MAKORA: No saved session found.");
-
-      alert(
-        "No saved session found. Supabase is not restoring your login."
-      );
-
-      const preferences = JSON.parse(
-        localStorage.getItem("welcomePreferences") || "{}"
-      );
-
-      applyInterfaceLanguage(
-        preferences.language || "English"
-      );
-
-      applyTheme(preferences.theme || "dark");
-      showPage("welcome");
-    }
-
-  } catch (error) {
-    console.error("MAKORA SESSION CHECK FAILED:", error);
-
-    alert("Session check failed: " + error.message);
-
+    applyInterfaceLanguage(preferences.language || "English");
+    applyTheme(preferences.theme || "dark");
     showPage("welcome");
   }
 }
-
 supabaseClient.auth.onAuthStateChange((event, session) => {
   if (event === "PASSWORD_RECOVERY") {
   showPage("passwordReset");

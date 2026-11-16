@@ -3340,7 +3340,17 @@ const SUPABASE_URL = "https://xxzcbjsbiaveclxmoqpu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_2GXwDmXYiO6GBapwH3la1A_yukRPEmF";
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
-  SUPABASE_KEY
+  SUPABASE_KEY,
+  {
+    auth: {
+
+      persistSession: true,
+
+      autoRefreshToken: true,
+
+      detectSessionInUrl: true
+    }
+  }
 );
 
 

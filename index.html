@@ -1889,6 +1889,132 @@ body.light-theme [id^="settingsPage-"] select {
         height: 76px;
     }
 }
+
+/* =================================
+   SOCIAL ACCOUNTS
+================================= */
+
+.social-intro {
+  color: #aaaab5;
+  margin: 12px 0 24px;
+  line-height: 1.6;
+}
+
+.social-accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.social-account-card {
+  background: #17171e;
+  border: 1px solid #30303a;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.social-account-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.social-account-info h3 {
+  margin: 0 0 5px;
+  color: #fff;
+}
+
+.social-account-info p {
+  margin: 0 0 9px;
+  color: #aaaab5;
+  font-size: 13px;
+}
+
+.social-platform-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  background: #252530;
+  flex-shrink: 0;
+}
+
+.instagram-icon {
+  color: #e879a8;
+}
+
+.facebook-icon {
+  color: #5797ff;
+}
+
+.youtube-icon {
+  color: #ff5555;
+}
+
+.social-status {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.social-status.not-connected {
+  color: #e6ae55;
+}
+
+.social-account-card button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.social-security-note {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: #17171e;
+  border: 1px solid #30303a;
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 24px;
+}
+
+.social-security-note > i {
+  color: #55c99a;
+  font-size: 21px;
+  margin-top: 3px;
+}
+
+.social-security-note strong {
+  color: #fff;
+}
+
+.social-security-note p {
+  color: #aaaab5;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 7px 0 0;
+}
+
+/* LIGHT THEME */
+
+body.light-theme .social-account-card,
+body.light-theme .social-security-note {
+  background: #fff;
+  border-color: #e2e2e8;
+}
+
+body.light-theme .social-account-info h3,
+body.light-theme .social-security-note strong {
+  color: #17171d;
+}
+
 </style>
 </head>
 <body>
@@ -2633,19 +2759,108 @@ body.light-theme [id^="settingsPage-"] select {
       </div>
     </div>
   </div>
+  
+<!-- SOCIAL MEDIA ACCOUNTS -->
+<div id="settingsPage-social" class="hidden">
 
-  <!-- SOCIAL MEDIA ACCOUNTS -->
-  <div id="settingsPage-social" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
-    <h1>Social Media Accounts</h1>
-    <div class="settings-section">
-      <p>Connect the social media accounts you want to manage with Makora.</p>
-      <p><strong>Instagram:</strong> Not connected</p>
-      <p><strong>Facebook:</strong> Not connected</p>
-      <p><strong>YouTube:</strong> Not connected</p>
-      <p>Account connections will be available after the official platform integrations are implemented.</p>
+  <button class="secondary" onclick="showSettingsHome()">
+    ← Back to Settings
+  </button>
+
+  <h1>Social Media Accounts</h1>
+
+  <p class="social-intro">
+    Connect your social media accounts to let Makora
+    manage your content from one place.
+  </p>
+
+  <div class="social-accounts-list">
+
+    <!-- INSTAGRAM -->
+    <div class="social-account-card">
+
+      <div class="social-account-info">
+        <div class="social-platform-icon instagram-icon">
+          <i class="fa-brands fa-instagram"></i>
+        </div>
+
+        <div>
+          <h3>Instagram</h3>
+          <p>Connect your Instagram professional account.</p>
+          <span class="social-status not-connected">
+            Not connected
+          </span>
+        </div>
+      </div>
+
+      <button type="button" disabled>
+        OAuth setup required
+      </button>
+
+    </div>
+
+    <!-- FACEBOOK -->
+    <div class="social-account-card">
+
+      <div class="social-account-info">
+        <div class="social-platform-icon facebook-icon">
+          <i class="fa-brands fa-facebook-f"></i>
+        </div>
+
+        <div>
+          <h3>Facebook</h3>
+          <p>Connect your Facebook Page.</p>
+          <span class="social-status not-connected">
+            Not connected
+          </span>
+        </div>
+      </div>
+
+      <button type="button" disabled>
+        OAuth setup required
+      </button>
+
+    </div>
+
+    <!-- YOUTUBE -->
+    <div class="social-account-card">
+
+      <div class="social-account-info">
+        <div class="social-platform-icon youtube-icon">
+          <i class="fa-brands fa-youtube"></i>
+        </div>
+
+        <div>
+          <h3>YouTube</h3>
+          <p>Connect your YouTube channel.</p>
+          <span class="social-status not-connected">
+            Not connected
+          </span>
+        </div>
+      </div>
+
+      <button type="button" disabled>
+        OAuth setup required
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="social-security-note">
+    <i class="fa-solid fa-shield-halved"></i>
+    <div>
+      <strong>Your accounts stay protected</strong>
+      <p>
+        Makora will use official platform authorization.
+        Your social media passwords will never be requested
+        by Makora.
+      </p>
     </div>
   </div>
+
+</div>
+
 
   <!-- MAKORA CREDITS -->
   <div id="settingsPage-credits" class="hidden">

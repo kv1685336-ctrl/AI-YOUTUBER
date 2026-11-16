@@ -5239,6 +5239,8 @@ async function logout() {
   }
 
   // Clear account identity.
+  document.getElementById("headerProfileButton")
+    .classList.add("hidden");
   activeWorkspaceUserId = null;
   settingsUserId = null;
 

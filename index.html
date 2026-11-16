@@ -1883,6 +1883,50 @@ body.light-theme [id^="settingsPage-"] select {
 .header-profile-button span {
   font-size: 21px;
 }
+
+/* SOCIAL ACCOUNT CARDS */
+
+.social-account-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 16px;
+  margin: 15px 0;
+  border: 1px solid #333;
+  border-radius: 12px;
+  background: #151515;
+}
+
+.social-account-info {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.social-brand-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.social-account-info h3 {
+  margin: 0 0 5px;
+}
+
+.social-account-info p {
+  margin: 0;
+  color: #aaa;
+  font-size: 13px;
+}
+
+.settings-description {
+  color: #999;
+  font-size: 13px;
+  margin-top: 20px;
+}
+
 </style>
 </head>
 <body>
@@ -2636,18 +2680,100 @@ body.light-theme [id^="settingsPage-"] select {
     </div>
   </div>
 
-  <!-- SOCIAL MEDIA ACCOUNTS -->
-  <div id="settingsPage-social" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
-    <h1>Social Media Accounts</h1>
-    <div class="settings-section">
-      <p>Connect the social media accounts you want to manage with Makora.</p>
-      <p><strong>Instagram:</strong> Not connected</p>
-      <p><strong>Facebook:</strong> Not connected</p>
-      <p><strong>YouTube:</strong> Not connected</p>
-      <p>Account connections will be available after the official platform integrations are implemented.</p>
+  
+<!-- SOCIAL MEDIA ACCOUNTS -->
+<div id="settingsPage-social" class="hidden">
+
+  <button class="secondary" onclick="showSettingsHome()">
+    ← Back to Settings
+  </button>
+
+  <h1>Social Media Accounts</h1>
+
+  <div class="settings-section">
+
+    <p>Connect the platforms you want Makora to manage.</p>
+
+    <!-- INSTAGRAM -->
+    <div class="social-account-card">
+
+      <div class="social-account-info">
+
+        <img
+          class="social-brand-logo"
+          src="https://cdn.simpleicons.org/instagram/E4405F"
+          alt="Instagram">
+
+        <div>
+          <h3>Instagram</h3>
+          <p id="instagramStatus">Not connected</p>
+        </div>
+
+      </div>
+
+      <button class="secondary"
+        onclick="connectSocialAccount('instagram')">
+        Connect
+      </button>
+
     </div>
+
+    <!-- FACEBOOK -->
+    <div class="social-account-card">
+
+      <div class="social-account-info">
+
+        <img
+          class="social-brand-logo"
+          src="https://cdn.simpleicons.org/facebook/0866FF"
+          alt="Facebook">
+
+        <div>
+          <h3>Facebook</h3>
+          <p id="facebookStatus">Not connected</p>
+        </div>
+
+      </div>
+
+      <button class="secondary"
+        onclick="connectSocialAccount('facebook')">
+        Connect
+      </button>
+
+    </div>
+
+    <!-- YOUTUBE -->
+    <div class="social-account-card">
+
+      <div class="social-account-info">
+
+        <img
+          class="social-brand-logo"
+          src="https://cdn.simpleicons.org/youtube/FF0000"
+          alt="YouTube">
+
+        <div>
+          <h3>YouTube</h3>
+          <p id="youtubeStatus">Not connected</p>
+        </div>
+
+      </div>
+
+      <button class="secondary"
+        onclick="connectSocialAccount('youtube')">
+        Connect
+      </button>
+
+    </div>
+
+    <p class="settings-description">
+      Secure account authorization will be available after the
+      official platform integrations are implemented.
+    </p>
+
   </div>
+</div>
+
 
   <!-- MAKORA CREDITS -->
   <div id="settingsPage-credits" class="hidden">

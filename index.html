@@ -2694,73 +2694,210 @@ body.light-theme .social-security-note strong {
   </div>
 </div>
 
-  <!-- GENERAL PREFERENCES -->
-  <div id="settingsPage-general" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
-    <h1>General Preferences</h1>
-    <div class="settings-section">
-      <div class="settings-row">
-        <div>
-          <strong>Interface language</strong>
-          <p>Choose your preferred app language.</p>
-        </div>
-        <select id="settingsLanguage">
-          <option>English</option>
-          <option>Tamil</option>
-          <option>Hindi</option>
-          <option>Telugu</option>
-        </select>
+
+<!-- CONTENT PREFERENCES -->
+<div id="settingsPage-ai" class="hidden">
+
+  <button class="secondary" onclick="showSettingsHome()">
+    ← Back to Settings
+  </button>
+
+  <h1>Content Preferences</h1>
+
+  <p class="settings-intro">
+    Tell Makora how you want your social media content to be created.
+  </p>
+
+  <div class="settings-section">
+
+    <h2>Content Identity</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Content niche</strong>
+        <p>What is your main content category?</p>
       </div>
-      <div class="settings-row">
-        <div>
-          <strong>Theme</strong>
-          <p>Choose how Makora looks.</p>
-        </div>
-        <select id="settingsTheme">
-          <option value="dark">Dark</option>
-          <option value="light">Light</option>
-        </select>
-      </div>
+      <select id="contentNiche">
+        <option value="General">General</option>
+        <option>Technology</option>
+        <option>Education</option>
+        <option>Business</option>
+        <option>Entertainment</option>
+        <option>Gaming</option>
+        <option>Fashion & Beauty</option>
+        <option>Food</option>
+        <option>Travel</option>
+        <option>Fitness & Sports</option>
+        <option>Lifestyle</option>
+        <option>News</option>
+        <option>Other</option>
+      </select>
     </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Target audience</strong>
+        <p>Who do you mainly want to reach?</p>
+      </div>
+      <select id="contentAudience">
+        <option value="General audience">General audience</option>
+        <option>Students</option>
+        <option>Young adults</option>
+        <option>Professionals</option>
+        <option>Business owners</option>
+        <option>Creators</option>
+        <option>Parents</option>
+      </select>
+    </div>
+
   </div>
 
-  <!-- AI PREFERENCES -->
-  <div id="settingsPage-ai" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
-    <h1>AI Preferences</h1>
-    <p>Set default preferences for content created with Makora.</p>
-    <div class="settings-section">
-      <div class="settings-row">
-        <div>
-          <strong>Default content language</strong>
-          <p>The language Makora should use when creating content.</p>
-        </div>
-        <select id="settingsVideoLanguage">
-          <option>English</option>
-          <option>Tamil</option>
-          <option>Hindi</option>
-        </select>
+  <div class="settings-section">
+
+    <h2>Language & Style</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Content language</strong>
+        <p>Default language for generated content.</p>
       </div>
-      <div class="settings-row">
-        <div>
-          <strong>Content style</strong>
-          <p>Your preferred style for generated content.</p>
-        </div>
-        <select id="settingsStyle">
-          <option>Professional</option>
-          <option>Informative</option>
-          <option>Educational</option>
-          <option>Entertaining</option>
-          <option>Funny</option>
-          <option>Inspirational</option>
-          <option>Minimalist</option>
-          <option>Creative</option>
-          <option>Makora's Choice</option>
-        </select>
-      </div>
+      <select id="settingsVideoLanguage">
+        <option>English</option>
+        <option>Tamil</option>
+        <option>Hindi</option>
+        <option>Telugu</option>
+        <option>Malayalam</option>
+        <option>Kannada</option>
+        <option>Spanish</option>
+        <option>French</option>
+        <option>Other</option>
+      </select>
     </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Content style</strong>
+        <p>Choose the overall style of your content.</p>
+      </div>
+      <select id="settingsStyle">
+        <option>Professional</option>
+        <option>Informative</option>
+        <option>Educational</option>
+        <option>Entertaining</option>
+        <option>Funny</option>
+        <option>Inspirational</option>
+        <option>Minimalist</option>
+        <option>Creative</option>
+        <option>Storytelling</option>
+        <option>Makora's Choice</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Brand voice</strong>
+        <p>How should your content sound?</p>
+      </div>
+      <select id="contentTone">
+        <option>Friendly</option>
+        <option>Professional</option>
+        <option>Casual</option>
+        <option>Confident</option>
+        <option>Humorous</option>
+        <option>Motivational</option>
+        <option>Authoritative</option>
+      </select>
+    </div>
+
   </div>
-  
+
+  <div class="settings-section">
+
+    <h2>Content Formats</h2>
+    <p>Select the formats you want Makora to prioritize.</p>
+
+    <label class="content-option">
+      <input type="checkbox" name="contentFormats" value="Short videos" checked>
+      Short videos / Reels
+    </label>
+
+    <label class="content-option">
+      <input type="checkbox" name="contentFormats" value="Long videos" checked>
+      Long-form videos
+    </label>
+
+    <label class="content-option">
+      <input type="checkbox" name="contentFormats" value="Carousels">
+      Carousels
+    </label>
+
+    <label class="content-option">
+      <input type="checkbox" name="contentFormats" value="Stories">
+      Stories
+    </label>
+
+    <label class="content-option">
+      <input type="checkbox" name="contentFormats" value="Images">
+      Single image posts
+    </label>
+
+    <label class="content-option">
+      <input type="checkbox" name="contentFormats" value="Text posts">
+      Text posts
+    </label>
+
+  </div>
+
+  <div class="settings-section">
+
+    <h2>Captions & Hashtags</h2>
+
+    <div class="settings-row">
+      <div>
+        <strong>Caption length</strong>
+        <p>How long should captions usually be?</p>
+      </div>
+      <select id="captionLength">
+        <option>Short</option>
+        <option selected>Medium</option>
+        <option>Long</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Hashtag preference</strong>
+        <p>How should Makora use hashtags?</p>
+      </div>
+      <select id="hashtagPreference">
+        <option>Relevant hashtags</option>
+        <option>Minimal hashtags</option>
+        <option>No hashtags</option>
+        <option>AI decides</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <strong>Call to action</strong>
+        <p>How should posts encourage audience engagement?</p>
+      </div>
+      <select id="contentCTA">
+        <option>Ask questions</option>
+        <option>Encourage comments</option>
+        <option>Encourage sharing</option>
+        <option>Visit a link</option>
+        <option>No call to action</option>
+        <option>AI decides</option>
+      </select>
+    </div>
+
+  </div>
+
+  <p id="contentPreferencesStatus" role="status"></p>
+
+</div>
+
 <!-- SOCIAL MEDIA ACCOUNTS -->
 <div id="settingsPage-social" class="hidden">
 

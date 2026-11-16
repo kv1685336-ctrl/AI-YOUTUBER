@@ -2074,6 +2074,119 @@ body.light-theme [id^="settingsPage-"] select {
   padding: 20px 10px;
 }
 
+/* ABOUT MAKORA */
+
+.about-brand-card {
+  text-align: center;
+  background: #111;
+  border: 1px solid #292929;
+  border-radius: 16px;
+  padding: 28px 18px;
+  margin: 18px 0;
+}
+
+.about-logo {
+  width: 65px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  border-radius: 18px;
+  background: #ff3030;
+  color: white;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.about-brand-card h2 {
+  color: white;
+  letter-spacing: 4px;
+  margin: 16px 0 5px;
+}
+
+.about-brand-card p {
+  color: #aaa;
+  margin: 5px 0 12px;
+}
+
+.about-version {
+  display: inline-block;
+  color: #ff6666;
+  font-size: 12px;
+  background: #251313;
+  padding: 7px 12px;
+  border-radius: 20px;
+}
+
+.about-card {
+  background: #111;
+  border: 1px solid #292929;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 16px 0;
+}
+
+.about-card h3 {
+  color: white;
+  margin-top: 0;
+}
+
+.about-card > p {
+  color: #aaa;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.about-feature {
+  display: flex;
+  gap: 13px;
+  padding: 13px 0;
+  border-top: 1px solid #292929;
+}
+
+.about-feature > span {
+  color: #ff4545;
+  font-size: 22px;
+}
+
+.about-feature strong {
+  color: white;
+  font-size: 14px;
+}
+
+.about-feature p {
+  color: #999;
+  font-size: 13px;
+  margin: 5px 0 0;
+  line-height: 1.5;
+}
+
+.about-status {
+  color: #ff7777 !important;
+}
+
+.about-legal-button {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.about-footer {
+  text-align: center;
+  padding: 25px 10px;
+}
+
+.about-footer p {
+  color: #ff4545;
+  font-weight: 800;
+  letter-spacing: 4px;
+}
+
+.about-footer span {
+  color: #777;
+  font-size: 12px;
+}
+
 
 </style>
 </head>
@@ -3378,19 +3491,97 @@ body.light-theme [id^="settingsPage-"] select {
   </p>
 </div>
 
+<!-- ABOUT MAKORA -->
+<div id="settingsPage-about" class="hidden">
+  <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
 
-  <!-- ABOUT MAKORA -->
-  <div id="settingsPage-about" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
-    <h1>About Makora</h1>
-    <div class="settings-section">
-      <p><strong>Makora</strong></p>
-      <p>AI Social Media Manager</p>
-      <p>Manage your social media workflow with AI-assisted tools.</p>
-      <button onclick="openLegal()">Legal & Privacy</button>
-      <p class="settings-note">Makora is currently under development. Some features may not be available.</p>
+  <h1>About Makora</h1>
+
+  <!-- BRAND -->
+  <div class="about-brand-card">
+    <div class="about-logo">M</div>
+    <h2>MAKORA</h2>
+    <p>AI Social Media Manager</p>
+    <span class="about-version">Version 1.0.0 · Under Development</span>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <div class="about-card">
+    <h3>About the Platform</h3>
+    <p>
+      Makora is an AI-powered social media management platform
+      designed to simplify the way creators manage their online presence.
+    </p>
+    <p>
+      Our goal is to bring content creation, social media planning,
+      publishing workflows, and performance insights together in one place.
+    </p>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="about-card">
+    <h3>What Makora Aims to Offer</h3>
+
+    <div class="about-feature">
+      <span>✦</span>
+      <div>
+        <strong>AI Content Creation</strong>
+        <p>Assist with ideas, captions, and social media content.</p>
+      </div>
+    </div>
+
+    <div class="about-feature">
+      <span>◷</span>
+      <div>
+        <strong>Content Planning</strong>
+        <p>Organize and plan your social media activities.</p>
+      </div>
+    </div>
+
+    <div class="about-feature">
+      <span>↗</span>
+      <div>
+        <strong>Social Media Management</strong>
+        <p>Manage your social media workflow from one platform.</p>
+      </div>
+    </div>
+
+    <div class="about-feature">
+      <span>▥</span>
+      <div>
+        <strong>Performance Insights</strong>
+        <p>Understand content performance and improve your strategy.</p>
+      </div>
     </div>
   </div>
+
+  <!-- DEVELOPMENT -->
+  <div class="about-card">
+    <h3>Development Status</h3>
+    <p>
+      Makora is currently under development. Features and integrations
+      are being built and tested.
+    </p>
+    <p class="about-status">Some features may not be available yet.</p>
+  </div>
+
+  <!-- LEGAL -->
+  <div class="about-card">
+    <h3>Legal & Privacy</h3>
+    <p>Read the policies and terms related to using Makora.</p>
+
+    <button class="about-legal-button" onclick="openLegal()">
+      Legal & Privacy →
+    </button>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="about-footer">
+    <p>MAKORA</p>
+    <span>Built to simplify social media management.</span>
+  </div>
+</div>
+
 
 </section>
 

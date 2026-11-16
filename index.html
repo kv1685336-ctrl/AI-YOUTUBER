@@ -2792,6 +2792,136 @@ body.light-theme [id^="settingsPage-"] select {
   }
 }
 
+/* ACTIVITY & AUTOMATION LOGS */
+
+.activity-page {
+  padding-bottom: 30px;
+}
+
+.activity-page .settings-description {
+  color: #999;
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+.activity-overview {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.activity-stat {
+  background: #111;
+  border: 1px solid #292929;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.activity-stat span {
+  display: block;
+  color: #999;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.activity-stat strong {
+  display: block;
+  color: #fff;
+  font-size: 25px;
+}
+
+.activity-page .settings-section {
+  margin-top: 22px;
+  padding: 20px;
+  background: #111;
+  border: 1px solid #292929;
+  border-radius: 14px;
+}
+
+.activity-page .settings-section h2 {
+  color: #fff;
+  margin-top: 0;
+}
+
+.activity-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.activity-filters label {
+  display: block;
+  color: #aaa;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.activity-filters select {
+  width: 100%;
+  padding: 11px;
+  color: #fff;
+  background: #1b1b1b;
+  border: 1px solid #383838;
+  border-radius: 8px;
+}
+
+.activity-empty-state {
+  text-align: center;
+  padding: 35px 15px;
+}
+
+.activity-empty-icon {
+  font-size: 36px;
+  color: #ff3030;
+  margin-bottom: 12px;
+}
+
+.activity-empty-state h3 {
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.activity-empty-state p {
+  color: #999;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 380px;
+  margin: auto;
+}
+
+.activity-info-item {
+  padding: 15px 0;
+  border-bottom: 1px solid #292929;
+}
+
+.activity-info-item:last-child {
+  border-bottom: none;
+}
+
+.activity-info-item strong {
+  color: #fff;
+}
+
+.activity-info-item p {
+  color: #999;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 6px 0 0;
+}
+
+@media (max-width: 480px) {
+  .activity-page .settings-section {
+    padding: 15px;
+  }
+
+  .activity-filters {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 
 
 
@@ -4375,6 +4505,125 @@ body.light-theme [id^="settingsPage-"] select {
   </p>
 
 </div>
+
+<!-- ACTIVITY & AUTOMATION LOGS -->
+<div id="settingsPage-activity" class="hidden activity-page">
+
+  <button class="secondary" onclick="showSettingsHome()">
+    ← Back to Settings
+  </button>
+
+  <h1>Activity & Automation Logs</h1>
+
+  <p class="settings-description">
+    Track Makora's actions and monitor your social media activities.
+  </p>
+
+  <!-- ACTIVITY OVERVIEW -->
+  <div class="activity-overview">
+
+    <div class="activity-stat">
+      <span>Total Activities</span>
+      <strong>--</strong>
+    </div>
+
+    <div class="activity-stat">
+      <span>Successful</span>
+      <strong>--</strong>
+    </div>
+
+    <div class="activity-stat">
+      <span>Failed</span>
+      <strong>--</strong>
+    </div>
+
+    <div class="activity-stat">
+      <span>Needs Attention</span>
+      <strong>--</strong>
+    </div>
+
+  </div>
+
+  <!-- FILTERS -->
+  <div class="settings-section">
+    <h2>Activity History</h2>
+
+    <div class="activity-filters">
+
+      <div>
+        <label for="activityTypeFilter">Activity Type</label>
+        <select id="activityTypeFilter">
+          <option value="all">All Activities</option>
+          <option value="publishing">Publishing</option>
+          <option value="content">Content Creation</option>
+          <option value="scheduling">Scheduling</option>
+          <option value="account">Account Activity</option>
+          <option value="ai">AI Actions</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="activityStatusFilter">Status</label>
+        <select id="activityStatusFilter">
+          <option value="all">All Statuses</option>
+          <option value="success">Successful</option>
+          <option value="failed">Failed</option>
+          <option value="pending">Pending</option>
+          <option value="attention">Needs Attention</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- ACTIVITY LIST -->
+    <div id="activityLogList" class="activity-log-list">
+
+      <div class="activity-empty-state">
+
+        <div class="activity-empty-icon">◷</div>
+
+        <h3>No Activity Yet</h3>
+
+        <p>
+          Makora's actions will appear here when its automation
+          and activity logging systems are implemented.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- AUTOMATION TRANSPARENCY -->
+  <div class="settings-section">
+
+    <h2>Automation Transparency</h2>
+
+    <div class="activity-info-item">
+      <strong>AI Actions</strong>
+      <p>See tasks performed by Makora's AI.</p>
+    </div>
+
+    <div class="activity-info-item">
+      <strong>Publishing History</strong>
+      <p>Track successful and unsuccessful publishing attempts.</p>
+    </div>
+
+    <div class="activity-info-item">
+      <strong>Attention Required</strong>
+      <p>Identify failed tasks and actions requiring your review.</p>
+    </div>
+
+  </div>
+
+  <p class="notification-footer">
+    Activity records will become available when Makora's
+    logging system is connected.
+  </p>
+
+</div>
+
 
   
 <!-- PRIVACY & DATA -->

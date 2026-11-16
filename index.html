@@ -1927,6 +1927,68 @@ body.light-theme [id^="settingsPage-"] select {
   margin-top: 20px;
 }
 
+/* PRIVACY & DATA */
+
+.privacy-card {
+  background: #151515;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 18px;
+  margin: 18px 0;
+}
+
+.privacy-card h3 {
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.privacy-card p {
+  color: #aaa;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.privacy-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.privacy-card-heading h3 {
+  margin: 0;
+}
+
+.privacy-icon {
+  font-size: 27px;
+}
+
+.privacy-option,
+.privacy-action {
+  padding: 14px 0;
+  border-top: 1px solid #333;
+}
+
+.privacy-option p,
+.privacy-action p {
+  margin: 5px 0 0;
+}
+
+.privacy-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.privacy-coming-soon {
+  color: #ff9999;
+  background: #352020;
+  padding: 6px 9px;
+  border-radius: 7px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
 </style>
 </head>
 <body>
@@ -2812,15 +2874,135 @@ body.light-theme [id^="settingsPage-"] select {
     </div>
   </div>
 
-  <!-- PRIVACY & DATA -->
-  <div id="settingsPage-privacy" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
-    <h1>Privacy & Data</h1>
-    <div class="settings-section">
-      <p>Chat history, data export and account deletion controls are not available in the app yet.</p>
-      <p>These controls must be implemented before public launch.</p>
+  
+<!-- PRIVACY & DATA -->
+<div id="settingsPage-privacy" class="hidden">
+
+  <button class="secondary" onclick="showSettingsHome()">
+    ← Back to Settings
+  </button>
+
+  <h1>Privacy & Data</h1>
+
+  <p class="settings-description">
+    Understand how Makora handles your information and manage your privacy.
+  </p>
+
+  <!-- PRIVACY OVERVIEW -->
+  <div class="privacy-card">
+
+    <div class="privacy-card-heading">
+      <span class="privacy-icon">🛡️</span>
+      <h3>Your Privacy Matters</h3>
     </div>
+
+    <p>
+      Makora aims to protect your personal information and give
+      you control over your data.
+    </p>
+
   </div>
+
+  <!-- DATA INFORMATION -->
+  <div class="privacy-card">
+
+    <h3>Information & Data</h3>
+
+    <div class="privacy-option">
+      <div>
+        <strong>Account Information</strong>
+        <p>Your account details and authentication information.</p>
+      </div>
+    </div>
+
+    <div class="privacy-option">
+      <div>
+        <strong>Chat History</strong>
+        <p>Your conversations and AI interaction history, where stored.</p>
+      </div>
+    </div>
+
+    <div class="privacy-option">
+      <div>
+        <strong>Content & Preferences</strong>
+        <p>Your saved settings and content preferences.</p>
+      </div>
+    </div>
+
+    <div class="privacy-option">
+      <div>
+        <strong>Connected Accounts</strong>
+        <p>Information needed to manage authorized social media connections.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DATA CONTROLS -->
+  <div class="privacy-card">
+
+    <h3>Your Data Controls</h3>
+
+    <div class="privacy-action">
+      <div>
+        <strong>Download My Data</strong>
+        <p>Request a copy of your Makora account information.</p>
+      </div>
+      <span class="privacy-coming-soon">Coming soon</span>
+    </div>
+
+    <div class="privacy-action">
+      <div>
+        <strong>Chat History Management</strong>
+        <p>Manage or delete saved conversations.</p>
+      </div>
+      <span class="privacy-coming-soon">Coming soon</span>
+    </div>
+
+    <div class="privacy-action">
+      <div>
+        <strong>Delete My Account</strong>
+        <p>Request permanent deletion of your account and associated data.</p>
+      </div>
+      <span class="privacy-coming-soon">Coming soon</span>
+    </div>
+
+  </div>
+
+  <!-- SECURITY -->
+  <div class="privacy-card">
+
+    <h3>Security</h3>
+
+    <p>
+      Makora should use secure authentication, protected database
+      access and server-side handling of sensitive credentials.
+    </p>
+
+    <p>
+      Social media access tokens must never be exposed in frontend code.
+    </p>
+
+  </div>
+
+  <!-- PRIVACY POLICY -->
+  <div class="privacy-card">
+
+    <h3>Privacy Policy</h3>
+
+    <p>
+      Read how Makora collects, uses, stores and protects information.
+    </p>
+
+    <p class="settings-description">
+      The final Privacy Policy must be published and linked here
+      before public launch.
+    </p>
+
+  </div>
+
+</div>
+
 
   <!-- SECURITY -->
   

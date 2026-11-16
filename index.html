@@ -4104,6 +4104,9 @@ function showDashboard(user) {
 
   // Load the new account's preferences.
   loadSettings();
+  loadMakoraProfilePicture(user);
+
+  document.getElementById("navLogin").classList.add("hidden");
 
   document.getElementById("navLogin").classList.add("hidden");
   document.getElementById("navLogout").classList.remove("hidden");

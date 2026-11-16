@@ -7295,23 +7295,55 @@ function loadWelcomePreferences() {
 
 loadWelcomePreferences();
 async function checkSession() {
-  const { data, error } = await supabaseClient.auth.getSession();
+  console.log("MAKORA: Checking saved login session...");
 
-  if (error) {
-    console.error(error);
-    showPage("welcome");
-    return;
-  }
+  try {
+    const { data, error } =
+      await supabaseClient.auth.getSession();
 
-  if (data.session) {
-    showDashboard(data.session.user);
-  } else {
-    const preferences = JSON.parse(
-      localStorage.getItem("welcomePreferences") || "{}"
-    );
+    if (error) {
+      console.error("MAKORA SESSION ERROR:", error);
 
-    applyInterfaceLanguage(preferences.language || "English");
-    applyTheme(preferences.theme || "dark");
+      alert("Session error: " + error.message);
+
+      showPage("welcome");
+      return;
+    }
+
+    if (data.session) {
+      console.log(
+        "MAKORA: Saved session found.",
+        data.session.user.id
+      );
+
+      alert("Saved session FOUND. Opening Makora.");
+
+      showDashboard(data.session.user);
+
+    } else {
+      console.log("MAKORA: No saved session found.");
+
+      alert(
+        "No saved session found. Supabase is not restoring your login."
+      );
+
+      const preferences = JSON.parse(
+        localStorage.getItem("welcomePreferences") || "{}"
+      );
+
+      applyInterfaceLanguage(
+        preferences.language || "English"
+      );
+
+      applyTheme(preferences.theme || "dark");
+      showPage("welcome");
+    }
+
+  } catch (error) {
+    console.error("MAKORA SESSION CHECK FAILED:", error);
+
+    alert("Session check failed: " + error.message);
+
     showPage("welcome");
   }
 }

@@ -2187,6 +2187,288 @@ body.light-theme [id^="settingsPage-"] select {
   font-size: 12px;
 }
 
+/* ================================
+   SUBSCRIPTION & BILLING
+================================ */
+
+.billing-page {
+  width: 100%;
+  padding-bottom: 35px;
+}
+
+.billing-heading {
+  margin: 25px 0;
+}
+
+.billing-heading h1 {
+  margin-bottom: 8px;
+}
+
+.billing-heading p,
+.billing-section > p {
+  color: #999;
+  font-size: 14px;
+}
+
+.billing-preview-notice {
+  background: rgba(255, 48, 48, 0.08);
+  border: 1px solid rgba(255, 48, 48, 0.25);
+  color: #ff9999;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.billing-preview-notice span {
+  margin-right: 7px;
+}
+
+.billing-card {
+  background: #111;
+  border: 1px solid #292929;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.billing-card-header,
+.billing-credits-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.billing-label,
+.billing-plan-tag {
+  color: #ff5555;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.billing-current-plan h2,
+.billing-credits-top h2 {
+  font-size: 26px;
+  margin: 10px 0 5px;
+  color: white;
+}
+
+.billing-current-plan p,
+.billing-credits-top p {
+  color: #999;
+  font-size: 13px;
+}
+
+.billing-status {
+  background: rgba(50, 200, 120, 0.12);
+  color: #54d994;
+  border-radius: 20px;
+  padding: 7px 12px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.billing-plan-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.billing-plan-details div,
+.billing-credit-info div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.billing-plan-details span,
+.billing-credit-info span {
+  color: #888;
+  font-size: 11px;
+}
+
+.billing-plan-details strong,
+.billing-credit-info strong {
+  color: white;
+  font-size: 13px;
+}
+
+.billing-outline-button,
+.billing-plan-button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 9px;
+  border: 1px solid #ff3030;
+  background: transparent;
+  color: #ff5555;
+  font-weight: 600;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.billing-section {
+  margin-top: 32px;
+}
+
+.billing-section > h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.billing-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+  margin-top: 18px;
+}
+
+.billing-plan-card h3 {
+  font-size: 22px;
+  margin: 15px 0 8px;
+}
+
+.billing-plan-card > p {
+  color: #999;
+  font-size: 13px;
+  min-height: 36px;
+  line-height: 1.5;
+}
+
+.billing-plan-card ul {
+  padding-left: 18px;
+  margin: 20px 0;
+  color: #ccc;
+  font-size: 12px;
+  line-height: 2.3;
+}
+
+.billing-featured-plan {
+  border-color: #ff3030;
+  box-shadow: 0 0 15px rgba(255, 48, 48, 0.08);
+}
+
+.billing-featured-plan .billing-plan-button {
+  background: #ff3030;
+  color: white;
+}
+
+.billing-credit-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 48, 48, 0.12);
+  color: #ff4545;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 27px;
+}
+
+.billing-credits-top h2 small {
+  font-size: 13px;
+  color: #999;
+}
+
+.billing-credit-divider {
+  height: 1px;
+  background: #292929;
+  margin: 22px 0;
+}
+
+.billing-credit-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.billing-empty-state {
+  text-align: center;
+  padding: 30px 10px;
+}
+
+.billing-empty-icon {
+  font-size: 30px;
+  color: #ff4545;
+  margin-bottom: 12px;
+}
+
+.billing-empty-state h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.billing-empty-state p {
+  color: #888;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.billing-simple-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.billing-simple-row h3 {
+  font-size: 15px;
+  margin-bottom: 7px;
+}
+
+.billing-simple-row p {
+  color: #888;
+  font-size: 12px;
+}
+
+.billing-simple-row .billing-outline-button {
+  width: auto;
+}
+
+.billing-footer {
+  border-top: 1px solid #292929;
+  margin-top: 30px;
+  padding-top: 20px;
+  text-align: center;
+  color: #aaa;
+  font-size: 13px;
+}
+
+.billing-footer span {
+  display: block;
+  color: #777;
+  margin-top: 7px;
+  font-size: 12px;
+}
+
+@media (max-width: 650px) {
+  .billing-plans-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .billing-plan-details {
+    grid-template-columns: 1fr;
+  }
+
+  .billing-credit-info {
+    grid-template-columns: 1fr;
+  }
+
+  .billing-simple-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .billing-simple-row .billing-outline-button {
+    width: 100%;
+  }
+}
+
 
 </style>
 </head>
@@ -3052,16 +3334,183 @@ body.light-theme [id^="settingsPage-"] select {
       </div>
     </div>
   </div>
-
   <!-- SUBSCRIPTION & BILLING -->
-  <div id="settingsPage-billing" class="hidden">
-    <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+
+<div id="settingsPage-billing" class="hidden billing-page">
+
+  <button class="secondary" onclick="showSettingsHome()">← Back to Settings</button>
+
+  <div class="billing-heading">
+
     <h1>Subscription & Billing</h1>
-    <div class="settings-section">
-      <p>Subscription plans, payment history and billing management are not connected yet.</p>
-      <p>This section will show your plan and billing information when the payment system is implemented.</p>
-    </div>
+
+    <p>Manage your Makora plan, credits and billing information.</p>
+
   </div>
+
+  <div class="billing-preview-notice">
+
+    <span>ⓘ</span>
+
+    This is a preview of the Subscription & Billing interface. Payment features are not active yet.
+
+  </div>
+
+  <!-- CURRENT PLAN -->
+
+  <div class="billing-card billing-current-plan">
+
+    <div class="billing-card-header">
+
+      <div>
+
+        <span class="billing-label">CURRENT PLAN</span>
+
+        <h2>Free Plan</h2>
+
+        <p>Your current Makora subscription</p>
+
+      </div>
+
+      <span class="billing-status">ACTIVE</span>
+
+    </div>
+
+    <div class="billing-plan-details">
+
+      <div>
+
+        <span>Plan type</span>
+
+        <strong>Free</strong>
+
+      </div>
+
+      <div>
+
+        <span>Billing cycle</span>
+
+        <strong>Free</strong>
+
+      </div>
+
+      <div>
+
+        <span>Next payment</span>
+
+        <strong>Not applicable</strong>
+
+      </div>
+
+    </div>
+
+    <button class="billing-outline-button" disabled>
+
+      Manage Subscription
+
+    </button>
+
+  </div>
+
+  <!-- AVAILABLE PLANS -->
+
+  <div class="billing-section">
+
+    <h2>Available Plans</h2>
+
+    <p>Choose a plan that matches your social media goals.</p>
+
+    <div class="billing-plans-grid">
+
+      <div class="billing-card billing-plan-card">
+
+        <span class="billing-plan-tag">STARTER</span>
+
+        <h3>Free</h3>
+
+        <p>Explore Makora's basic features.</p>
+
+        <ul>
+
+          <li>Basic AI assistance</li>
+
+          <li>Social media guidance</li>
+
+          <li>Limited AI tools</li>
+
+          <li>Basic content planning</li>
+
+        </ul>
+
+        <button class="billing-plan-button" disabled>
+
+          Current Plan
+
+        </button>
+
+      </div>
+
+      <div class="billing-card billing-plan-card billing-featured-plan">
+
+        <span class="billing-plan-tag">POPULAR</span>
+
+        <h3>Pro</h3>
+
+        <p>More tools for growing creators.</p>
+
+        <ul>
+
+          <li>Advanced AI tools</li>
+
+          <li>More content creation</li>
+
+          <li>Advanced planning</li>
+
+          <li>Expanded credit allowance</li>
+
+        </ul>
+
+        <button class="billing-plan-button" disabled>
+
+          Coming Soon
+
+        </button>
+
+      </div>
+
+      <div class="billing-card billing-plan-card">
+
+        <span class="billing-plan-tag">ADVANCED</span>
+
+        <h3>Max</h3>
+
+        <p>More capabilities for ambitious creators.</p>
+
+        <ul>
+
+          <li>Advanced automation tools</li>
+
+          <li>Higher usage allowance</li>
+
+          <li>Advanced analytics</li>
+
+          <li>Priority feature access</li>
+
+        </ul>
+
+        <button class="billing-plan-button" disabled>
+
+          Coming Soon
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
 
   <!-- NOTIFICATIONS -->
   <div id="settingsPage-notifications" class="hidden">

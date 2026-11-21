@@ -6688,9 +6688,22 @@ function renderMessages() {
   currentMessages.forEach(message => {
     const paragraph = document.createElement("p");
     paragraph.className = "chat-answer";
-    paragraph.textContent =
-      (message.role === "user" ? "You: " : "MAKORA AI: ") +
-      message.content;
+    const displayName =
+  document.getElementById("settingsDisplayName")
+    ?.textContent.trim();
+
+const userName =
+  displayName &&
+  displayName !== "Not set" &&
+  displayName !== "Loading..." &&
+  displayName !== "Not logged in" &&
+  displayName !== "Could not load account"
+    ? displayName
+    : "You";
+
+paragraph.textContent =
+  (message.role === "user" ? userName + ": " : "MAKORA AI: ") +
+  message.content;
     chatMessages.appendChild(paragraph);
   });
 

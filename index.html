@@ -5263,6 +5263,79 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_KEY
 );
 
+// =====================================
+// MAKORA ACTIVITY LOGGER
+// =====================================
+
+async function logMakoraActivity({
+  action,
+  category,
+  platform = null,
+  status = "pending",
+  description = null,
+  error_message = null,
+  metadata = {}
+}) {
+  try {
+    const {
+      data: { session },
+      error: sessionError
+    } = await supabaseClient.auth.getSession();
+
+    if (sessionError || !session) {
+      throw new Error("Please log in to record activity.");
+    }
+
+    const { data, error } =
+      await supabaseClient.functions.invoke(
+        "log-activity",
+        {
+          body: {
+            action,
+            category,
+            platform,
+            status,
+            description,
+            error_message,
+            metadata
+          }
+        }
+      );
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data?.success) {
+      throw new Error("Activity could not be saved.");
+    }
+
+    console.log("Makora activity recorded:", action);
+
+    return true;
+
+  } catch (error) {
+    console.error("Makora activity logging failed:", error);
+
+    return false;
+  }
+}
+async function testMakoraActivityLogger() {
+  const result = await logMakoraActivity({
+    action: "Activity Logging Connection Test",
+    category: "ai",
+    status: "success",
+    description: "Testing Makora activity logging."
+  });
+
+  alert(
+    result
+      ? "Activity log saved successfully!"
+      : "Activity log failed. Check the logs."
+  );
+}
+
+
 
 
 const MAKORA_WORKER_URL =

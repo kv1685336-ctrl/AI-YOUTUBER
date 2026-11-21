@@ -7675,11 +7675,26 @@ async function sendMessage() {
     // Replace the temporary reply with the real AI response.
     currentMessages[currentMessages.length - 1].content =
       data.reply || "I couldn't generate a reply.";
+    await logMakoraActivity({
+  action: "AI Chat Response Generated",
+  category: "ai",
+  status: "success",
+  description: "Makora successfully completed an AI chat request."
+});
   } catch (error) {
-    currentMessages[currentMessages.length - 1].content =
-      error.message || "Request failed.";
-    console.error(error);
-  }
+  currentMessages[currentMessages.length - 1].content =
+    error.message || "Request failed.";
+
+  console.error(error);
+
+  await logMakoraActivity({
+    action: "AI Chat Request Failed",
+    category: "ai",
+    status: "failed",
+    description: "Makora could not complete an AI chat request.",
+    error_message: error.message || "Unknown AI request error."
+  });
+}
 
   renderMessages();
 

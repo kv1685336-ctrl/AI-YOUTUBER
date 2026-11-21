@@ -4518,14 +4518,7 @@ body.light-theme [id^="settingsPage-"] select {
   <p class="settings-description">
     Track Makora's actions and monitor your social media activities.
   </p>
-  <button
-  class="primary"
-  onclick="testMakoraActivityLogger()"
-  style="margin: 10px 0 20px;"
->
-  Test Activity Logger
-</button>
-
+ 
   <!-- ACTIVITY OVERVIEW -->
   <div class="activity-overview">
 
@@ -5327,23 +5320,148 @@ async function logMakoraActivity({
     return false;
   }
 }
-async function testMakoraActivityLogger() {
-  const result = await logMakoraActivity({
-    action: "Activity Logging Connection Test",
-    category: "ai",
-    status: "success",
-    description: "Testing Makora activity logging."
-  });
 
-  alert(
-    result
-      ? "Activity log saved successfully!"
-      : "Activity log failed. Check the logs."
-  );
+
+
+
+// =====================================
+// MAKORA ACTIVITY HISTORY
+// =====================================
+
+let makoraActivityRecords = [];
+
+async function loadMakoraActivityLogs() {
+  const list = document.getElementById("activityLogList");
+
+  if (!list) return;
+
+  list.textContent = "Loading activity...";
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("activity_logs")
+      .select(`
+        id,
+        action,
+        category,
+        platform,
+        status,
+        description,
+        error_message,
+        created_at
+      `)
+      .order("created_at", { ascending: false })
+      .limit(500);
+
+    if (error) throw error;
+
+    makoraActivityRecords = data || [];
+
+    updateMakoraActivityStats();
+    renderMakoraActivityLogs();
+
+  } catch (error) {
+    console.error("Activity history loading failed:", error);
+
+    list.textContent =
+      "Could not load activity history. Please try again.";
+  }
 }
 
+function updateMakoraActivityStats() {
+  const records = makoraActivityRecords;
 
+  const stats = document.querySelectorAll(
+    "#settingsPage-activity .activity-stat strong"
+  );
 
+  if (stats.length < 4) return;
+
+  stats[0].textContent = records.length;
+  stats[1].textContent =
+    records.filter(x => x.status === "success").length;
+  stats[2].textContent =
+    records.filter(x => x.status === "failed").length;
+  stats[3].textContent =
+    records.filter(x => x.status === "attention").length;
+}
+
+function renderMakoraActivityLogs() {
+  const list = document.getElementById("activityLogList");
+
+  if (!list) return;
+
+  const typeFilter =
+    document.getElementById("activityTypeFilter").value;
+
+  const statusFilter =
+    document.getElementById("activityStatusFilter").value;
+
+  const filtered = makoraActivityRecords.filter(record => {
+    const typeMatches =
+      typeFilter === "all" || record.category === typeFilter;
+
+    const statusMatches =
+      statusFilter === "all" || record.status === statusFilter;
+
+    return typeMatches && statusMatches;
+  });
+
+  list.innerHTML = "";
+
+  if (filtered.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "activity-empty-state";
+
+    const heading = document.createElement("h3");
+    heading.textContent = "No Activity Found";
+
+    const message = document.createElement("p");
+    message.textContent =
+      "No records match your selected filters.";
+
+    empty.append(heading, message);
+    list.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(record => {
+    const card = document.createElement("div");
+    card.className = "activity-info-item";
+
+    const heading = document.createElement("strong");
+    heading.textContent = record.action || "Activity";
+
+    const details = document.createElement("p");
+    details.textContent =
+      (record.description || "No description") +
+      " | " +
+      (record.platform || "General") +
+      " | " +
+      new Date(record.created_at).toLocaleString();
+
+    const status = document.createElement("p");
+    status.textContent =
+      "Status: " + record.status.toUpperCase();
+
+    card.append(heading, details, status);
+
+    if (record.error_message) {
+      const error = document.createElement("p");
+      error.textContent =
+        "Details: " + record.error_message;
+
+      card.appendChild(error);
+    }
+
+    list.appendChild(card);
+  });
+}
+document.getElementById("activityTypeFilter")
+  .addEventListener("change", renderMakoraActivityLogs);
+
+document.getElementById("activityStatusFilter")
+  .addEventListener("change", renderMakoraActivityLogs);
 
 const MAKORA_WORKER_URL =
   "https://black-boat-3f22ai-youtuber-api.kapil20122504.workers.dev";
@@ -7046,6 +7164,9 @@ function openSettingsSection(section) {
   if (section === "credits") {
     loadCreditWallet();
   }
+  if (section === "activity") {
+  loadMakoraActivityLogs();
+}
 }
 
 async function selectTool(tool, button) {

@@ -7373,63 +7373,58 @@ function showMakoraPlatformDemo() {
 
 
 
-let makoraSelectedPlatform = "";
 
 function openPlatformDemo(platform) {
-  makoraSelectedPlatform = platform;
+  const allowedPlatforms = ["YouTube", "Instagram", "Facebook", "X"];
+
+  if (!allowedPlatforms.includes(platform)) return;
+
+  window.makoraFlow = {
+    platform,
+    request: "",
+    understanding: "",
+    format: "",
+    style: "",
+    language: "English"
+  };
 
   const chatMessages = document.getElementById("chatMessages");
+  const inputArea = document.querySelector(".chat-input-area");
 
-  document.querySelector(".chat-input-area").style.display = "none";
+  if (inputArea) inputArea.style.display = "none";
+  if (typeof showChatInput === "function") showChatInput(false);
 
   chatMessages.innerHTML = `
-    <div style="max-width:700px;margin:30px auto;color:white;">
+    <div style="max-width:750px;margin:30px auto;padding:15px;color:white;">
 
-      <button onclick="showMakoraPlatformDemo()"
-        class="secondary">
+      <button class="secondary" onclick="showMakoraPlatformDemo()">
         ← Back to Platforms
       </button>
 
-      <h2 class="theme-text" style="margin-top:25px;">
+      <h1 class="theme-text" style="margin-top:25px;">
         ${platform} Content Creator
-      </h2>
+      </h1>
 
       <p style="color:#aaa;">
         Tell Makora what you want to create.
       </p>
 
-      <textarea
-        id="makoraCreationRequest"
-        placeholder="Example: Create a cinematic football edit of Ronaldo for YouTube Shorts..."
-        style="
-          width:100%;
-          min-height:130px;
-          box-sizing:border-box;
-          padding:15px;
-          margin-top:15px;
-          background:#151515;
-          color:white;
-          border:1px solid #444;
-          border-radius:10px;
-          font:inherit;
-        "
-      ></textarea>
+      <textarea id="makoraCreationRequest"
+        placeholder="Example: Create a cinematic video about the Bermuda Triangle..."
+        style="width:100%;min-height:140px;box-sizing:border-box;
+        padding:15px;margin-top:15px;background:#151515;color:white;
+        border:1px solid #444;border-radius:10px;font:inherit;"></textarea>
 
-      <button
+      <button id="makoraUnderstandButton"
         onclick="understandMakoraRequest()"
-        id="makoraUnderstandButton"
-        style="margin-top:15px;width:100%;">
+        style="width:100%;margin-top:15px;">
         Continue
       </button>
 
       <p id="makoraRequestStatus"
-        style="color:#aaa;margin-top:15px;"
-        role="status">
-      </p>
+        style="color:#aaa;margin-top:15px;" role="status"></p>
 
-      <div id="makoraUnderstandingResult"
-        style="margin-top:20px;">
-      </div>
+      <div id="makoraUnderstandingResult"></div>
 
     </div>
   `;
@@ -7438,61 +7433,57 @@ function openPlatformDemo(platform) {
 
 async function understandMakoraRequest() {
 
+  const flow = window.makoraFlow;
   const input = document.getElementById("makoraCreationRequest");
   const button = document.getElementById("makoraUnderstandButton");
   const status = document.getElementById("makoraRequestStatus");
   const result = document.getElementById("makoraUnderstandingResult");
 
-  const userRequest = input.value.trim();
+  const request = input.value.trim();
 
-  if (!userRequest) {
+  if (!request) {
     status.textContent = "Please describe what you want to create.";
     return;
   }
 
+  flow.request = request;
+
   button.disabled = true;
   status.textContent = "Makora is understanding your request...";
-  result.textContent = "";
+  result.innerHTML = "";
 
   try {
-
-    const { data: { session }, error: sessionError } =
+    const { data: { session }, error } =
       await supabaseClient.auth.getSession();
 
-    if (sessionError || !session) {
+    if (error || !session) {
       throw new Error("Please log in again.");
     }
 
     const instruction = `
 You are MAKORA, an AI social media content manager.
 
-The selected platform is: ${makoraSelectedPlatform}
+Selected platform: ${flow.platform}
 
-The user's creation request is:
-${userRequest}
+User request:
+${request}
 
-YOUR CURRENT TASK:
-Understand the request and confirm your understanding.
-Do NOT generate the content yet.
-Do NOT create a title, description, hashtags, script or video yet.
-Do NOT claim that a video has been created.
+Your task is ONLY to understand the request.
 
-Identify:
+Explain:
 1. What content the user wants.
-2. The subject or topic.
-3. The intended platform and format, if specified.
-4. The requested purpose or outcome.
-5. Any important missing information.
+2. The main subject or topic.
+3. The intended purpose.
+4. Any important missing information.
 
-Then explain your understanding in simple, natural language.
+Do not generate the content yet.
+Do not invent details.
+Do not choose a content format, style or language for the user.
 
-Ask the user:
+End by asking:
 "Is this what you want me to create?"
 
-If an essential detail is missing, ask a short clarification question instead.
-
-Do not invent details the user did not provide.
-Keep the response concise.
+Keep your response concise and clear.
 `;
 
     const response = await fetch(
@@ -7503,68 +7494,271 @@ Keep the response concise.
           "Content-Type": "application/json",
           "Authorization": `Bearer ${session.access_token}`
         },
-        body: JSON.stringify({
-          message: instruction
-        })
+        body: JSON.stringify({ message: instruction })
       }
     );
 
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.reply || "Makora could not understand the request.");
+      throw new Error(data.reply || "Makora could not understand your request.");
     }
+
+    flow.understanding = data.reply || "";
 
     status.textContent = "Understanding complete. Please review:";
 
-    const reply = document.createElement("div");
-    reply.style.cssText = `
-      padding:18px;
-      background:#1c1c1c;
-      border:1px solid #444;
-      border-radius:12px;
-      line-height:1.6;
-      white-space:pre-wrap;
-    `;
+    const explanation = document.createElement("div");
+    explanation.style.cssText =
+      "padding:18px;background:#1c1c1c;border:1px solid #444;" +
+      "border-radius:12px;line-height:1.6;white-space:pre-wrap;";
+    explanation.textContent = flow.understanding;
 
-    reply.textContent = data.reply || "Please try again.";
+    result.appendChild(explanation);
 
-    result.appendChild(reply);
+    const yesButton = document.createElement("button");
+    yesButton.textContent = "Yes, continue";
+    yesButton.style.cssText = "width:100%;margin-top:15px;";
+    yesButton.onclick = confirmMakoraUnderstanding;
 
-    const confirmation = document.createElement("p");
-    confirmation.style.cssText = "margin-top:15px;color:#aaa;";
-    confirmation.textContent =
-      "Review Makora's understanding. You can correct your request above and try again.";
+    const editButton = document.createElement("button");
+    editButton.textContent = "No, edit my request";
+    editButton.className = "secondary";
+    editButton.style.cssText = "width:100%;margin-top:10px;";
+    editButton.onclick = () => {
+      input.focus();
+      input.scrollIntoView({ behavior: "smooth", block: "center" });
+      status.textContent = "Edit your request and press Continue again.";
+    };
 
-    result.appendChild(confirmation);
-
-    await logMakoraActivity({
-      action: "Content Request Understanding",
-      category: "ai",
-      platform: makoraSelectedPlatform.toLowerCase() === "x"
-        ? null
-        : makoraSelectedPlatform.toLowerCase(),
-      status: "success",
-      description: "Makora processed a content creation request."
-    });
+    result.appendChild(yesButton);
+    result.appendChild(editButton);
 
   } catch (error) {
-
     status.textContent = error.message || "Something went wrong.";
-
     console.error("Makora understanding error:", error);
-
-    await logMakoraActivity({
-      action: "Content Request Understanding Failed",
-      category: "ai",
-      status: "failed",
-      description: "Makora could not understand a content request.",
-      error_message: error.message
-    });
 
   } finally {
     button.disabled = false;
   }
+}
+
+
+function confirmMakoraUnderstanding() {
+  showMakoraPreferences();
+}
+
+
+function showMakoraPreferences() {
+
+  const flow = window.makoraFlow;
+  const chatMessages = document.getElementById("chatMessages");
+
+  const formats = {
+    YouTube: [
+      "YouTube Short",
+      "YouTube Long Video",
+      "YouTube Community Post"
+    ],
+    Instagram: [
+      "Instagram Reel",
+      "Instagram Story",
+      "Instagram Feed Post",
+      "Instagram Carousel"
+    ],
+    Facebook: [
+      "Facebook Reel",
+      "Facebook Video",
+      "Facebook Story",
+      "Facebook Photo/Text Post"
+    ],
+    X: [
+      "X Text Post",
+      "X Thread",
+      "X Video Post"
+    ]
+  };
+
+  const styles = [
+    "Cinematic",
+    "Entertainment",
+    "Friendly",
+    "Educational",
+    "Professional",
+    "Funny",
+    "Inspirational",
+    "Storytelling",
+    "Informative",
+    "Documentary",
+    "Motivational"
+  ];
+
+  const languages = [
+    "English",
+    "Hindi",
+    "Tamil",
+    "Telugu",
+    "Malayalam",
+    "Kannada",
+    "Bengali",
+    "Marathi",
+    "Spanish",
+    "French",
+    "Arabic",
+    "Portuguese",
+    "Japanese",
+    "Korean"
+  ];
+
+  chatMessages.innerHTML = `
+    <div style="max-width:750px;margin:30px auto;padding:15px;color:white;">
+
+      <button class="secondary" onclick="openPlatformDemo('${flow.platform}')">
+        ← Back
+      </button>
+
+      <h2 class="theme-text" style="margin-top:25px;">
+        Customize Your Content
+      </h2>
+
+      <p style="color:#aaa;">
+        Choose how you want Makora to create your content.
+      </p>
+
+      <div style="margin-top:25px;">
+
+        <label for="makoraFormat"><strong>1. Content Format</strong></label>
+        <select id="makoraFormat"
+          style="display:block;width:100%;padding:13px;margin-top:10px;
+          background:#151515;color:white;border:1px solid #444;
+          border-radius:8px;">
+          ${formats[flow.platform].map(x =>
+            `<option value="${x}">${x}</option>`
+          ).join("")}
+        </select>
+
+        <label for="makoraStyle"
+          style="display:block;margin-top:25px;">
+          <strong>2. Content Style</strong>
+        </label>
+
+        <select id="makoraStyle"
+          style="display:block;width:100%;padding:13px;margin-top:10px;
+          background:#151515;color:white;border:1px solid #444;
+          border-radius:8px;">
+          ${styles.map(x =>
+            `<option value="${x}">${x}</option>`
+          ).join("")}
+        </select>
+
+        <label for="makoraLanguage"
+          style="display:block;margin-top:25px;">
+          <strong>3. Content Language</strong>
+        </label>
+
+        <select id="makoraLanguage"
+          style="display:block;width:100%;padding:13px;margin-top:10px;
+          background:#151515;color:white;border:1px solid #444;
+          border-radius:8px;">
+          ${languages.map(x =>
+            `<option value="${x}">${x}</option>`
+          ).join("")}
+        </select>
+
+        <button onclick="confirmMakoraPreferences()"
+          style="width:100%;margin-top:25px;">
+          Continue
+        </button>
+
+      </div>
+    </div>
+  `;
+}
+
+
+function confirmMakoraPreferences() {
+
+  const flow = window.makoraFlow;
+
+  flow.format = document.getElementById("makoraFormat").value;
+  flow.style = document.getElementById("makoraStyle").value;
+  flow.language = document.getElementById("makoraLanguage").value;
+
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <div style="max-width:750px;margin:30px auto;padding:15px;color:white;">
+
+      <h2 class="theme-text">Review Your Choices</h2>
+
+      <div style="background:#1c1c1c;border:1px solid #444;
+        padding:20px;border-radius:12px;line-height:2;">
+
+        <p><strong>Platform:</strong> ${flow.platform}</p>
+        <p><strong>Request:</strong> ${escapeMakoraText(flow.request)}</p>
+        <p><strong>Format:</strong> ${flow.format}</p>
+        <p><strong>Style:</strong> ${flow.style}</p>
+        <p><strong>Language:</strong> ${flow.language}</p>
+
+      </div>
+
+      <p style="color:#aaa;margin-top:20px;">
+        Are these choices correct?
+      </p>
+
+      <button onclick="finishMakoraSetup()"
+        style="width:100%;">
+        Confirm Choices
+      </button>
+
+      <button class="secondary"
+        onclick="showMakoraPreferences()"
+        style="width:100%;margin-top:10px;">
+        Change Choices
+      </button>
+
+    </div>
+  `;
+}
+
+
+function escapeMakoraText(value) {
+  const div = document.createElement("div");
+  div.textContent = value;
+  return div.innerHTML;
+}
+
+
+function finishMakoraSetup() {
+
+  const flow = window.makoraFlow;
+
+  document.getElementById("chatMessages").innerHTML = `
+    <div style="max-width:750px;margin:40px auto;padding:15px;color:white;">
+
+      <h2 class="theme-text">Your Content Preferences Are Confirmed!</h2>
+
+      <p style="color:#aaa;line-height:1.7;">
+        Makora has saved your choices for this creation session.
+      </p>
+
+      <div style="background:#1c1c1c;padding:20px;
+        border:1px solid #444;border-radius:12px;line-height:2;">
+
+        <p><strong>Platform:</strong> ${flow.platform}</p>
+        <p><strong>Format:</strong> ${flow.format}</p>
+        <p><strong>Style:</strong> ${flow.style}</p>
+        <p><strong>Language:</strong> ${flow.language}</p>
+
+      </div>
+
+      <p style="color:#ffb454;margin-top:20px;">
+        Next step: Content production workflow.
+        No video or post has been generated yet.
+      </p>
+
+    </div>
+  `;
 }
 
 function showPlatformContentCreator(platform) {

@@ -7372,52 +7372,199 @@ function showMakoraPlatformDemo() {
 }
 
 
+
+let makoraSelectedPlatform = "";
+
 function openPlatformDemo(platform) {
+  makoraSelectedPlatform = platform;
+
   const chatMessages = document.getElementById("chatMessages");
 
   document.querySelector(".chat-input-area").style.display = "none";
-  showChatInput(false);
 
   chatMessages.innerHTML = `
-    <div style="max-width:850px;margin:30px auto;padding:20px;color:white;">
+    <div style="max-width:700px;margin:30px auto;color:white;">
 
-      <button class="secondary" onclick="showMakoraPlatformDemo()">
+      <button onclick="showMakoraPlatformDemo()"
+        class="secondary">
         ← Back to Platforms
       </button>
 
-      <h1 class="theme-text" style="margin-top:30px;">
-        ${platform} Manager
-      </h1>
+      <h2 class="theme-text" style="margin-top:25px;">
+        ${platform} Content Creator
+      </h2>
 
-      <p style="color:#aaa;margin:10px 0 25px;">
-        Manage your ${platform} content with Makora.
+      <p style="color:#aaa;">
+        Tell Makora what you want to create.
       </p>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;">
+      <textarea
+        id="makoraCreationRequest"
+        placeholder="Example: Create a cinematic football edit of Ronaldo for YouTube Shorts..."
+        style="
+          width:100%;
+          min-height:130px;
+          box-sizing:border-box;
+          padding:15px;
+          margin-top:15px;
+          background:#151515;
+          color:white;
+          border:1px solid #444;
+          border-radius:10px;
+          font:inherit;
+        "
+      ></textarea>
 
-        <button class="secondary"
-          onclick="showPlatformContentCreator('${platform}')">
-          ✍️ Create Content
-        </button>
+      <button
+        onclick="understandMakoraRequest()"
+        id="makoraUnderstandButton"
+        style="margin-top:15px;width:100%;">
+        Continue
+      </button>
 
-        <button class="secondary"
-          onclick="alert('Content Calendar is coming next.')">
-          📅 Content Calendar
-        </button>
+      <p id="makoraRequestStatus"
+        style="color:#aaa;margin-top:15px;"
+        role="status">
+      </p>
 
-        <button class="secondary"
-          onclick="alert('Analytics integration is coming next.')">
-          📊 Analytics
-        </button>
-
-        <button class="secondary"
-          onclick="alert('Post management is coming next.')">
-          📱 Manage Posts
-        </button>
-
+      <div id="makoraUnderstandingResult"
+        style="margin-top:20px;">
       </div>
+
     </div>
   `;
+}
+
+
+async function understandMakoraRequest() {
+
+  const input = document.getElementById("makoraCreationRequest");
+  const button = document.getElementById("makoraUnderstandButton");
+  const status = document.getElementById("makoraRequestStatus");
+  const result = document.getElementById("makoraUnderstandingResult");
+
+  const userRequest = input.value.trim();
+
+  if (!userRequest) {
+    status.textContent = "Please describe what you want to create.";
+    return;
+  }
+
+  button.disabled = true;
+  status.textContent = "Makora is understanding your request...";
+  result.textContent = "";
+
+  try {
+
+    const { data: { session }, error: sessionError } =
+      await supabaseClient.auth.getSession();
+
+    if (sessionError || !session) {
+      throw new Error("Please log in again.");
+    }
+
+    const instruction = `
+You are MAKORA, an AI social media content manager.
+
+The selected platform is: ${makoraSelectedPlatform}
+
+The user's creation request is:
+${userRequest}
+
+YOUR CURRENT TASK:
+Understand the request and confirm your understanding.
+Do NOT generate the content yet.
+Do NOT create a title, description, hashtags, script or video yet.
+Do NOT claim that a video has been created.
+
+Identify:
+1. What content the user wants.
+2. The subject or topic.
+3. The intended platform and format, if specified.
+4. The requested purpose or outcome.
+5. Any important missing information.
+
+Then explain your understanding in simple, natural language.
+
+Ask the user:
+"Is this what you want me to create?"
+
+If an essential detail is missing, ask a short clarification question instead.
+
+Do not invent details the user did not provide.
+Keep the response concise.
+`;
+
+    const response = await fetch(
+      "https://black-boat-3f22ai-youtuber-api.kapil20122504.workers.dev/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          message: instruction
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.reply || "Makora could not understand the request.");
+    }
+
+    status.textContent = "Understanding complete. Please review:";
+
+    const reply = document.createElement("div");
+    reply.style.cssText = `
+      padding:18px;
+      background:#1c1c1c;
+      border:1px solid #444;
+      border-radius:12px;
+      line-height:1.6;
+      white-space:pre-wrap;
+    `;
+
+    reply.textContent = data.reply || "Please try again.";
+
+    result.appendChild(reply);
+
+    const confirmation = document.createElement("p");
+    confirmation.style.cssText = "margin-top:15px;color:#aaa;";
+    confirmation.textContent =
+      "Review Makora's understanding. You can correct your request above and try again.";
+
+    result.appendChild(confirmation);
+
+    await logMakoraActivity({
+      action: "Content Request Understanding",
+      category: "ai",
+      platform: makoraSelectedPlatform.toLowerCase() === "x"
+        ? null
+        : makoraSelectedPlatform.toLowerCase(),
+      status: "success",
+      description: "Makora processed a content creation request."
+    });
+
+  } catch (error) {
+
+    status.textContent = error.message || "Something went wrong.";
+
+    console.error("Makora understanding error:", error);
+
+    await logMakoraActivity({
+      action: "Content Request Understanding Failed",
+      category: "ai",
+      status: "failed",
+      description: "Makora could not understand a content request.",
+      error_message: error.message
+    });
+
+  } finally {
+    button.disabled = false;
+  }
 }
 
 function showPlatformContentCreator(platform) {

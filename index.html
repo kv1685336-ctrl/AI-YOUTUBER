@@ -7729,36 +7729,317 @@ function escapeMakoraText(value) {
 }
 
 
-function finishMakoraSetup() {
+
+async function finishMakoraSetup() {
+
+  const flow = window.makoraFlow;
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <div style="max-width:750px;margin:50px auto;padding:15px;color:white;">
+      <h2 class="theme-text">Preparing Your Production Plan</h2>
+      <p id="makoraPlanStatus" style="color:#aaa;">
+        Makora is planning your content...
+      </p>
+    </div>
+  `;
+
+  try {
+
+    const { data: { session }, error } =
+      await supabaseClient.auth.getSession();
+
+    if (error || !session) {
+      throw new Error("Please log in again.");
+    }
+
+    const instruction = `
+You are MAKORA, an AI social media content manager.
+
+Prepare a detailed content production plan using these confirmed choices.
+
+PLATFORM: ${flow.platform}
+CONTENT REQUEST: ${flow.request}
+FORMAT: ${flow.format}
+STYLE: ${flow.style}
+LANGUAGE: ${flow.language}
+
+Create a platform-appropriate production plan containing:
+
+1. Content concept.
+2. Suggested title or opening headline.
+3. Opening hook.
+4. Scene-by-scene storyboard or post structure.
+5. Visual and footage requirements.
+6. Full voiceover or written content, as appropriate.
+7. On-screen text, where relevant.
+8. Background music or sound direction, where relevant.
+9. Ending and call to action.
+10. Caption or description.
+11. Relevant hashtags.
+
+IMPORTANT RULES:
+
+- Match the selected language.
+- Match the selected style.
+- Adapt the plan to the selected platform and format.
+- Make the plan practical and specific.
+- Do not invent real footage or claim assets have been obtained.
+- Suggest original, licensed or otherwise properly authorized media.
+- Do not claim a video, image or post has been generated.
+- Do not publish anything.
+- This is a production plan for user review only.
+
+Present the plan with clear headings.
+`;
+
+    const response = await fetch(
+      "https://black-boat-3f22ai-youtuber-api.kapil20122504.workers.dev/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ message: instruction })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.reply || "Could not prepare the production plan.");
+    }
+
+    flow.productionPlan = data.reply || "";
+
+    showMakoraProductionPlan();
+
+  } catch (error) {
+
+    chatMessages.innerHTML = `
+      <div style="max-width:750px;margin:40px auto;padding:15px;color:white;">
+        <h2>Could Not Prepare the Plan</h2>
+        <p style="color:#aaa;">
+          ${escapeMakoraText(error.message)}
+        </p>
+        <button onclick="finishMakoraSetup()">Try Again</button>
+      </div>
+    `;
+
+    console.error("Makora production plan error:", error);
+  }
+}
+
+
+function showMakoraProductionPlan() {
+
+  const flow = window.makoraFlow;
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <div style="max-width:800px;margin:30px auto;padding:15px;color:white;">
+
+      <button class="secondary" onclick="showMakoraPreferences()">
+        ← Back to Preferences
+      </button>
+
+      <h2 class="theme-text" style="margin-top:25px;">
+        Your Content Production Plan
+      </h2>
+
+      <p style="color:#aaa;">
+        Review Makora's proposed plan before proceeding.
+      </p>
+
+      <div style="
+        margin-top:20px;
+        padding:20px;
+        background:#1c1c1c;
+        border:1px solid #444;
+        border-radius:12px;
+        line-height:1.7;
+        white-space:pre-wrap;
+        overflow-wrap:anywhere;
+      ">${escapeMakoraText(flow.productionPlan)}</div>
+
+      <p style="color:#aaa;margin-top:20px;">
+        Are you happy with this production plan?
+      </p>
+
+      <button onclick="approveMakoraProductionPlan()"
+        style="width:100%;">
+        Approve Production Plan
+      </button>
+
+      <button class="secondary"
+        onclick="requestMakoraPlanChanges()"
+        style="width:100%;margin-top:10px;">
+        Request Changes
+      </button>
+
+    </div>
+  `;
+}
+
+
+function approveMakoraProductionPlan() {
 
   const flow = window.makoraFlow;
 
   document.getElementById("chatMessages").innerHTML = `
     <div style="max-width:750px;margin:40px auto;padding:15px;color:white;">
 
-      <h2 class="theme-text">Your Content Preferences Are Confirmed!</h2>
+      <h2 class="theme-text">Production Plan Approved!</h2>
 
       <p style="color:#aaa;line-height:1.7;">
-        Makora has saved your choices for this creation session.
+        Your production plan has been approved.
+        The next stage is preparing the actual content.
       </p>
 
-      <div style="background:#1c1c1c;padding:20px;
+      <div style="padding:20px;background:#1c1c1c;
         border:1px solid #444;border-radius:12px;line-height:2;">
 
-        <p><strong>Platform:</strong> ${flow.platform}</p>
-        <p><strong>Format:</strong> ${flow.format}</p>
-        <p><strong>Style:</strong> ${flow.style}</p>
-        <p><strong>Language:</strong> ${flow.language}</p>
+        <p><strong>Platform:</strong> ${escapeMakoraText(flow.platform)}</p>
+        <p><strong>Format:</strong> ${escapeMakoraText(flow.format)}</p>
+        <p><strong>Style:</strong> ${escapeMakoraText(flow.style)}</p>
+        <p><strong>Language:</strong> ${escapeMakoraText(flow.language)}</p>
 
       </div>
 
       <p style="color:#ffb454;margin-top:20px;">
-        Next step: Content production workflow.
-        No video or post has been generated yet.
+        Plan approved. Actual media generation is not connected yet.
       </p>
 
     </div>
   `;
+}
+
+
+function requestMakoraPlanChanges() {
+
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <div style="max-width:750px;margin:40px auto;padding:15px;color:white;">
+
+      <h2 class="theme-text">Request Plan Changes</h2>
+
+      <p style="color:#aaa;">
+        Tell Makora what you want changed.
+      </p>
+
+      <textarea id="makoraPlanChanges"
+        placeholder="Example: Make the opening more mysterious and add more scenes..."
+        style="width:100%;min-height:130px;box-sizing:border-box;
+        padding:15px;background:#151515;color:white;
+        border:1px solid #444;border-radius:10px;font:inherit;">
+      </textarea>
+
+      <button onclick="reviseMakoraProductionPlan()"
+        style="width:100%;margin-top:15px;">
+        Revise Production Plan
+      </button>
+
+      <button class="secondary"
+        onclick="showMakoraProductionPlan()"
+        style="width:100%;margin-top:10px;">
+        Back to Plan
+      </button>
+
+    </div>
+  `;
+}
+
+
+async function reviseMakoraProductionPlan() {
+
+  const flow = window.makoraFlow;
+  const changes = document.getElementById("makoraPlanChanges").value.trim();
+
+  if (!changes) {
+    alert("Please describe the changes you want.");
+    return;
+  }
+
+  flow.planChanges = changes;
+
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.innerHTML = `
+    <div style="max-width:750px;margin:50px auto;padding:15px;color:white;">
+      <h2 class="theme-text">Revising Your Plan</h2>
+      <p style="color:#aaa;">Makora is applying your changes...</p>
+    </div>
+  `;
+
+  try {
+
+    const { data: { session }, error } =
+      await supabaseClient.auth.getSession();
+
+    if (error || !session) {
+      throw new Error("Please log in again.");
+    }
+
+    const instruction = `
+You are MAKORA.
+
+Revise the following production plan.
+
+ORIGINAL REQUEST:
+${flow.request}
+
+PLATFORM: ${flow.platform}
+FORMAT: ${flow.format}
+STYLE: ${flow.style}
+LANGUAGE: ${flow.language}
+
+PREVIOUS PLAN:
+${flow.productionPlan}
+
+USER'S REQUESTED CHANGES:
+${changes}
+
+Create a complete revised production plan.
+Preserve all confirmed preferences.
+Do not claim that media has been generated or published.
+Return only the revised plan.
+`;
+
+    const response = await fetch(
+      "https://black-boat-3f22ai-youtuber-api.kapil20122504.workers.dev/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ message: instruction })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.reply || "Could not revise the plan.");
+    }
+
+    flow.productionPlan = data.reply || "";
+    showMakoraProductionPlan();
+
+  } catch (error) {
+
+    chatMessages.innerHTML = `
+      <div style="max-width:750px;margin:40px auto;padding:15px;color:white;">
+        <h2>Revision Failed</h2>
+        <p>${escapeMakoraText(error.message)}</p>
+        <button onclick="showMakoraProductionPlan()">Back to Plan</button>
+      </div>
+    `;
+
+    console.error("Makora revision error:", error);
+  }
 }
 
 function showPlatformContentCreator(platform) {

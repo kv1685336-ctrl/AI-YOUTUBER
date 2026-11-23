@@ -9086,6 +9086,209 @@ function showEditor() {
   function clipDuration(clip) {
     return clip.end - clip.start;
   }
+  
+async function exportEditedVideo() {
+  if (!clips.length) {
+    status.textContent = "Import videos before exporting.";
+    return;
+  }
+
+  if (!window.MediaRecorder ||
+      !HTMLCanvasElement.prototype.captureStream) {
+    status.textContent =
+      "Video export is not supported in this browser.";
+    return;
+  }
+
+  const exportButton = document.getElementById("studioExport");
+  exportButton.disabled = true;
+  status.textContent = "Preparing video export...";
+
+  const canvas = document.createElement("canvas");
+  const ratio = document.getElementById("studioRatio").value;
+
+  if (ratio === "9:16") {
+    canvas.width = 720;
+    canvas.height = 1280;
+  } else if (ratio === "1:1") {
+    canvas.width = 720;
+    canvas.height = 720;
+  } else {
+    canvas.width = 1280;
+    canvas.height = 720;
+  }
+
+  const ctx = canvas.getContext("2d");
+  const stream = canvas.captureStream(30);
+
+  const mimeTypes = [
+    "video/webm;codecs=vp9",
+    "video/webm;codecs=vp8",
+    "video/webm",
+    "video/mp4"
+  ];
+
+  const mimeType = mimeTypes.find(type =>
+    MediaRecorder.isTypeSupported(type)
+  );
+
+  if (!mimeType) {
+    stream.getTracks().forEach(track => track.stop());
+    exportButton.disabled = false;
+    status.textContent = "No supported export format found.";
+    return;
+  }
+
+  let recorder;
+  const chunks = [];
+
+  try {
+    recorder = new MediaRecorder(stream, { mimeType });
+
+    recorder.ondataavailable = event => {
+      if (event.data.size > 0) chunks.push(event.data);
+    };
+
+    const recordingFinished = new Promise((resolve, reject) => {
+      recorder.onstop = resolve;
+      recorder.onerror = () => reject(
+        new Error("Video recording failed.")
+      );
+    });
+
+    recorder.start(1000);
+
+    for (let index = 0; index < clips.length; index++) {
+      const clip = clips[index];
+      const source = sources[clip.sourceId];
+
+      if (!source) {
+        throw new Error("A video source is missing.");
+      }
+
+      status.textContent =
+        `Rendering clip ${index + 1} of ${clips.length}...`;
+
+      const player = document.createElement("video");
+      player.src = source.url;
+      player.muted = true;
+      player.playsInline = true;
+      player.preload = "auto";
+
+      await new Promise((resolve, reject) => {
+        player.onloadedmetadata = resolve;
+        player.onerror = () => reject(
+          new Error("Could not load " + source.name)
+        );
+        player.load();
+      });
+
+      await new Promise((resolve, reject) => {
+        player.onseeked = resolve;
+        player.onerror = reject;
+        player.currentTime = clip.start;
+      });
+
+      const filters = {
+        none: "none",
+        grayscale: "grayscale(100%)",
+        sepia: "sepia(100%)",
+        vintage: "sepia(45%) contrast(110%) brightness(90%)",
+        blur: "blur(3px)",
+        bright: "brightness(130%)",
+        contrast: "contrast(150%)",
+        warm: "sepia(25%) saturate(140%)"
+      };
+
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      await player.play();
+
+      while (player.currentTime < clip.end && !player.ended) {
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.save();
+        ctx.filter = filters[clip.filter || "none"];
+
+        const scale = Math.min(
+          canvas.width / player.videoWidth,
+          canvas.height / player.videoHeight
+        );
+
+        const width = player.videoWidth * scale;
+        const height = player.videoHeight * scale;
+
+        ctx.drawImage(
+          player,
+          (canvas.width - width) / 2,
+          (canvas.height - height) / 2,
+          width,
+          height
+        );
+
+        ctx.restore();
+
+        if (clip.text) {
+          ctx.fillStyle = "white";
+          ctx.font = `bold ${clip.textSize || 28}px Arial`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.shadowColor = "black";
+          ctx.shadowBlur = 6;
+
+          ctx.fillText(
+            clip.text,
+            canvas.width / 2,
+            canvas.height / 2,
+            canvas.width * 0.85
+          );
+
+          ctx.shadowBlur = 0;
+        }
+
+        await new Promise(resolve =>
+          requestAnimationFrame(resolve)
+        );
+      }
+
+      player.pause();
+      player.removeAttribute("src");
+      player.load();
+    }
+
+    recorder.stop();
+    await recordingFinished;
+
+    const blob = new Blob(chunks, { type: mimeType });
+    const url = URL.createObjectURL(blob);
+
+    const extension = mimeType.includes("mp4") ? "mp4" : "webm";
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `makora-edited-video.${extension}`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    status.textContent = "Video export completed!";
+    
+  } catch (error) {
+    if (recorder && recorder.state !== "inactive") {
+      recorder.stop();
+    }
+
+    console.error("Makora export error:", error);
+    status.textContent = error.message || "Video export failed.";
+
+  } finally {
+    stream.getTracks().forEach(track => track.stop());
+    exportButton.disabled = false;
+  }
+}
+
 
   function totalDuration() {
     return clips.reduce(
@@ -10170,8 +10373,7 @@ video.addEventListener("pause", () => {
   });
 
   document.getElementById("studioExport").addEventListener("click", () => {
-    status.textContent =
-      "MP4 export is not connected yet. We will build the rendering engine separately.";
+    exportEditedVideo();
   });
 
   // Initial history state.

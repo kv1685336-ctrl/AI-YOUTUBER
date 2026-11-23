@@ -7404,9 +7404,15 @@ async function testMakoraResearch() {
 
     const result = await response.json();
 
-    if (!response.ok || !result.success) {
-      throw new Error(result.error || "Research request failed.");
-    }
+    
+if (!response.ok || !result.success) {
+  console.error("Research API error:", response.status, result);
+
+  throw new Error(
+    `${result.error || "Research failed"} | ${result.details || "No additional details"}`
+  );
+}
+
 
     chatMessages.innerHTML = "";
 

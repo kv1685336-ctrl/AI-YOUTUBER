@@ -7365,11 +7365,81 @@ function showMakoraPlatformDemo() {
             width="38" height="38" alt="X logo">
           <br><br>X
         </button>
+        <button onclick="testMakoraResearch()">
+  Test AI Research
+</button>
 
       </div>
     </div>
   `;
 }
+  
+async function testMakoraResearch() {
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatMessages.textContent = "Researching with Gemini and Google Search...";
+
+  try {
+    const { data: { session } } =
+      await supabaseClient.auth.getSession();
+
+    if (!session?.access_token) {
+      throw new Error("Please log in to Makora first.");
+    }
+
+    const response = await fetch(
+      "https://black-boat-3f22ai-youtuber-api.kapil20122504.workers.dev/research",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          topic: "The Bermuda Triangle",
+          context: "Research accurate historical and scientific facts for a YouTube Short."
+        })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || "Research request failed.");
+    }
+
+    chatMessages.innerHTML = "";
+
+    const heading = document.createElement("h2");
+    heading.textContent = "Research successful!";
+    chatMessages.appendChild(heading);
+
+    const report = document.createElement("pre");
+    report.style.whiteSpace = "pre-wrap";
+    report.style.color = "white";
+    report.textContent = result.research;
+    chatMessages.appendChild(report);
+
+    const sourceHeading = document.createElement("h3");
+    sourceHeading.textContent = "Research sources";
+    chatMessages.appendChild(sourceHeading);
+
+    result.sources.forEach(source => {
+      const link = document.createElement("a");
+      link.textContent = source.title;
+      link.href = source.url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.style.display = "block";
+      link.style.margin = "10px 0";
+      chatMessages.appendChild(link);
+    });
+
+  } catch (error) {
+    chatMessages.textContent = "Research error: " + error.message;
+  }
+}
+
 
 
 

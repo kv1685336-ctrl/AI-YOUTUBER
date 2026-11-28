@@ -6268,6 +6268,10 @@ function showPage(page) {
     "hidden",
     !isWorkspace && !isLegal
   );
+  if (isWorkspace) {
+    loadCreditWallet();
+}
+
 
   document.getElementById("siteFooter").classList.toggle(
     "hidden",

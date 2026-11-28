@@ -9168,6 +9168,8 @@ async function exportEditedVideo() {
     if (audioSources.length > 0) {
       importedAudioPlayer = new Audio();
       importedAudioPlayer.preload = "auto";
+      importedAudioPlayer.volume = 1;
+      importedAudioPlayer.muted = false;
       importedAudioPlayer.src = audioSources[0].url;
 
       await new Promise((resolve, reject) => {
@@ -9181,6 +9183,9 @@ async function exportEditedVideo() {
         audioContext.createMediaElementSource(importedAudioPlayer);
 
       importedAudioNode.connect(audioDestination);
+      
+
+      importedAudioNode.connect(audioContext.destination);
     }
 
     recorder = new MediaRecorder(stream, { mimeType });

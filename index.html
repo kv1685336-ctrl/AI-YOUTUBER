@@ -2920,7 +2920,28 @@ body.light-theme [id^="settingsPage-"] select {
     grid-template-columns: 1fr;
   }
 }
+.header-credits {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border: 1px solid #ff3030;
+  border-radius: 9px;
+  background: transparent;
+  color: #ff6877;
+  font-weight: 700;
+  cursor: pointer;
+}
 
+.header-credits svg {
+  width: 18px;
+  height: 18px;
+}
+
+.header-credits.hidden {
+  display: none;
+}
 
 
 
@@ -2943,6 +2964,13 @@ body.light-theme [id^="settingsPage-"] select {
       onclick="showPage('login')" data-i18n="login">
       Log in
     </button>
+    <button id="headerCredits"
+  class="header-credits hidden"
+  onclick="openCreditsFromHeader()"
+  title="Makora Credits">
+  <i data-lucide="coins"></i>
+  <span id="headerCreditBalance">—</span>
+</button>
 
     <button id="navLogout" class="login-btn hidden"
       onclick="logout()" data-i18n="logout">
@@ -5514,9 +5542,13 @@ async function loadCreditWallet() {
       );
     }
 
-    balanceElement.textContent =
-      Number(wallet.balance).toLocaleString() + " credits";
+        const creditAmount =
+      Number(wallet.balance).toLocaleString();
 
+    balanceElement.textContent = creditAmount + " credits";
+
+    document.getElementById("headerCreditBalance").textContent =
+      creditAmount;
     historyElement.innerHTML = "";
 
     if (!history.transactions?.length) {
@@ -5549,9 +5581,13 @@ async function loadCreditWallet() {
 
   } catch (error) {
     balanceElement.textContent = "Unavailable";
+
+    document.getElementById("headerCreditBalance").textContent = "—";
+
     historyElement.textContent = "Could not load transactions.";
     statusElement.textContent = error.message;
   }
+    
 }
 
 
@@ -6224,6 +6260,11 @@ function showPage(page) {
   );
 
   document.getElementById("navLogout").classList.toggle(
+    "hidden",
+    !isWorkspace && !isLegal
+  );
+
+  document.getElementById("headerCredits").classList.toggle(
     "hidden",
     !isWorkspace && !isLegal
   );
@@ -7181,7 +7222,18 @@ function openSettingsSection(section) {
   loadMakoraActivityLogs();
 }
 }
+async function openCreditsFromHeader() {
+  const settingsButton = [...document.querySelectorAll(".menu-item")]
+    .find(button =>
+      button.textContent.trim().toLowerCase().includes("settings")
+    );
 
+  if (!settingsButton) return;
+
+  await selectTool("Settings", settingsButton);
+
+  openSettingsSection("credits");
+}
 async function selectTool(tool, button) {
   document.querySelectorAll(".menu-item").forEach(item => {
     item.classList.remove("active");
@@ -8631,6 +8683,7 @@ async function logout() {
 
   // Return to welcome page.
   document.getElementById("navLogout").classList.add("hidden");
+    document.getElementById("headerCredits").classList.add("hidden");
   document.getElementById("navLogin").classList.remove("hidden");
 
   showPage("welcome");

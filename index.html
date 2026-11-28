@@ -9122,7 +9122,7 @@ async function exportEditedVideo() {
   const stream = canvas.captureStream(30);
   let audioContext = null;
   let audioDestination = null;
-  let importedAudioPlayer = null;
+  let importedAudioSource = null;
 
   const mimeTypes = [
     "video/mp4",
@@ -9164,29 +9164,23 @@ async function exportEditedVideo() {
 
     await audioContext.resume();
 
-    // Add the first imported audio file to the export.
-    if (audioSources.length > 0) {
-      importedAudioPlayer = new Audio();
-      importedAudioPlayer.preload = "auto";
-      importedAudioPlayer.volume = 1;
-      importedAudioPlayer.muted = false;
-      importedAudioPlayer.src = audioSources[0].url;
+    // Add imported audio directly to the export audio stream.
+if (audioSources.length > 0) {
+  const response = await fetch(audioSources[0].url);
 
-      await new Promise((resolve, reject) => {
-        importedAudioPlayer.oncanplay = resolve;
-        importedAudioPlayer.onerror = () =>
-          reject(new Error("Could not load imported audio."));
-        importedAudioPlayer.load();
-      });
+  if (!response.ok) {
+    throw new Error("Could not load imported audio.");
+  }
 
-      const importedAudioNode =
-        audioContext.createMediaElementSource(importedAudioPlayer);
+  const audioData = await response.arrayBuffer();
 
-      importedAudioNode.connect(audioDestination);
-      
+  const importedAudioBuffer =
+    await audioContext.decodeAudioData(audioData);
 
-      importedAudioNode.connect(audioContext.destination);
-    }
+  importedAudioSource = audioContext.createBufferSource();
+  importedAudioSource.buffer = importedAudioBuffer;
+  importedAudioSource.connect(audioDestination);
+}
 
     recorder = new MediaRecorder(stream, { mimeType });
 
@@ -9202,10 +9196,10 @@ async function exportEditedVideo() {
     });
 
     recorder.start(1000);
-    if (importedAudioPlayer) {
-  importedAudioPlayer.currentTime = 0;
-  await importedAudioPlayer.play();
-}
+
+    if (importedAudioSource) {
+      importedAudioSource.start(0);
+    }
 
     for (let index = 0; index < clips.length; index++) {
       const clip = clips[index];

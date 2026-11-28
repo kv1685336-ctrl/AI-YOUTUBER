@@ -9120,6 +9120,9 @@ async function exportEditedVideo() {
 
   const ctx = canvas.getContext("2d");
   const stream = canvas.captureStream(30);
+  let audioContext = null;
+  let audioDestination = null;
+  let importedAudioPlayer = null;
 
   const mimeTypes = [
     "video/mp4",
@@ -9143,6 +9146,43 @@ async function exportEditedVideo() {
   const chunks = [];
 
   try {
+    const AudioContextClass =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) {
+      throw new Error("Audio export is not supported in this browser.");
+    }
+
+    audioContext = new AudioContextClass();
+    audioDestination = audioContext.createMediaStreamDestination();
+
+    const audioTrack = audioDestination.stream.getAudioTracks()[0];
+
+    if (audioTrack) {
+      stream.addTrack(audioTrack);
+    }
+
+    await audioContext.resume();
+
+    // Add the first imported audio file to the export.
+    if (audioSources.length > 0) {
+      importedAudioPlayer = new Audio();
+      importedAudioPlayer.preload = "auto";
+      importedAudioPlayer.src = audioSources[0].url;
+
+      await new Promise((resolve, reject) => {
+        importedAudioPlayer.oncanplay = resolve;
+        importedAudioPlayer.onerror = () =>
+          reject(new Error("Could not load imported audio."));
+        importedAudioPlayer.load();
+      });
+
+      const importedAudioNode =
+        audioContext.createMediaElementSource(importedAudioPlayer);
+
+      importedAudioNode.connect(audioDestination);
+    }
+
     recorder = new MediaRecorder(stream, { mimeType });
 
     recorder.ondataavailable = event => {
@@ -9157,6 +9197,10 @@ async function exportEditedVideo() {
     });
 
     recorder.start(1000);
+    if (importedAudioPlayer) {
+  importedAudioPlayer.currentTime = 0;
+  await importedAudioPlayer.play();
+}
 
     for (let index = 0; index < clips.length; index++) {
       const clip = clips[index];
@@ -9171,10 +9215,14 @@ async function exportEditedVideo() {
 
       const player = document.createElement("video");
       player.src = source.url;
-      player.muted = true;
-      player.playsInline = true;
-      player.preload = "auto";
-
+player.muted = false;
+player.volume = Math.max(
+  0,
+  Math.min(1, Number(clip.volume ?? 1))
+);
+player.playbackRate = Number(clip.speed) || 1;
+player.playsInline = true;
+player.preload = "auto";
       await new Promise((resolve, reject) => {
         player.onloadedmetadata = resolve;
         player.onerror = () => reject(
@@ -9182,6 +9230,13 @@ async function exportEditedVideo() {
         );
         player.load();
       });
+      const clipAudioNode =
+  audioContext.createMediaElementSource(player);
+
+clipAudioNode.connect(audioDestination);
+      
+
+
 
       await new Promise((resolve, reject) => {
         player.onseeked = resolve;
